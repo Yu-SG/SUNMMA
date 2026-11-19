@@ -33,12 +33,17 @@ export const isValidToken = (token?: string | null) => {
 }
 
 export const startSession = (event: H3Event) => {
+  // Cloudflare / 反向代理下 NODE_ENV 与协议都不可靠，
+  // 直接看本次请求是不是 HTTPS，避免 secure cookie 在 http 下被丢弃。
+  const protocol = getRequestProtocol(event) || ''
+  const secure = protocol === 'https' || getHeader(event, 'x-forwarded-proto') === 'https'
+
   setCookie(event, COOKIE_NAME, createToken(), {
     httpOnly: true,
     sameSite: 'lax',
     path: '/',
     maxAge: SESSION_TTL / 1000,
-    secure: process.env.NODE_ENV === 'production',
+    secure,
   })
 }
 

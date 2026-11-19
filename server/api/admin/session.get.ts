@@ -1,6 +1,6 @@
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   return {
     authenticated: isAuthenticated(event),
-    meta: readMeta(),
+    meta: await loadMeta(event),
   }
 })
