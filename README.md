@@ -120,6 +120,31 @@ ADMIN_PASSWORD=... ADMIN_SECRET=... node .output/server/index.mjs
 
 SQLite 文件默认写在项目根目录 `.data/`，部署时挂载一个可写目录或把 `CONTENT_DB_PATH` 指过去即可。
 
+### GitHub
+
+代码仓库：<https://github.com/Yu-SG/SUNMMA>
+
+```bash
+git remote add origin https://github.com/Yu-SG/SUNMMA.git
+git push -u origin master
+```
+
+仓库自带 `.github/workflows/ci.yml`：每次 push 会用 Node 24 安装依赖、`yarn build`，并把 `node .output/server/index.mjs` 起起来自检 `/`、`/admin`、`/api/content`。
+
+> ⚠️ **GitHub Pages 不适合本项目**。本项目是 SSR（Nitro）+ SQLite 写入的全栈应用，后台保存要写数据库。Pages 只能托管静态文件，`/admin` 与 `/api/*` 无法工作。
+
+### 推荐托管方式
+
+| 方式 | 说明 |
+|---|---|
+| **Render / Railway / Fly.io** | 选 Node 环境，构建 `yarn install && yarn build`，启动 `node .output/server/index.mjs`；**必须挂持久磁盘**到 `.data`（或用 `CONTENT_DB_PATH` 指到磁盘内），否则重启会丢内容 |
+| **VPS（最稳）** | Node ≥ 23.4，`pm2 start .output/server/index.mjs --name sumaaz`，Nginx 反代 3000 端口；`.data/` 与 `public/images/` 一起备份 |
+| **Vercel / Netlify Functions** | 能跑 SSR，但文件系统不可写、实例无状态，SQLite 会失效。要用必须把数据库换成 Turso（libSQL）或 Postgres，并改 `server/utils/db.ts` |
+
+环境变量：`ADMIN_PASSWORD`、`ADMIN_SECRET`（会话签名，务必改成随机串）、`CONTENT_DB_PATH`（可选）、`UPLOAD_DIR`（可选，默认 `.data/uploads`）、`PORT`。
+
+Node 版本要求 **≥ 23.4**（`node:sqlite` 从该版本起免 flag 可用），已在 `package.json` 的 `engines` 里声明。
+
 ## 其他说明
 
 - 图片放在 `public/images/`，后台填写 `/images/xxx.jpg` 即可引用；现有 banner 图片来自 Burst（Shopify），Burst License 可免费商用、无需署名。
