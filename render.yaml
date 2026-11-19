@@ -1,0 +1,25 @@
+# Render Blueprint —— 连接 GitHub 仓库后一键创建服务
+# 注意：本项目用 SQLite 存内容，必须挂持久磁盘，否则每次重启内容会丢。
+services:
+  - type: web
+    name: sumaaz
+    runtime: node
+    plan: starter
+    region: singapore
+    buildCommand: yarn install --frozen-lockfile && yarn build
+    startCommand: node .output/server/index.mjs
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: '24'
+      - key: NUXT_TELEMETRY_DISABLED
+        value: '1'
+      # 在 Render 控制台里填，别提交到仓库
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_SECRET
+        generateValue: true
+    disk:
+      name: sumaaz-data
+      mountPath: /opt/render/project/src/.data
+      sizeGB: 1
