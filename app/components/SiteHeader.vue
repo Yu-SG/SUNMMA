@@ -21,6 +21,22 @@ const isActive = (to: string) => {
   return route.path === path || route.path.startsWith(`${path}/`)
 }
 
+/**
+ * 子菜单里多个链接可能共用同一个路径（如 /news?category=…），
+ * 只用路径判断会全部高亮，所以这里连查询参数一起比对。
+ */
+const isChildActive = (to: string) => {
+  const [path, search = ''] = to.split('?')
+  if (route.path !== path) return false
+
+  const expected = new URLSearchParams(search)
+  const expectedKeys = [...expected.keys()]
+
+  if (!expectedKeys.length) return Object.keys(route.query).length === 0
+
+  return expectedKeys.every((key) => String(route.query[key] ?? '') === expected.get(key))
+}
+
 watch(
   () => route.fullPath,
   () => {
@@ -85,6 +101,7 @@ watch(mdAndUp, (desktop) => {
                   v-for="child in item.children"
                   :key="child.to"
                   :to="child.to"
+                  :class="{ 'is-current': isChildActive(child.to) }"
                   :title="child.label"
                   color="primary"
                 >
@@ -136,11 +153,17 @@ watch(mdAndUp, (desktop) => {
               class="mobile-drawer__parent"
             />
           </template>
-          <v-list-item :to="item.to" :title="`全部${item.label}`" @click="drawer = false" />
+          <v-list-item
+            :to="item.to"
+            :class="{ 'is-current': isChildActive(item.to) }"
+            :title="`全部${item.label}`"
+            @click="drawer = false"
+          />
           <v-list-item
             v-for="child in item.children"
             :key="child.to"
             :to="child.to"
+            :class="{ 'is-current': isChildActive(child.to) }"
             :title="child.label"
             @click="drawer = false"
           />
@@ -340,6 +363,17 @@ watch(mdAndUp, (desktop) => {
     padding-inline: 16px;
   }
 }
+
+/* 移动端抽屉里的子菜单同样只保留一个高亮 */
+.mobile-drawer__list :deep(.v-list-group__items .v-list-item--active:not(.is-current)) {
+  color: inherit;
+  background: transparent;
+}
+
+.mobile-drawer__list :deep(.v-list-group__items .v-list-item.is-current) {
+  color: rgb(var(--v-theme-primary));
+  background: rgba(var(--v-theme-primary), 0.08);
+}
 </style>
 
 <style>
@@ -357,5 +391,19 @@ watch(mdAndUp, (desktop) => {
 .nav-menu .v-list-item-title {
   font-size: 14px;
   letter-spacing: 0.04em;
+}
+
+/*
+ * 子菜单里的多个链接可能共用同一路径（/news?category=…），
+ * Vue Router 会按路径把它们全部标记为 active，这里只让 is-current 生效。
+ */
+.nav-menu .v-list-item--active:not(.is-current) {
+  color: inherit;
+  background: transparent;
+}
+
+.nav-menu .v-list-item.is-current {
+  color: rgb(var(--v-theme-primary));
+  background: rgba(var(--v-theme-primary), 0.08);
 }
 </style>
