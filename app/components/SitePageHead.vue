@@ -21,9 +21,6 @@ const crumbs = computed(() => {
 
 <template>
   <v-sheet class="page-head" tag="section">
-    <div class="page-head__deco page-head__deco--one" aria-hidden="true" />
-    <div class="page-head__deco page-head__deco--two" aria-hidden="true" />
-
     <v-container class="page-head__inner">
       <v-breadcrumbs :items="crumbs" divider="›" class="page-head__crumbs">
         <template #item="{ item }">
@@ -60,28 +57,6 @@ const crumbs = computed(() => {
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 50%;
   content: '';
-}
-
-.page-head__deco {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.page-head__deco--one {
-  top: -120px;
-  right: 8%;
-  width: 340px;
-  height: 340px;
-  background: radial-gradient(circle, rgba(79, 195, 247, 0.35) 0%, rgba(79, 195, 247, 0) 70%);
-}
-
-.page-head__deco--two {
-  bottom: -180px;
-  left: -60px;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(38, 198, 218, 0.18) 0%, rgba(38, 198, 218, 0) 70%);
 }
 
 .page-head__inner {

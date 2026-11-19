@@ -258,7 +258,7 @@ useSeoMeta({
   position: relative;
   overflow: hidden;
   border-radius: 22px;
-  box-shadow: 0 24px 50px rgba(13, 71, 161, 0.16);
+  box-shadow: 0 16px 36px rgba(13, 71, 161, 0.1);
 }
 
 .intro-art__img {
@@ -445,7 +445,7 @@ useSeoMeta({
   align-items: center;
   justify-content: space-between;
   gap: 30px;
-  background: linear-gradient(120deg, #0d47a1, #1976d2 60%, #26c6da);
+  background: linear-gradient(158deg, #0b2c56 0%, #143f74 55%, #1b5aa6 100%);
   color: #fff;
 }
 

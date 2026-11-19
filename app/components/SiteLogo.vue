@@ -23,7 +23,7 @@ const brand = siteConfig.brand
         <defs>
           <linearGradient id="logo-grad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#1976d2" />
-            <stop offset="1" stop-color="#26c6da" />
+            <stop offset="1" stop-color="#64b5f6" />
           </linearGradient>
         </defs>
         <rect width="48" height="48" rx="13" fill="url(#logo-grad)" />

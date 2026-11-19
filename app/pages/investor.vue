@@ -282,6 +282,12 @@ useSeoMeta({
 }
 
 .investor-aside {
+  /* Shared emphasis-card tokens — kept in sync with /pharmacovigilance. */
+  --panel-bg: linear-gradient(158deg, #0b2c56 0%, #143f74 55%, #1b5aa6 100%);
+  --panel-accent: #bbdefb;
+  --panel-text: #ffffff;
+  --panel-muted: rgba(255, 255, 255, 0.72);
+
   display: flex;
   padding-top: 84px;
   flex-direction: column;
@@ -290,26 +296,27 @@ useSeoMeta({
 
 .investor-contact {
   padding: 26px 24px;
-  background: linear-gradient(160deg, #0d47a1, #1976d2 70%, #26c6da);
-  color: #fff;
+  background: var(--panel-bg);
+  color: var(--panel-text);
 }
 
 .investor-contact__label {
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--panel-muted);
   font-size: 10px;
+  font-weight: 500;
   letter-spacing: 0.24em;
 }
 
 .investor-contact__title {
   margin-top: 6px;
-  color: #fff;
+  color: var(--panel-text);
   font-size: 20px;
   font-weight: 600;
 }
 
 .investor-contact__text {
   margin-top: 10px;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--panel-muted);
   font-size: 13px;
   line-height: 1.85;
 }
@@ -321,7 +328,7 @@ useSeoMeta({
   flex-direction: column;
   gap: 10px;
   list-style: none;
-  color: rgba(255, 255, 255, 0.86);
+  color: var(--panel-muted);
   font-size: 13px;
 }
 
@@ -331,9 +338,18 @@ useSeoMeta({
   gap: 7px;
 }
 
+.investor-contact__list li:nth-child(-n + 2) span {
+  color: var(--panel-accent);
+}
+
+.investor-contact__list :deep(.v-icon) {
+  color: var(--panel-accent);
+}
+
 .investor-contact :deep(.v-btn) {
-  background: #fff;
-  color: #0d47a1;
+  background: var(--panel-accent);
+  color: #0b2c56;
+  font-weight: 500;
 }
 
 .investor-note {

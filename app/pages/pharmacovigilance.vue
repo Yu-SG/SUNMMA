@@ -128,6 +128,14 @@ useSeoMeta({
 }
 
 .pv-aside {
+  /* Shared emphasis-card tokens — kept in sync with /investor. */
+  --panel-bg: linear-gradient(158deg, #0b2c56 0%, #143f74 55%, #1b5aa6 100%);
+  --panel-accent: #bbdefb;
+  --panel-text: #ffffff;
+  --panel-muted: rgba(255, 255, 255, 0.72);
+  --panel-line: rgba(255, 255, 255, 0.18);
+  --panel-warning: #ffcc80;
+
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -135,27 +143,42 @@ useSeoMeta({
 
 .hotline-card {
   padding: 26px 24px;
-  background: linear-gradient(155deg, #0b2c56, #115293 60%, #1976d2);
-  color: #fff;
+  background: var(--panel-bg);
+  color: var(--panel-text);
 }
 
 .hotline-card__label {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 9.5px;
-  letter-spacing: 0.22em;
+  color: var(--panel-muted);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
 }
 
 .hotline-card__title {
+  position: relative;
   margin-top: 6px;
-  color: #fff;
-  font-size: 19px;
+  padding-left: 12px;
+  color: var(--panel-text);
+  font-size: 20px;
   font-weight: 600;
+}
+
+/* A single small amber cue keeps the warning context without recolouring the card. */
+.hotline-card__title::before {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--panel-warning);
+  content: '';
 }
 
 .hotline-card__phone {
   display: block;
   margin-top: 14px;
-  color: #8fe3ff;
+  color: var(--panel-accent);
   font-size: 30px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -163,24 +186,28 @@ useSeoMeta({
 
 .hotline-card__time {
   margin-top: 4px;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--panel-muted);
   font-size: 12px;
+}
+
+.hotline-card :deep(.v-divider) {
+  border-color: var(--panel-line);
+  opacity: 1;
 }
 
 .hotline-card__email,
 .hotline-card__note {
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--panel-muted);
   font-size: 12.5px;
   line-height: 1.8;
 }
 
 .hotline-card__email a {
-  color: #8fe3ff;
+  color: var(--panel-accent);
 }
 
 .hotline-card__note {
   margin-top: 8px;
-  color: rgba(255, 255, 255, 0.6);
 }
 
 .steps-card,

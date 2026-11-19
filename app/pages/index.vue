@@ -301,7 +301,7 @@ useSeoMeta({
 }
 
 .hero__script {
-  color: #7ee8fa;
+  color: #bbdefb;
   font-size: 15px;
   letter-spacing: 0.24em;
 }
