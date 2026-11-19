@@ -1,19 +1,16 @@
-import { readFile, stat } from 'node:fs/promises'
-import { resolveUploadFile, uploadMime } from '~~/server/utils/uploads'
+import { readUploadedMedia } from '~~/server/utils/media-store'
 
 export default defineEventHandler(async (event) => {
   const name = getRouterParam(event, 'name') ?? ''
-  const path = resolveUploadFile(name)
+  const file = await readUploadedMedia(event, name)
 
-  if (!path) {
+  if (!file) {
     throw createError({ statusCode: 404, statusMessage: '图片不存在' })
   }
 
-  const info = await stat(path)
-
-  setResponseHeader(event, 'content-type', uploadMime(path))
-  setResponseHeader(event, 'content-length', info.size)
+  setResponseHeader(event, 'content-type', file.type || 'application/octet-stream')
+  setResponseHeader(event, 'content-length', file.bytes.length)
   setResponseHeader(event, 'cache-control', 'public, max-age=31536000, immutable')
 
-  return await readFile(path)
+  return file.bytes
 })

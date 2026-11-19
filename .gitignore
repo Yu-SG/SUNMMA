@@ -5,6 +5,7 @@
 .nitro
 .cache
 dist
+.wrangler
 
 # Node dependencies
 node_modules
@@ -21,4 +22,5 @@ logs
 # Local env files
 .env
 .env.*
+.dev.vars
 !.env.example

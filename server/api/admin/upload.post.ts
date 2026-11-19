@@ -1,12 +1,7 @@
-import { writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
-import {
-  MAX_UPLOAD_BYTES,
-  UPLOAD_DIR,
-  buildUploadName,
-  ensureUploadDir,
-  uploadExtension,
-} from '~~/server/utils/uploads'
+import { buildUploadName, uploadExtension } from '~~/server/utils/uploads'
+import { saveUploadedMedia } from '~~/server/utils/media-store'
+
+const MAX_UPLOAD_BYTES = 8 * 1024 * 1024
 
 export default defineEventHandler(async (event) => {
   requireAdmin(event)
@@ -18,7 +13,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: '没有收到文件' })
   }
 
-  const extension = uploadExtension(file.type || '')
+  const type = file.type || ''
+  const extension = uploadExtension(type)
   if (!extension) {
     throw createError({ statusCode: 415, statusMessage: '只支持 JPG、PNG、WebP、GIF、AVIF 图片' })
   }
@@ -27,14 +23,11 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 413, statusMessage: '图片不能超过 8MB' })
   }
 
-  ensureUploadDir()
+  const saved = await saveUploadedMedia(event, {
+    name: buildUploadName(extension),
+    bytes: new Uint8Array(file.data),
+    type,
+  })
 
-  const name = buildUploadName(extension)
-  await writeFile(join(UPLOAD_DIR, name), file.data)
-
-  return {
-    url: `/uploads/${name}`,
-    name,
-    size: file.data.length,
-  }
+  return { url: saved.url, name: saved.name, size: saved.size }
 })

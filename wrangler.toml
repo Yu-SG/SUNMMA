@@ -1,0 +1,13 @@
+name = "summaaz"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"
+
+# 在 Cloudflare 后台（Workers & Pages → KV）新建一个命名空间，
+# 把它真实的 ID 填到下面；或者用 `wrangler kv namespace create CONTENT_KV` 创建后复制 ID。
+[[kv_namespaces]]
+binding = "CONTENT_KV"
+id = "00000000000000000000000000000000"
+
+[vars]
+NUXT_TELEMETRY_DISABLED = "1"

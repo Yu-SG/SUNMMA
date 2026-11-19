@@ -6,6 +6,11 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: '内容格式不正确' })
   }
 
-  const content = writeContent(body.content)
-  return { content, meta: readMeta(), revisions: listRevisions() }
+  const content = await saveContent(event, body.content)
+
+  return {
+    content,
+    meta: await loadMeta(event),
+    revisions: await listContentRevisions(event),
+  }
 })

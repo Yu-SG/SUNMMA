@@ -1,10 +1,11 @@
 export default defineEventHandler(async (event) => {
   requireAdmin(event)
 
-  const [uploads, builtin] = await Promise.all([listUploadedMedia(), listBuiltinMedia()])
+  const items = await listMediaLibrary(event)
+  const uploads = items.filter((item) => item.source === 'uploads').length
 
   return {
-    items: [...uploads, ...builtin],
-    counts: { uploads: uploads.length, builtin: builtin.length },
+    items,
+    counts: { uploads, builtin: items.length - uploads },
   }
 })

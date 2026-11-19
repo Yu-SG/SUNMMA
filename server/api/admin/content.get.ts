@@ -1,8 +1,9 @@
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   requireAdmin(event)
+
   return {
-    content: readContent(),
-    meta: readMeta(),
-    revisions: listRevisions(),
+    content: await loadContent(event),
+    meta: await loadMeta(event),
+    revisions: await listContentRevisions(event),
   }
 })

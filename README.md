@@ -76,7 +76,7 @@ public/                     # 图片、robots.txt、sitemap.xml
 | 接口 | 说明 |
 |---|---|
 | `POST /api/admin/upload` | multipart 字段 `file`，仅 JPG/PNG/WebP/GIF/AVIF，单张 ≤ 8MB，返回 `{ url: "/uploads/<name>" }` |
-| `DELETE /api/admin/upload` | body `{ url }`，只删除后台上传的文件（`/uploads/...`），仓库里的 `/images/*` 不会被删 |
+| `DELETE /api/admin/upload?url=/uploads/x.jpg` | 只删除后台上传的文件（`/uploads/...`），仓库里的 `/images/*` 不会被删 |
 | `GET /uploads/<name>` | 读取上传文件，带一年强缓存 |
 | `GET /api/admin/media` | 图片库列表：后台上传（读 `.data/uploads`）+ 内置素材（`public/images`），返回文件名、大小、时间、来源 |
 
@@ -132,6 +132,31 @@ git push -u origin master
 仓库自带 `.github/workflows/ci.yml`：每次 push 会用 Node 24 安装依赖、`yarn build`，并把 `node .output/server/index.mjs` 起起来自检 `/`、`/admin`、`/api/content`。
 
 > ⚠️ **GitHub Pages 不适合本项目**。本项目是 SSR（Nitro）+ SQLite 写入的全栈应用，后台保存要写数据库。Pages 只能托管静态文件，`/admin` 与 `/api/*` 无法工作。
+
+### Cloudflare Pages（已适配）
+
+项目已经做了 Cloudflare 版本：Worker 运行时没有 `node:sqlite` 和可写磁盘，所以内容与上传图片在 CF 上存进 **Workers KV**，本地/Node 主机上仍用 SQLite + 磁盘。
+
+部署步骤：
+
+1. **建 KV 命名空间**：Cloudflare 控制台 → Workers & Pages → KV → Create，复制 namespace ID，填进仓库根目录 `wrangler.toml` 的 `[[kv_namespaces]] id`
+2. **建 Pages 项目**：Workers & Pages → Create → Pages → 连接 GitHub 仓库
+   - Build command：`yarn build`
+   - Build output directory：`dist`
+   - 环境变量：`ADMIN_PASSWORD`、`ADMIN_SECRET`（随机长串）
+3. `wrangler.toml` 里已声明 `nodejs_compat` 兼容标记和 `CONTENT_KV` 绑定，Pages 构建时会自动读取
+4. 打开分配的 `*.pages.dev` 域名即可，首次访问会把默认内容写进 KV
+
+数据位置（KV 键）：
+
+| Key | 内容 |
+|---|---|
+| `content` | `{ data: SiteConfig, updatedAt }` |
+| `revisions` | 最近 20 个版本 |
+| `uploads` | 上传图片索引 |
+| `upload:<name>` | 图片本体（base64） |
+
+注意：KV 单值上限 25MB、免费额度 1GB 存储；图片上传仍有 8MB 限制。备份内容可以执行 `npx wrangler kv key get content --namespace-id=<你的ID>`。
 
 ### 推荐托管方式
 

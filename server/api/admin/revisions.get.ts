@@ -1,4 +1,4 @@
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   requireAdmin(event)
-  return { revisions: listRevisions() }
+  return { revisions: await listContentRevisions(event) }
 })

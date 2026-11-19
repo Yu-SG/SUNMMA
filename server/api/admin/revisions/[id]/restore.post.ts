@@ -1,4 +1,4 @@
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   requireAdmin(event)
 
   const id = Number(event.context.params?.id)
@@ -6,10 +6,14 @@ export default defineEventHandler((event) => {
     throw createError({ statusCode: 400, statusMessage: '版本号不正确' })
   }
 
-  const restored = restoreRevision(id)
+  const restored = await restoreContentRevision(event, id)
   if (!restored) {
     throw createError({ statusCode: 404, statusMessage: '找不到该版本' })
   }
 
-  return { content: restored, meta: readMeta(), revisions: listRevisions() }
+  return {
+    content: restored,
+    meta: await loadMeta(event),
+    revisions: await listContentRevisions(event),
+  }
 })

@@ -44,3 +44,11 @@ jobs:
           PORT: 3000
           ADMIN_PASSWORD: ci-test-password
           ADMIN_SECRET: ci-test-secret
+
+      # Cloudflare Pages 用的是另一套运行时（KV 存储），单独验证一次能构建
+      - name: Build (Cloudflare Pages)
+        run: |
+          NITRO_PRESET=cloudflare-pages yarn build
+          test -f dist/_worker.js/index.js
+        env:
+          NUXT_TELEMETRY_DISABLED: '1'

@@ -100,7 +100,7 @@ const remove = async (item: MediaItem) => {
   if (item.source !== 'uploads') return
   removing.value = item.url
   try {
-    await $fetch('/api/admin/upload', { method: 'DELETE', body: { url: item.url } })
+    await $fetch('/api/admin/upload', { method: 'DELETE', query: { url: item.url } })
     items.value = items.value.filter((entry) => entry.url !== item.url)
   } catch (error: any) {
     emit('error', error?.data?.statusMessage || '删除失败')

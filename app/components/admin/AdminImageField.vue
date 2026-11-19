@@ -98,7 +98,7 @@ const remove = async () => {
   if (isUpload.value) {
     removing.value = true
     try {
-      await $fetch('/api/admin/upload', { method: 'DELETE', body: { url: props.modelValue } })
+      await $fetch('/api/admin/upload', { method: 'DELETE', query: { url: props.modelValue } })
     } catch {
       /* file may already be gone — clearing the field is still the right outcome */
     } finally {
