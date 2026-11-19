@@ -2,6 +2,7 @@
   "name": "sumaaz",
   "type": "module",
   "private": true,
+  "packageManager": "yarn@1.22.22",
   "engines": {
     "node": ">=23.4"
   },
