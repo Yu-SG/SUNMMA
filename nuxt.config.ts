@@ -7,6 +7,13 @@ export default defineNuxtConfig({
 
   modules: ['vuetify-nuxt-module'],
 
+  runtimeConfig: {
+    public: {
+      // 站点根地址，用于 canonical / sitemap / og:url；部署时用 NUXT_PUBLIC_SITE_URL 覆盖
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://demo2.lcwlzx.site',
+    },
+  },
+
   css: ['~/assets/css/main.css'],
 
   vuetify: {

@@ -24,12 +24,37 @@ const next = computed(() =>
     : null,
 )
 
+const abs = useAbsoluteUrl()
+
+useJsonLd('article', () => {
+  const current = article.value
+  if (!current) return null
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: current.title,
+    description: current.excerpt,
+    datePublished: current.date.replace(/\./g, '-'),
+    dateModified: current.date.replace(/\./g, '-'),
+    articleSection: current.category,
+    image: [abs(current.cover ?? siteConfig.banners[0]?.src)],
+    inLanguage: 'zh-CN',
+    mainEntityOfPage: { '@type': 'WebPage', '@id': abs(`/news/${current.id}`) },
+    publisher: {
+      '@type': 'Organization',
+      name: siteConfig.brand.name,
+      logo: { '@type': 'ImageObject', url: abs(siteConfig.brand.logo || '/images/hero-1.svg') },
+    },
+  }
+})
+
 useSeoMeta({
   title: () => `${article.value?.title ?? '新闻详情'}｜${siteConfig.brand.name} 制药`,
   description: () => article.value?.excerpt ?? '',
   ogTitle: () => article.value?.title ?? '',
   ogDescription: () => article.value?.excerpt ?? '',
-  ogImage: () => article.value?.cover ?? siteConfig.banners[0]?.src ?? '',
+    ogImage: () => abs(article.value?.cover && !article.value.cover.endsWith('.svg') ? article.value.cover : '/images/og-cover.png'),
   ogType: 'article',
 })
 </script>

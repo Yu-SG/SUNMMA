@@ -87,6 +87,15 @@ public/                     # 图片、robots.txt、sitemap.xml
 
 表单统一提交到 `POST /api/forms`（有 `CONTENT_KV` 时写 KV 的 `forms:<时间戳>`，否则追加 `.data/forms.jsonl`）。
 
+## SEO
+
+- 每个页面都有独立的 `title` / `description` / `og:*`（`useSeoMeta`），详情页额外输出 `og:type=article`
+- 全局插件 `app/plugins/seo.ts` 自动输出绝对地址的 `canonical`、`og:url` 与默认分享图 `/images/og-cover.png`（1200×630）
+- 结构化数据（JSON-LD）：全站 `Organization` + `WebSite`，内页 `BreadcrumbList`，新闻详情 `NewsArticle`
+- `/robots.txt` 与 `/sitemap.xml` 由服务端动态生成（sitemap 含栏目页与全部新闻详情，robots 屏蔽 `/admin`、`/api/`）
+- 404/500 错误页输出 `robots: noindex, nofollow`
+- 站点根地址来自 `NUXT_PUBLIC_SITE_URL`（默认 `https://demo2.lcwlzx.site`），canonical / sitemap / og:url 都跟随它，换域名时改这一个变量即可
+
 ## 图片上传
 
 首页横幅与产品图片支持直接上传，不必手填路径：

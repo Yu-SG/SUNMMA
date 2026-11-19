@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { siteConfig } from '~/config/site'
 
+const title = computed(() => `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`)
+
 useSeoMeta({
-  title: `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`,
+  title,
   description: siteConfig.brand.description,
-  ogTitle: `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`,
+  ogTitle: title,
   ogDescription: siteConfig.brand.description,
-  ogImage: siteConfig.banners[0]?.src,
   ogType: 'website',
   ogSiteName: siteConfig.brand.nameEn,
 })

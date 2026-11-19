@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { siteConfig } from '~/config/site'
 
 const props = withDefaults(
   defineProps<{
@@ -17,6 +18,20 @@ const crumbs = computed(() => {
   items.push({ title: props.title })
   return items
 })
+
+const abs = useAbsoluteUrl()
+const route = useRoute()
+
+useJsonLd('breadcrumb', () => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.value.map((crumb, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: crumb.title,
+    item: abs(crumb.to ?? route.path),
+  })),
+}))
 </script>
 
 <template>
@@ -29,7 +44,7 @@ const crumbs = computed(() => {
         </template>
       </v-breadcrumbs>
 
-      <p class="page-head__eyebrow font-en">XXX PHARMACEUTICAL</p>
+      <p class="page-head__eyebrow font-en">{{ siteConfig.brand.nameEn }}</p>
       <h1 class="page-head__title">{{ title }}</h1>
       <p v-if="subtitle" class="page-head__subtitle">{{ subtitle }}</p>
       <div v-if="intro.length" class="page-head__intro">

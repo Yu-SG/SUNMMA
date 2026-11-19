@@ -4,6 +4,7 @@ import { useDisplay } from 'vuetify'
 import { siteConfig } from '~/config/site'
 
 const { mdAndUp } = useDisplay()
+const abs = useAbsoluteUrl()
 
 const carouselHeight = computed(() => (mdAndUp.value ? 560 : 500))
 const newsCategories = computed(() => siteConfig.pages.news.categories)
@@ -20,7 +21,6 @@ useSeoMeta({
   description: siteConfig.brand.description,
   ogTitle: `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`,
   ogDescription: siteConfig.brand.description,
-  ogImage: siteConfig.banners[0]?.src,
 })
 </script>
 
