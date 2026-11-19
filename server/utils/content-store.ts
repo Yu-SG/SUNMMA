@@ -90,13 +90,27 @@ const readKvRevisions = async (kv: KvBinding): Promise<KvRevision[]> => {
 
 export const loadContent = async (event: H3Event): Promise<SiteConfig> => {
   const kv = getContentKv(event)
-  if (!kv) return (await import('./db')).readContent()
+  if (!kv) {
+    // On a Worker without the KV binding the SQLite fallback cannot work —
+    // serve the built-in defaults instead of a 500 so the site still renders.
+    try {
+      return (await import('./db')).readContent()
+    } catch {
+      return mergeContent(null)
+    }
+  }
   return (await readKvEntry(kv)).data
 }
 
 export const loadMeta = async (event: H3Event): Promise<ContentMeta> => {
   const kv = getContentKv(event)
-  if (!kv) return (await import('./db')).readMeta()
+  if (!kv) {
+    try {
+      return (await import('./db')).readMeta()
+    } catch {
+      return { updatedAt: null, dbPath: '未配置存储（缺少 CONTENT_KV 绑定）' }
+    }
+  }
 
   const entry = await readKvEntry(kv)
   return { updatedAt: entry.updatedAt, dbPath: 'Cloudflare KV · CONTENT_KV' }
@@ -104,7 +118,16 @@ export const loadMeta = async (event: H3Event): Promise<ContentMeta> => {
 
 export const saveContent = async (event: H3Event, next: unknown): Promise<SiteConfig> => {
   const kv = getContentKv(event)
-  if (!kv) return (await import('./db')).writeContent(next)
+  if (!kv) {
+    try {
+      return (await import('./db')).writeContent(next)
+    } catch {
+      throw createError({
+        statusCode: 503,
+        statusMessage: '当前部署没有可写存储：请在 Cloudflare 绑定 CONTENT_KV，详见 README',
+      })
+    }
+  }
 
   const data = mergeContent(next)
   const updatedAt = new Date().toISOString()
@@ -122,14 +145,26 @@ export const saveContent = async (event: H3Event, next: unknown): Promise<SiteCo
 
 export const listContentRevisions = async (event: H3Event): Promise<RevisionSummary[]> => {
   const kv = getContentKv(event)
-  if (!kv) return (await import('./db')).listRevisions()
+  if (!kv) {
+    try {
+      return (await import('./db')).listRevisions()
+    } catch {
+      return []
+    }
+  }
 
   return (await readKvRevisions(kv)).map((revision) => ({ id: revision.id, created_at: revision.createdAt }))
 }
 
 export const restoreContentRevision = async (event: H3Event, id: number): Promise<SiteConfig | null> => {
   const kv = getContentKv(event)
-  if (!kv) return (await import('./db')).restoreRevision(id)
+  if (!kv) {
+    try {
+      return (await import('./db')).restoreRevision(id)
+    } catch {
+      throw createError({ statusCode: 503, statusMessage: '当前部署没有可写存储：请绑定 CONTENT_KV' })
+    }
+  }
 
   const revision = (await readKvRevisions(kv)).find((entry) => entry.id === id)
   if (!revision) return null
