@@ -19,6 +19,16 @@ const selectType = (value: unknown) => {
   activeType.value = typeof value === 'string' ? value : ALL
 }
 
+type Notice = (typeof page.items)[number]
+
+const noticeOpen = ref(false)
+const activeNotice = ref<Notice | null>(null)
+
+const openNotice = (item: Notice) => {
+  activeNotice.value = item
+  noticeOpen.value = true
+}
+
 useSeoMeta({
   title: `投资者关系｜${siteConfig.brand.name} 制药`,
   description: page.intro[0] || `${siteConfig.brand.name} 制药投资者关系`,
@@ -52,11 +62,12 @@ useSeoMeta({
             </div>
 
             <div class="notice-list">
-              <a
+              <button
                 v-for="item in filtered"
                 :key="item.title"
-                :href="item.url"
+                type="button"
                 class="notice-row"
+                @click="openNotice(item)"
               >
                 <div class="notice-date">
                   <span class="notice-date__day font-en">{{ formatDate(item.date).day }}</span>
@@ -70,7 +81,7 @@ useSeoMeta({
                   查看
                   <v-icon icon="mdi-file-document-outline" size="16" />
                 </span>
-              </a>
+              </button>
             </div>
           </v-col>
 
@@ -112,6 +123,44 @@ useSeoMeta({
         </v-row>
       </v-container>
     </section>
+
+    <v-dialog v-model="noticeOpen" max-width="720" scrollable>
+      <v-card v-if="activeNotice" rounded="xl">
+        <v-card-item class="pb-2">
+          <v-card-title class="text-h6">{{ activeNotice.title }}</v-card-title>
+          <v-card-subtitle class="d-flex align-center ga-2 pt-2">
+            <v-chip size="x-small" color="primary" variant="tonal">{{ activeNotice.type }}</v-chip>
+            <span class="font-en">{{ activeNotice.date }}</span>
+          </v-card-subtitle>
+        </v-card-item>
+        <v-divider />
+        <v-card-text class="py-5 notice-detail">
+          <p v-if="activeNotice.summary" class="notice-detail__summary">{{ activeNotice.summary }}</p>
+          <p v-for="(paragraph, index) in activeNotice.body || []" :key="index" class="notice-detail__paragraph">
+            {{ paragraph }}
+          </p>
+          <p v-if="!activeNotice.summary && !(activeNotice.body || []).length" class="text-medium-emphasis">
+            公告全文请以监管机构指定媒体披露的内容为准。
+          </p>
+        </v-card-text>
+        <v-divider />
+        <v-card-actions class="px-4 py-3">
+          <v-btn
+            v-if="activeNotice.url"
+            :href="activeNotice.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="text"
+            color="primary"
+            append-icon="mdi-open-in-new"
+          >
+            查看原文
+          </v-btn>
+          <v-spacer />
+          <v-btn variant="text" @click="noticeOpen = false">关闭</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -140,11 +189,35 @@ useSeoMeta({
 
 .notice-row {
   display: flex;
+  width: 100%;
   padding: 22px 4px;
   align-items: center;
   gap: 22px;
+  border: 0;
   border-bottom: 1px dashed rgba(16, 35, 58, 0.12);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
   transition: background-color 0.2s var(--ease);
+}
+
+.notice-detail__summary {
+  margin: 0 0 18px;
+  color: rgb(var(--v-theme-on-surface));
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.9;
+}
+
+.notice-detail__paragraph {
+  margin: 0 0 14px;
+  color: rgba(var(--v-theme-on-surface), 0.78);
+  font-size: 14.5px;
+  line-height: 2;
+}
+
+.notice-detail__paragraph:last-child {
+  margin-bottom: 0;
 }
 
 .notice-row:hover {
