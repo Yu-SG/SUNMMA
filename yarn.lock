@@ -655,7 +655,7 @@
     which "^6.0.1"
     ws "^8.22.0"
 
-"@nuxt/kit@4.6.4", "@nuxt/kit@^4.6.1", "@nuxt/kit@^4.6.4":
+"@nuxt/kit@4.6.4", "@nuxt/kit@^4.5.2", "@nuxt/kit@^4.6.1", "@nuxt/kit@^4.6.4":
   version "4.6.4"
   resolved "https://registry.yarnpkg.com/@nuxt/kit/-/kit-4.6.4.tgz#d33b4fcb063af56f4e0f607ef77485b7e2a191de"
   integrity sha512-S7JqP/CCJejDNGADlCIct/SHEPf+Jz3Chrxq7GDgyRPRkRD2flbxoanGq4bkib9kD9QBXJlF4TuCsqqL9a7COw==
@@ -826,6 +826,13 @@
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@poppinss/exception/-/exception-1.2.3.tgz#b713855e6c9fe2110fea0949455c50828145e64a"
   integrity sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw==
+
+"@quansync/fs@^1.0.0":
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/@quansync/fs/-/fs-1.1.0.tgz#3b6325031dcd125f69203192a10fc8fedba2c5d3"
+  integrity sha512-qAPG/t3HqML1TlN7sY/pTbEjzFVAKsMjNNMGheyDosro+kT4iw2KCUoHcVdmliwWjorm4elZbgNQyU2eD97eDg==
+  dependencies:
+    quansync "^1.0.0"
 
 "@rolldown/binding-android-arm-eabi@1.2.19":
   version "1.2.19"
@@ -1363,6 +1370,15 @@
   integrity sha512-X+1jBLmXHkpQEnC0vyOb4rtX2QSkBiFhaFXz8yhQqN2A4vQ6k2nChxN4Ol7VAY5KoqMdFoRMnmNdp/1qYXDQig==
   dependencies:
     upath "^2.0.1"
+
+"@vuetify/unplugin-styles@^1.0.0-rc.1":
+  version "1.0.0-rc.1"
+  resolved "https://registry.npmmirror.com/@vuetify/unplugin-styles/-/unplugin-styles-1.0.0-rc.1.tgz#a01c8b0299e5f06790745fb9f0e10832cdeb3f45"
+  integrity sha512-Oo1+ztrpZXJ1vg/to7+6YaiPKtIKvYc9TiNgPWKN2uEw9I627hsPlCXg0FzmxfzJIQ11eDxows7NMJhaAglehA==
+  dependencies:
+    pathe "^2.0.3"
+    semver "^7.7.4"
+    unplugin "^3.0.0"
 
 "@vuetify/v0@^1.2.3":
   version "1.3.2"
@@ -3460,7 +3476,7 @@ semver@^6.3.1:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.2.tgz#f50413fbe5a686c6379385b2e8789b61c124a3c7"
   integrity sha512-GYrCADwpu6yV5OAvchkQ27Z5wwMxWAEMg5NNWjyHh/5DboFFqbdbvYNIvZouQpxXyeMPoTOh0vdPYKlf0ZswdQ==
 
-semver@^7.5.3, semver@^7.8.5:
+semver@^7.5.3, semver@^7.7.4, semver@^7.8.5:
   version "7.8.6"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.6.tgz#67c0cda133a3ceb6f70b803e67625bf969000424"
   integrity sha512-9lpSSU4Mly3mrtruwLs1eLK6+gzbzqeBFwRNjIjE+9LuDpWdYctrQlQ3ej1Ilgi7gknpsTRnPoLP8DpCHqHIJw==
@@ -3824,6 +3840,25 @@ ultrahtml@^1.7.0:
   resolved "https://registry.yarnpkg.com/ultrahtml/-/ultrahtml-1.7.0.tgz#8e7d597e338a481ea82852a9ba5e8021c54aed10"
   integrity sha512-2xRd0VHoAQE4M+vF/DvFFB7pUV0ZxTW1TLi7lHQWnF/Sb5TPeEUV/l+hxcNnGO00ZXGnR0voCMmYRKQf+rvJ2g==
 
+unconfig-core@7.5.0:
+  version "7.5.0"
+  resolved "https://registry.npmmirror.com/unconfig-core/-/unconfig-core-7.5.0.tgz#68f3d000701288418f3d36203d886f38c3986677"
+  integrity sha512-Su3FauozOGP44ZmKdHy2oE6LPjk51M/TRRjHv2HNCWiDvfvCoxC2lno6jevMA91MYAdCdwP05QnWdWpSbncX/w==
+  dependencies:
+    "@quansync/fs" "^1.0.0"
+    quansync "^1.0.0"
+
+unconfig@^7.5.0:
+  version "7.5.0"
+  resolved "https://registry.npmmirror.com/unconfig/-/unconfig-7.5.0.tgz#122d8ef27e27aedf5551485069161c0852ab534d"
+  integrity sha512-oi8Qy2JV4D3UQ0PsopR28CzdQ3S/5A1zwsUwp/rosSbfhJ5z7b90bIyTwi/F7hCLD4SGcZVjDzd4XoUQcEanvA==
+  dependencies:
+    "@quansync/fs" "^1.0.0"
+    defu "^6.1.4"
+    jiti "^2.6.1"
+    quansync "^1.0.0"
+    unconfig-core "7.5.0"
+
 uncrypto@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/uncrypto/-/uncrypto-0.1.3.tgz#e1288d609226f2d02d8d69ee861fa20d8348ef2b"
@@ -4160,6 +4195,22 @@ vue@^3.5.44, vue@^3.5.45:
     "@vue/runtime-dom" "3.5.45"
     "@vue/server-renderer" "3.5.45"
     "@vue/shared" "3.5.45"
+
+vuetify-nuxt-module@^1.0.0-rc.6:
+  version "1.0.0-rc.6"
+  resolved "https://registry.npmmirror.com/vuetify-nuxt-module/-/vuetify-nuxt-module-1.0.0-rc.6.tgz#83b8429e2584c45200ad5828a113bce495886836"
+  integrity sha512-oR/MKyRtqWHlaltqXmE2QVGH8MOk42cUEK2GLL762fT7n0vyNTuCx9eVGPQkRt8x8cHeoMJUoRQZxuz4RYOLCA==
+  dependencies:
+    "@nuxt/kit" "^4.5.2"
+    "@vuetify/loader-shared" "^2.1.2"
+    "@vuetify/unplugin-styles" "^1.0.0-rc.1"
+    defu "^6.1.7"
+    local-pkg "^1.2.1"
+    pathe "^2.0.3"
+    perfect-debounce "^2.1.0"
+    semver "^7.8.5"
+    ufo "^1.6.4"
+    unconfig "^7.5.0"
 
 vuetify@^4.3.4:
   version "4.3.4"

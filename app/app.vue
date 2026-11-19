@@ -1,40 +1,19 @@
 <script setup lang="ts">
 import { siteConfig } from '~/config/site'
 
-const route = useRoute()
-const isAdmin = computed(() => route.path.startsWith('/admin'))
-
 useSeoMeta({
-  title: `${siteConfig.brand.name}｜${siteConfig.brand.tagline}`,
+  title: `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`,
   description: siteConfig.brand.description,
-  ogTitle: `${siteConfig.brand.name}｜${siteConfig.brand.tagline}`,
+  ogTitle: `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`,
   ogDescription: siteConfig.brand.description,
+  ogImage: siteConfig.banners[0]?.src,
   ogType: 'website',
+  ogSiteName: siteConfig.brand.nameEn,
 })
 </script>
 
 <template>
-  <div class="app" :class="{ 'app--admin': isAdmin }">
-    <SiteHeader v-if="!isAdmin" />
-    <main>
-      <NuxtPage />
-    </main>
-    <SiteFooter v-if="!isAdmin" />
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
-
-<style>
-.app {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-}
-
-.app main {
-  flex: 1;
-}
-
-.app--admin {
-  background: var(--c-cream);
-}
-</style>

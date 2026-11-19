@@ -1,1131 +1,720 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useDisplay } from 'vuetify'
 import { siteConfig } from '~/config/site'
 
-const brand = siteConfig.brand
+const { mdAndUp } = useDisplay()
 
-const anchorItems = [
-  { id: 'news', label: '新闻' },
-  { id: 'message', label: '理念' },
-  { id: 'about', label: '关于' },
-  { id: 'products', label: '产品' },
-  { id: 'greeting', label: '寄语' },
-  { id: 'facility', label: '研发中心' },
-]
-const { hero, banners, message, aboutStory, products, news, greeting, facility, stats } = siteConfig
+const carouselHeight = computed(() => (mdAndUp.value ? 560 : 500))
+const newsCategories = computed(() => siteConfig.pages.news.categories)
+const milestones = computed(() => siteConfig.pages.about.milestones)
+const jobTypes = computed(() => siteConfig.pages.jobs.items.map((item) => item.type).filter((v, i, a) => a.indexOf(v) === i))
+
+const articlesOf = (category: string) =>
+  siteConfig.news.filter((article) => article.category === category).slice(0, 3)
+
+const jobsOf = (type: string) => siteConfig.pages.jobs.items.filter((item) => item.type === type)
 
 useSeoMeta({
-  title: `${brand.name}｜${brand.tagline}`,
-  description: brand.description,
-  ogTitle: `${brand.name}｜${brand.tagline}`,
-  ogDescription: brand.description,
+  title: `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`,
+  description: siteConfig.brand.description,
+  ogTitle: `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`,
+  ogDescription: siteConfig.brand.description,
+  ogImage: siteConfig.banners[0]?.src,
 })
 </script>
 
 <template>
-  <div>
-    <!-- ================= hero ================= -->
-    <section class="hero">
-      <HeroCarousel :slides="banners" />
+  <div class="home">
+    <!-- 轮播 Banner -->
+    <section class="hero" aria-label="首页轮播">
+      <v-carousel
+        :height="carouselHeight"
+        cycle
+        :interval="6500"
+        hide-delimiters
+        show-arrows="hover"
+        class="hero__carousel"
+      >
+        <v-carousel-item
+          v-for="slide in siteConfig.banners"
+          :key="slide.src"
+          :src="slide.src"
+          :alt="slide.alt"
+          cover
+        />
+      </v-carousel>
 
-      <div class="hero__body">
-        <div class="hero__deco" aria-hidden="true">
-          <svg viewBox="0 0 1440 520" preserveAspectRatio="none">
-            <path
-              d="M560 420c170-16 250-104 344-176 76-60 176-104 296-124"
-              fill="none"
-              stroke="var(--c-primary)"
-              stroke-width="1.2"
-              stroke-linecap="round"
-              opacity="0.85"
-            />
-          </svg>
-          <span class="hero__script">{{ hero.script }}</span>
-        </div>
+      <div class="hero__overlay" aria-hidden="true" />
 
-        <div class="container hero__inner">
-          <div class="hero__copy">
-            <h1 class="hero__title">
-              <template v-for="(line, i) in hero.heading" :key="i">
-                <span class="hero__line">{{ line }}</span>
-              </template>
-            </h1>
-            <p class="hero__lead">{{ brand.description }}</p>
-            <div class="hero__actions">
-              <NuxtLink to="/products" class="btn btn--primary">
-                查看产品中心
-                <span class="btn__ico" aria-hidden="true">
-                  <svg viewBox="0 0 24 12" width="14" height="10">
-                    <path d="M1 6h20M16 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </span>
-              </NuxtLink>
-              <NuxtLink to="/about" class="btn btn--outline">了解我们</NuxtLink>
-            </div>
-          </div>
+      <v-container class="hero__content">
+        <p class="hero__script font-en">{{ siteConfig.hero.script }}</p>
+        <h1 class="hero__title">
+          <span v-for="line in siteConfig.hero.heading" :key="line">{{ line }}</span>
+        </h1>
+        <p class="hero__side">{{ siteConfig.hero.side }}</p>
+        <div class="hero__actions">
+          <v-btn color="primary" size="large" to="/products" append-icon="mdi-arrow-right">
+            了解产品
+          </v-btn>
+          <v-btn variant="outlined" color="white" size="large" to="/about">关于我们</v-btn>
         </div>
-      </div>
+      </v-container>
     </section>
 
-    <!-- ================= news ================= -->
-    <section id="news" class="news section">
-      <div class="container news__grid">
-        <div class="news__label">
-          <p class="head02__en">News</p>
-          <p class="head02__zh">最新动态</p>
-        </div>
-        <div class="news__main" data-reveal>
-          <NewsList :items="news" />
-          <div class="news__more">
-            <ArrowLink to="/news" label="查看全部动态" />
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- 新闻动态 -->
+    <section class="section section--news">
+      <v-container>
+        <SectionHead
+          en="News"
+          zh="新闻动态"
+          desc="了解 XXX 的研发进展、合作动态，以及医药行业的政策法规变化。"
+          to="/news"
+        />
 
-    <!-- ================= message ================= -->
-    <section id="message" class="msg">
-      <span class="watermark msg__watermark">Message</span>
-
-      <div class="container">
-        <div class="msg__grid">
-          <div class="msg__media frame frame--lg" data-reveal>
-            <ArtPanel variant="portrait" />
-          </div>
-
-          <div class="msg__copy" data-reveal>
-            <h2 class="msg__title">
-              <template v-for="(line, i) in message.title" :key="i">
-                {{ line }}<br v-if="i < message.title.length - 1">
-              </template>
-            </h2>
-            <div class="msg__text">
-              <p v-for="(p, i) in message.paragraphs" :key="i">{{ p }}</p>
-            </div>
-            <ArrowLink to="/about" :label="message.link" class="msg__link" />
-          </div>
-        </div>
-
-        <div class="msg__sub frame" data-reveal>
-          <ArtPanel variant="cell" />
-        </div>
-
-        <svg class="msg__birds" viewBox="0 0 90 60" aria-hidden="true">
-          <path d="M6 34c9-14 19-18 27-9 8-9 18-5 27 9-10-5-18-3-27 6-9-9-17-10-27-6z" fill="currentColor" />
-          <path d="M8 52c6-9 12-12 17-6 5-6 11-3 17 6-6-3-11-2-17 4-6-6-11-7-17-4z" fill="currentColor" opacity="0.75" />
-        </svg>
-      </div>
-    </section>
-
-    <!-- ================= about (blue) ================= -->
-    <section id="about" class="about">
-  
-      <div class="about__body">
-        <div class="container">
-          <SectionHead en="About us" zh="关于我们" light data-reveal />
-
-          <div class="about__story">
-            <article
-              v-for="(item, i) in aboutStory"
-              :key="item.no"
-              class="story"
-              :class="{ 'story--reverse': i % 2 === 1 }"
-              data-reveal
-            >
-              <div class="story__text">
-                <h3 class="story__title">
-                  <template v-for="(line, j) in item.title" :key="j">
-                    {{ line }}<br v-if="j < item.title.length - 1">
-                  </template>
-                </h3>
-                <span class="story__rule" />
-                <p class="story__lead">{{ item.text }}</p>
-              </div>
-
-              <div class="story__media">
-                <div class="frame frame--lg story__frame">
-                  <ArtPanel :variant="item.art" />
+        <v-row>
+          <v-col v-for="category in newsCategories" :key="category" cols="12" md="6">
+            <div class="news-panel">
+              <div class="news-panel__head">
+                <div>
+                  <p class="news-panel__en font-en">{{ category === '企业动态' ? 'Company' : 'Policy' }}</p>
+                  <h3 class="news-panel__title">{{ category }}</h3>
                 </div>
-                <span class="big-num story__num">
-                  <span class="big-num__hash">#</span>{{ item.no }}
+                <v-btn
+                  variant="text"
+                  size="small"
+                  color="primary"
+                  :to="{ path: '/news', query: { category } }"
+                  append-icon="mdi-arrow-right"
+                >
+                  MORE
+                </v-btn>
+              </div>
+
+              <v-list class="news-panel__list" lines="three" density="comfortable">
+                <v-list-item
+                  v-for="article in articlesOf(category)"
+                  :key="article.id ?? article.title"
+                  :to="`/news/${article.id}`"
+                  class="news-panel__item"
+                >
+                  <span class="news-panel__date font-en">{{ article.date }}</span>
+                  <div class="news-panel__body">
+                    <p class="news-panel__name">{{ article.title }}</p>
+                    <p class="news-panel__excerpt">{{ article.excerpt }}</p>
+                  </div>
+                  <template #append>
+                    <v-icon icon="mdi-chevron-right" size="18" opacity="0.35" />
+                  </template>
+                </v-list-item>
+              </v-list>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </section>
+
+    <!-- 发展历程 -->
+    <section class="section section--history">
+      <v-container>
+        <SectionHead
+          en="Development History"
+          zh="发展历程"
+          desc="二十余年，从技术服务到原料药与制剂一体化，我们始终围绕临床需求做长期投入。"
+          to="/about"
+          link-text="ABOUT"
+        />
+
+        <div class="timeline">
+          <div v-for="(milestone, index) in milestones" :key="milestone.period" class="timeline__item">
+            <div class="timeline__rail" aria-hidden="true">
+              <span class="timeline__dot">{{ index + 1 }}</span>
+            </div>
+            <v-card class="timeline__card">
+              <p class="timeline__period font-en">{{ milestone.period }}</p>
+              <h3 class="timeline__title">{{ milestone.title }}</h3>
+              <p class="timeline__text">{{ milestone.text }}</p>
+            </v-card>
+          </div>
+        </div>
+      </v-container>
+    </section>
+
+    <!-- 产品中心 -->
+    <section class="section section--products">
+      <v-container>
+        <SectionHead
+          en="Products"
+          zh="产品中心"
+          desc="覆盖呼吸、心血管、神经、肌肉-骨骼、血液和造血器官、消化道和代谢等多个治疗领域。"
+          to="/products"
+        />
+
+        <v-row>
+          <v-col
+            v-for="product in siteConfig.products.slice(0, 4)"
+            :key="product.code"
+            cols="12"
+            sm="6"
+            lg="3"
+          >
+            <v-card
+              class="product-card"
+              :to="{ path: '/products', query: { group: product.group } }"
+            >
+              <v-img
+                :src="product.image"
+                :alt="product.name"
+                :aspect-ratio="4 / 3"
+                cover
+                eager
+                class="product-card__img"
+              >
+                <template #placeholder>
+                  <div class="product-card__placeholder" />
+                </template>
+              </v-img>
+              <div class="product-card__body">
+                <div class="product-card__tags">
+                  <v-chip size="x-small" color="primary" variant="tonal">{{ product.category }}</v-chip>
+                  <v-chip v-if="product.group" size="x-small" variant="outlined">{{ product.group }}</v-chip>
+                </div>
+                <h3 class="product-card__name">{{ product.name }}</h3>
+                <p class="product-card__desc">{{ product.description }}</p>
+                <span class="product-card__more font-en">
+                  查看详情
+                  <v-icon icon="mdi-arrow-right" size="15" />
                 </span>
               </div>
-            </article>
-          </div>
-
-          <svg class="about__line" viewBox="0 0 300 60" aria-hidden="true">
-            <path
-              d="M2 40c40-30 70 10 108-6s58-24 92 8c14 12 40 6 40 6"
-              fill="none"
-              stroke="rgba(255,255,255,0.55)"
-              stroke-width="1.2"
-              stroke-linecap="round"
-            />
-          </svg>
-
-          <div class="about__foot">
-            <ArrowLink to="/about" label="关于我们" light />
-          </div>
-        </div>
-      </div>
-
-      </section>
-
-    <!-- ================= products ================= -->
-    <section id="products" class="menu">
-      <div class="menu__media" data-reveal>
-        <ArtPanel variant="cell" />
-        <div class="menu__media-overlay" />
-      </div>
-
-      <div class="container menu__body">
-        <div class="menu__head" data-reveal>
-          <SectionHead en="Products" zh="产品中心" />
-          <p class="menu__lead">
-            从屏障修护到功效精华，我们把实验室里的研究与真实的肌肤问题对齐，做出可以长期使用的产品。
-          </p>
-          <ArrowLink to="/products" label="查看全部产品" />
-        </div>
-
-        <NuxtLink
-          v-for="item in products"
-          :key="item.code"
-          to="/products"
-          class="m-card"
-          data-reveal
-        >
-          <span class="m-card__photo">
-            <img :src="item.image" :alt="item.name" loading="lazy" decoding="async" />
-          </span>
-          <div class="m-card__body">
-            <p class="m-card__cat">{{ item.category }} / {{ item.tag }}</p>
-            <h3 class="m-card__title">{{ item.name }}</h3>
-            <p class="m-card__text">{{ item.description }}</p>
-          </div>
-          <div class="m-card__foot">
-            <span class="m-card__code font-en">{{ item.code }}</span>
-            <span class="m-card__go" aria-hidden="true">
-              <svg viewBox="0 0 24 12" width="16" height="10">
-                <path d="M1 6h20M16 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </span>
-          </div>
-        </NuxtLink>
-      </div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
     </section>
 
-    <!-- ================= stats ================= -->
-    <section class="stats">
-      <div class="container stats__grid">
-        <div v-for="stat in stats" :key="stat.label" class="stat">
-          <strong class="font-en">{{ stat.value }}</strong>
-          <span>{{ stat.label }}</span>
-        </div>
-      </div>
-    </section>
+    <!-- 加入我们 -->
+    <section class="section section--jobs">
+      <v-container>
+        <SectionHead
+          en="Join Us"
+          zh="加入我们"
+          desc="我们正在寻找对医药行业抱有长期热情的人。"
+          to="/jobs"
+        />
 
-    <!-- ================= greeting ================= -->
-    <section id="greeting" class="greet">
-      <div class="container">
-        <SectionHead en="Greeting" :zh="greeting.title" data-reveal />
-
-        <div class="greet__grid">
-          <div class="greet__copy" data-reveal>
-            <div class="greet__text">
-              <p v-for="(p, i) in greeting.message" :key="i">{{ p }}</p>
-            </div>
-
-            <dl class="greet__profile">
-              <div class="greet__row">
-                <dt>{{ greeting.role }}</dt>
-                <dd>
-                  <strong>{{ greeting.name }}</strong>
-                  <span class="font-en">{{ greeting.nameEn }}</span>
-                </dd>
+        <v-row>
+          <v-col v-for="type in jobTypes" :key="type" cols="12" md="6">
+            <v-card
+              class="job-card"
+              :to="{ path: '/jobs', query: { type } }"
+            >
+              <v-img
+                :src="type === '社会招聘' ? '/images/job-social.svg' : '/images/job-campus.svg'"
+                :alt="type"
+                height="180"
+                cover
+                eager
+              />
+              <div class="job-card__body">
+                <p class="job-card__en font-en">CAREERS</p>
+                <h3 class="job-card__title">{{ type }}</h3>
+                <p class="job-card__text">期待您的加入</p>
+                <p class="job-card__meta">
+                  {{ jobsOf(type).length }} 个在招岗位
+                  <span>·</span>
+                  上海 / 浙江台州
+                </p>
+                <span class="job-card__more">
+                  查看岗位
+                  <v-icon icon="mdi-arrow-right" size="16" />
+                </span>
               </div>
-              <div class="greet__row greet__row--list">
-                <dt>经历</dt>
-                <dd>
-                  <ul>
-                    <li v-for="item in greeting.career" :key="item">{{ item }}</li>
-                  </ul>
-                </dd>
-              </div>
-            </dl>
-          </div>
-
-          <div class="greet__media">
-            <div class="frame frame--lg greet__frame" data-reveal>
-              <ArtPanel :variant="greeting.art" />
-            </div>
-            <ArrowLink to="/about" label="创始人介绍" class="greet__link" />
-          </div>
-        </div>
-      </div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
     </section>
-
-    <!-- ================= facility ================= -->
-    <section id="facility" class="fac">
-      <div class="container fac__head">
-        <SectionHead en="Facility" zh="研发中心" />
-        <p class="fac__watermark" aria-hidden="true">Science in<br>the making.</p>
-      </div>
-
-      <div class="fac__scroller">
-        <article v-for="item in facility" :key="item.no" class="fac__item" data-reveal>
-          <div class="fac__art frame">
-            <ArtPanel :variant="item.art" />
-            <p class="fac__label">{{ item.label }}</p>
-          </div>
-          <p class="fac__no font-en">{{ item.no }}</p>
-          <p class="fac__text">{{ item.text }}</p>
-        </article>
-      </div>
-
-      <div class="container fac__foot">
-        <ArrowLink to="/about" label="了解研发中心" />
-      </div>
-    </section>
-
-    <ContactBlock id="contact" />
-    <SectionAnchor :items="anchorItems" />
   </div>
 </template>
 
 <style scoped>
-/* ================= hero ================= */
+.section {
+  padding: 88px 0;
+}
+
+.section--news {
+  background: #fff;
+}
+
+.section--history {
+  background: #f5f7fa;
+}
+
+.section--products {
+  background: #fff;
+}
+
+.section--jobs {
+  background: linear-gradient(180deg, #f5f7fa 0%, #eef3f9 100%);
+}
+
+/* hero ------------------------------------------------------------------ */
 .hero {
   position: relative;
-  padding-top: var(--header-h);
-  background: var(--c-cream);
-}
-
-.hero__body {
-  position: relative;
-  padding: 84px 0 96px;
-  background: var(--c-cream);
   overflow: hidden;
+  background: #0b2c56;
 }
 
-.hero__deco {
+.hero__carousel {
+  position: relative;
+  z-index: 0;
+  color: #fff;
+}
+
+.hero__overlay {
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 520px;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(6, 22, 43, 0.88) 0%,
+    rgba(7, 28, 53, 0.68) 44%,
+    rgba(7, 28, 53, 0.12) 100%
+  );
   pointer-events: none;
 }
 
-.hero__deco svg {
-  width: 100%;
+.hero__content {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
   height: 100%;
+  padding-top: 72px;
+  flex-direction: column;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hero__content :deep(.v-btn) {
+  pointer-events: auto;
 }
 
 .hero__script {
-  position: absolute;
-  top: 52px;
-  right: 6%;
-  color: var(--c-primary);
-  font-family: var(--font-script);
-  font-size: clamp(30px, 3.4vw, 54px);
-  line-height: 1;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  transform: rotate(-6deg);
-}
-
-.hero__inner {
-  position: relative;
-  z-index: 2;
-}
-
-.hero__copy {
-  max-width: 880px;
+  color: #7ee8fa;
+  font-size: 15px;
+  letter-spacing: 0.24em;
 }
 
 .hero__title {
-  color: var(--c-ink);
-  font-size: clamp(28px, 3.3vw, 46px);
-  font-weight: 500;
-  line-height: 1.95;
-  letter-spacing: 0.1em;
-}
-
-.hero__line {
-  display: block;
-}
-
-.hero__lead {
-  max-width: 620px;
-  margin-top: 22px;
-  color: var(--c-muted);
-  font-size: 15px;
-  line-height: 2.1;
+  display: flex;
+  margin-top: 14px;
+  flex-direction: column;
+  color: #fff;
+  font-size: clamp(38px, 5vw, 62px);
+  font-weight: 700;
   letter-spacing: 0.06em;
+  line-height: 1.24;
+}
+
+.hero__side {
+  max-width: 560px;
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  line-height: 1.9;
 }
 
 .hero__actions {
   display: flex;
-  margin-top: 34px;
-  gap: 12px;
+  margin-top: 30px;
   flex-wrap: wrap;
-}
-
-
-
-/* ================= news ================= */
-.news {
-  padding: 90px 0 80px;
-  background: var(--c-cream);
-}
-
-.news__grid {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
-  gap: 44px;
-  max-width: calc(var(--contents-inner) + 80px);
-}
-
-.news__label {
-  display: flex;
-  padding-top: 26px;
   gap: 12px;
-  color: var(--c-primary);
-  align-items: flex-start;
 }
 
-.news__label .head02__en {
-  font-family: var(--font-en);
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: 0.03em;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  transform: rotate(180deg);
+/* news ------------------------------------------------------------------ */
+.news-panel {
+  height: 100%;
+  padding: 26px 28px;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
 }
 
-.news__label .head02__zh {
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.7;
-  letter-spacing: 0.18em;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  transform: rotate(180deg);
+.news-panel:hover {
+  box-shadow: 0 18px 44px rgba(13, 71, 161, 0.1);
 }
 
-.news__main {
-  min-width: 0;
-}
-
-.news__more {
+.news-panel__head {
   display: flex;
-  margin-top: 34px;
-  justify-content: flex-end;
-}
-
-/* ================= message ================= */
-.msg {
-  position: relative;
-  padding: 60px 0 130px;
-  background: var(--c-cream);
-  overflow: hidden;
-}
-
-.msg__watermark {
-  top: 60px;
-  right: -20px;
-  font-size: clamp(120px, 15vw, 230px);
-}
-
-.msg__grid {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  gap: clamp(40px, 6vw, 90px);
-  align-items: center;
-}
-
-.msg__media {
-  height: clamp(360px, 44vw, 600px);
-}
-
-.msg__title {
-  color: var(--c-ink);
-  font-size: clamp(23px, 2.6vw, 32px);
-  font-weight: 500;
-  line-height: 1.9;
-  letter-spacing: 0.08em;
-}
-
-.msg__text {
-  margin-top: 34px;
-}
-
-.msg__text p {
-  color: var(--c-text);
-  font-size: 15px;
-  line-height: 2.15;
-  letter-spacing: 0.06em;
-  white-space: pre-line;
-}
-
-.msg__text p + p {
-  margin-top: 1.6em;
-}
-
-.msg__link {
-  margin-top: 38px;
-}
-
-.msg__sub {
-  position: absolute;
-  z-index: 1;
-  top: -60px;
-  right: 0;
-  width: 260px;
-  height: 170px;
-  border-radius: var(--r-md) 0 0 var(--r-md);
-  overflow: hidden;
-  opacity: 0.95;
-}
-
-.msg__birds {
-  position: absolute;
-  bottom: 42px;
-  left: 4%;
-  width: 90px;
-  height: 60px;
-  color: var(--c-primary);
-}
-
-/* ================= about ================= */
-.about {
-  position: relative;
-  background: var(--c-cream);
-}
-
-.about__body {
-  position: relative;
-  padding: 70px 0 110px;
-  background: var(--c-primary);
-  color: #fff;
-  overflow: hidden;
-}
-
-.about__story {
-  display: grid;
-  gap: 100px;
-  margin-top: 24px;
-}
-
-.story {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: clamp(30px, 6vw, 90px);
-  align-items: center;
-}
-
-.story--reverse .story__text {
-  order: 2;
-}
-
-.story--reverse .story__media {
-  order: 1;
-}
-
-.story__title {
-  color: #fff;
-  font-size: clamp(20px, 2.2vw, 26px);
-  font-weight: 500;
-  line-height: 1.95;
-  letter-spacing: 0.08em;
-}
-
-.story__rule {
-  display: block;
-  width: 34px;
-  height: 1px;
-  margin: 26px 0 22px;
-  background: rgba(255, 255, 255, 0.6);
-}
-
-.story__lead {
-  max-width: 400px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 14px;
-  line-height: 2.1;
-  letter-spacing: 0.06em;
-}
-
-.story__media {
-  position: relative;
-}
-
-.story__frame {
-  height: clamp(260px, 30vw, 400px);
-}
-
-.story__num {
-  position: absolute;
-  right: -14px;
-  bottom: -34px;
-  color: var(--c-cream);
-  opacity: 0.95;
-}
-
-.story--reverse .story__num {
-  right: auto;
-  left: -14px;
-}
-
-.about__line {
-  width: 300px;
-  height: 60px;
-  margin: 90px 0 0 40px;
-  opacity: 0.8;
-}
-
-.about__foot {
-  display: flex;
-  margin-top: 26px;
-  justify-content: flex-end;
-}
-
-/* ================= pipeline (menu) ================= */
-.menu {
-  position: relative;
-  padding-bottom: 110px;
-  background: var(--c-cream);
-}
-
-.menu__media {
-  position: relative;
-  height: clamp(280px, 38vw, 540px);
-  overflow: hidden;
-}
-
-.menu__media-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(244, 244, 240, 0) 40%, rgba(244, 244, 240, 0.85) 100%);
-}
-
-.menu__body {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: 0.72fr 1fr 1fr;
-  gap: 26px;
-  margin-top: -200px;
-  align-items: start;
-}
-
-.menu__head {
-  padding-right: 20px;
-  grid-column: 1;
-  grid-row: 1 / span 2;
-}
-
-.menu__lead {
-  margin: -20px 0 30px;
-  color: var(--c-muted);
-  font-size: 14px;
-  line-height: 2.1;
-  letter-spacing: 0.06em;
-}
-
-.m-card {
-  display: flex;
-  min-height: 316px;
-  overflow: hidden;
-  padding: 26px;
-  flex-direction: column;
-  border-radius: var(--r-md);
-  background: var(--c-white);
-  box-shadow: 0 16px 40px rgba(13, 71, 161, 0.09);
-  color: var(--c-primary);
-  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
-}
-
-.m-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 50px rgba(13, 71, 161, 0.14);
-}
-
-.m-card__top {
-  display: flex;
+  padding-bottom: 14px;
   align-items: flex-start;
   justify-content: space-between;
+  border-bottom: 1px solid rgba(16, 35, 58, 0.09);
+}
+
+.news-panel__en {
+  color: #1976d2;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.news-panel__title {
+  margin-top: 4px;
+  color: #10233a;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.news-panel__list {
+  padding: 0;
+  background: transparent;
+}
+
+.news-panel__item {
+  padding: 18px 0;
+  border-bottom: 1px dashed rgba(16, 35, 58, 0.1);
+}
+
+.news-panel__item:last-child {
+  border-bottom: 0;
+}
+
+.news-panel__item :deep(.v-list-item__content) {
+  display: flex;
+  align-items: flex-start;
   gap: 16px;
 }
 
-.m-card__photo {
-  position: relative;
-  display: block;
-  height: 132px;
-  margin: -26px -26px 0;
-  overflow: hidden;
-  background: var(--c-primary-100);
-}
-
-.m-card__photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.8s var(--ease);
-}
-
-.m-card:hover .m-card__photo img {
-  transform: scale(1.06);
-}
-
-.m-card__body {
-  margin-top: auto;
-  padding-top: 26px;
-}
-
-.m-card__cat {
-  color: var(--c-primary);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-}
-
-.m-card__title {
-  margin-top: 8px;
-  color: var(--c-ink);
-  font-size: 17px;
-  font-weight: 500;
-  line-height: 1.7;
-  letter-spacing: 0.06em;
-}
-
-.m-card__text {
-  margin-top: 6px;
-  color: var(--c-muted);
-  font-size: 12.5px;
-  line-height: 1.9;
-  letter-spacing: 0.04em;
-}
-
-.m-card__foot {
-  display: flex;
-  margin-top: 18px;
-  padding-top: 14px;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid var(--c-line);
-}
-
-.m-card__code {
-  color: var(--c-muted);
+.news-panel__date {
+  width: 78px;
+  flex-shrink: 0;
+  padding-top: 3px;
+  color: #1976d2;
   font-size: 12px;
-  letter-spacing: 0.08em;
-}
-
-.m-card__go {
-  display: grid;
-  width: 38px;
-  height: 24px;
-  place-items: center;
-  border-radius: var(--r-pill);
-  background: var(--c-primary);
-  color: #fff;
-  transition: transform 0.3s var(--ease);
-}
-
-.m-card:hover .m-card__go {
-  transform: translateX(4px);
-}
-
-/* ================= stats ================= */
-.stats {
-  padding: 44px 0;
-  background: var(--c-white);
-}
-
-.stats__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  max-width: calc(var(--contents-inner) + 80px);
-}
-
-.stat {
-  display: flex;
-  padding: 6px 24px;
-  flex-direction: column;
-  gap: 4px;
-  border-left: 1px solid var(--c-line);
-  text-align: center;
-}
-
-.stat:first-child {
-  border-left: 0;
-}
-
-.stat strong {
-  color: var(--c-primary);
-  font-family: var(--font-en);
-  font-size: 34px;
-  font-weight: 500;
-  line-height: 1.2;
   letter-spacing: 0.02em;
 }
 
-.stat span {
-  color: var(--c-muted);
-  font-size: 12px;
-  line-height: 1.8;
-  letter-spacing: 0.04em;
-}
-
-/* ================= greeting ================= */
-.greet {
-  padding: 110px 0;
-  background: var(--c-cream);
-}
-
-.greet__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: clamp(40px, 6vw, 80px);
-  align-items: start;
-}
-
-.greet__text p {
-  color: var(--c-text);
-  font-size: 15px;
-  line-height: 2.15;
-  letter-spacing: 0.06em;
-}
-
-.greet__text p + p {
-  margin-top: 1.4em;
-}
-
-.greet__profile {
-  margin-top: 44px;
-}
-
-.greet__row {
-  display: flex;
-  padding: 20px 0;
-  gap: 28px;
-  border-top: 1px solid var(--c-line-strong);
-}
-
-.greet__row:last-child {
-  border-bottom: 1px solid var(--c-line-strong);
-}
-
-.greet__row dt {
-  width: 84px;
-  flex-shrink: 0;
-  color: var(--c-muted);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-}
-
-.greet__row dd {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 16px;
-}
-
-.greet__row dd strong {
-  color: var(--c-ink);
-  font-size: 20px;
+.news-panel__name {
+  overflow: hidden;
+  color: #10233a;
+  font-size: 15.5px;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  line-height: 1.65;
+  text-overflow: ellipsis;
+  transition: color 0.2s var(--ease);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
-.greet__row dd span {
-  color: var(--c-muted);
-  font-family: var(--font-en);
+.news-panel__item:hover .news-panel__name {
+  color: #1976d2;
+}
+
+.news-panel__excerpt {
+  display: -webkit-box;
+  margin-top: 6px;
+  overflow: hidden;
+  color: #7b8794;
   font-size: 13px;
-  letter-spacing: 0.08em;
+  line-height: 1.75;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
-.greet__row--list dd ul {
-  display: grid;
-  gap: 6px;
-  color: var(--c-text);
-  font-size: 13px;
-  line-height: 1.9;
-}
-
-.greet__row--list dd li {
+/* timeline --------------------------------------------------------------- */
+.timeline {
   position: relative;
-  padding-left: 14px;
+  display: grid;
+  padding-top: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
 }
 
-.greet__row--list dd li::before {
+.timeline__item {
+  position: relative;
+  padding-top: 54px;
+}
+
+.timeline__rail {
   position: absolute;
-  top: 0.85em;
+  top: 0;
+  right: 0;
   left: 0;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--c-primary-400);
+  display: flex;
+  height: 38px;
+  align-items: flex-start;
+}
+
+.timeline__rail::before {
+  width: 100%;
+  height: 2px;
+  margin-top: 18px;
+  background: linear-gradient(90deg, #bbdefb, #1976d2);
   content: '';
 }
 
-.greet__media {
-  position: relative;
+.timeline__item:last-child .timeline__rail::before {
+  background: linear-gradient(90deg, #1976d2, #bbdefb);
+  opacity: 0.4;
 }
 
-.greet__frame {
-  height: clamp(320px, 38vw, 560px);
-}
-
-.greet__link {
-  margin-top: 30px;
-}
-
-/* ================= facility ================= */
-.fac {
-  position: relative;
-  padding: 100px 0 120px;
-  background: var(--c-cream);
-  overflow: hidden;
-}
-
-.fac__head {
-  position: relative;
-}
-
-.fac__watermark {
+.timeline__dot {
   position: absolute;
-  z-index: 0;
-  top: -30px;
-  right: 0;
-  color: rgba(25, 118, 210, 0.08);
+  top: 2px;
+  left: 0;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #1976d2;
+  color: #fff;
   font-family: var(--font-en);
-  font-size: clamp(56px, 8vw, 116px);
-  font-weight: 500;
-  line-height: 0.95;
-  letter-spacing: 0.01em;
-  text-align: right;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.fac__scroller {
-  display: flex;
-  margin-top: 20px;
-  padding: 0 var(--container-pad) 18px;
-  gap: 24px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
-}
-
-.fac__item {
-  flex: 0 0 clamp(240px, 24vw, 330px);
-  scroll-snap-align: start;
-}
-
-.fac__art {
-  position: relative;
-  height: clamp(300px, 30vw, 400px);
-}
-
-.fac__label {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  padding: 14px 8px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--c-primary);
   font-size: 12px;
-  font-weight: 500;
-  line-height: 1.8;
-  letter-spacing: 0.16em;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+  box-shadow: 0 0 0 1px rgba(25, 118, 210, 0.35);
 }
 
-.fac__no {
-  margin-top: 16px;
-  color: var(--c-primary);
-  font-family: var(--font-en);
+.timeline__card {
+  height: 100%;
+  padding: 24px 24px 26px;
+  background: #fff;
+  border: 1px solid rgba(16, 35, 58, 0.07);
+}
+
+.timeline__period {
+  color: #1976d2;
   font-size: 13px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
 }
 
-.fac__text {
-  margin-top: 4px;
-  color: var(--c-muted);
-  font-size: 13px;
-  line-height: 1.95;
-  letter-spacing: 0.04em;
+.timeline__title {
+  margin-top: 8px;
+  color: #10233a;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.5;
 }
 
-.fac__foot {
+.timeline__text {
+  margin-top: 10px;
+  color: #5b6472;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+
+/* products --------------------------------------------------------------- */
+.product-card {
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(13, 71, 161, 0.12);
+}
+
+.product-card__img {
+  background: #eef3f9;
+}
+
+.product-card__placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, #e3f2fd, #f5f7fa);
+}
+
+.product-card__body {
+  padding: 18px 20px 20px;
+}
+
+.product-card__tags {
   display: flex;
-  margin-top: 34px;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-/* ================= responsive ================= */
-@media (max-width: 1100px) {
-  .menu__body {
-    grid-template-columns: 1fr 1fr;
-    margin-top: -120px;
-  }
-
-  .menu__head {
-    grid-column: 1 / -1;
-    grid-row: auto;
-  }
-
-  .menu__lead {
-    margin-top: 6px;
-    max-width: 620px;
-  }
-
-  .stats__grid {
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 24px;
-  }
-
-  .stat:nth-child(3) {
-    border-left: 0;
-  }
+.product-card__name {
+  margin-top: 12px;
+  color: #10233a;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
-@media (max-width: 900px) {
-  .hero__script,
-  .hero__deco {
-    display: none;
+.product-card__desc {
+  display: -webkit-box;
+  margin-top: 8px;
+  overflow: hidden;
+  color: #7b8794;
+  font-size: 13px;
+  line-height: 1.8;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.product-card__more {
+  display: inline-flex;
+  margin-top: 16px;
+  align-items: center;
+  gap: 4px;
+  color: #1976d2;
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+}
+
+/* jobs ------------------------------------------------------------------- */
+.job-card {
+  display: flex;
+  overflow: hidden;
+  flex-direction: row;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  background: #fff;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(13, 71, 161, 0.12);
+}
+
+.job-card :deep(.v-img) {
+  width: 44%;
+  flex-shrink: 0;
+}
+
+.job-card__body {
+  padding: 26px 28px;
+}
+
+.job-card__en {
+  color: #1976d2;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+}
+
+.job-card__title {
+  margin-top: 6px;
+  color: #10233a;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.job-card__text {
+  margin-top: 6px;
+  color: #5b6472;
+  font-size: 14px;
+}
+
+.job-card__meta {
+  margin-top: 14px;
+  color: #7b8794;
+  font-size: 12.5px;
+}
+
+.job-card__meta span {
+  margin: 0 6px;
+  opacity: 0.5;
+}
+
+.job-card__more {
+  display: inline-flex;
+  margin-top: 22px;
+  align-items: center;
+  gap: 4px;
+  color: #1976d2;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 959px) {
+  .section {
+    padding: 60px 0;
   }
 
-  .hero__title {
-    line-height: 1.95;
-  }
-
-  .msg__grid,
-  .story,
-  .greet__grid {
+  .timeline {
     grid-template-columns: 1fr;
+    gap: 18px;
   }
 
-  .story--reverse .story__text,
-  .story--reverse .story__media {
-    order: 0;
-  }
-
-  .story--reverse .story__num {
-    right: -14px;
-    left: auto;
-  }
-
-  .msg__sub {
-    display: none;
-  }
-
-  .msg__watermark {
-    display: none;
-  }
-
-  .about__story {
-    gap: 64px;
-  }
-
-  .about__line {
-    display: none;
-  }
-
-  .about__foot {
-    margin-top: 44px;
-    justify-content: flex-start;
-  }
-
-  .news__grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .news__label {
+  .timeline__item {
     padding-top: 0;
+    padding-left: 46px;
   }
 
-  .news__label .head02__en,
-  .news__label .head02__zh {
-    writing-mode: horizontal-tb;
-    transform: none;
+  .timeline__rail {
+    top: 0;
+    bottom: 0;
+    width: 34px;
+    height: auto;
   }
 
-  .news__label .head02__zh {
-    display: none;
+  .timeline__rail::before {
+    width: 2px;
+    height: 100%;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #1976d2, #bbdefb);
+  }
+
+  .timeline__dot {
+    top: 0;
+    left: 0;
+  }
+
+  .job-card {
+    flex-direction: column;
+  }
+
+  .job-card :deep(.v-img) {
+    width: 100%;
   }
 }
 
-@media (max-width: 768px) {
-  .hero__body {
-    padding: 56px 0 72px;
+@media (max-width: 700px) {
+  .hero__content {
+    padding-top: 40px;
   }
 
-
-  .menu__body {
-    grid-template-columns: 1fr;
-    margin-top: -80px;
+  .hero__script {
+    font-size: 13px;
   }
 
-  .menu__media {
-    height: 240px;
+  .hero__side {
+    font-size: 13.5px;
   }
 
-  .m-card {
-    min-height: 260px;
+  .news-panel {
+    padding: 20px 18px;
   }
 
-  .stats__grid {
-    grid-template-columns: 1fr 1fr;
+  .news-panel__item :deep(.v-list-item__content) {
+    gap: 10px;
   }
 
-  .stat {
-    padding: 6px 10px;
+  .news-panel__date {
+    width: 66px;
+    font-size: 11px;
   }
 
-  .stat strong {
-    font-size: 26px;
+  .timeline__card {
+    padding: 20px 18px;
   }
 
-  .greet,
-  .fac,
-  .msg {
-    padding: 72px 0 82px;
+  .job-card__body {
+    padding: 20px;
   }
 
-  .fac__watermark {
-    display: none;
-  }
-
-  .greet__row {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .greet__row dt {
-    width: auto;
-  }
-
-  .story__num {
-    right: 6px;
-    bottom: -16px;
-  }
-
-  .fac__item {
-    flex: 0 0 min(72vw, 300px);
-  }
-
-  .fac__text {
-    font-size: 12.5px;
+  .job-card__title {
+    font-size: 22px;
   }
 }
 </style>

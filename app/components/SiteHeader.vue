@@ -1,345 +1,361 @@
 <script setup lang="ts">
+import { computed, watch } from 'vue'
+import { useDisplay } from 'vuetify'
 import { siteConfig } from '~/config/site'
 
 const route = useRoute()
-const scrolled = ref(false)
-const menuOpen = ref(false)
+const { mdAndUp } = useDisplay()
 
-const isActive = (to: string) => (to === '/' ? route.path === '/' : route.path.startsWith(to))
+const drawer = ref(false)
 
-let scrollQueued = false
+const nav = computed(() => siteConfig.nav)
+const utilityLinks = computed(() => siteConfig.site.utilityLinks)
+const phone = computed(() => siteConfig.site.phone || siteConfig.brand.phone)
+const phoneHref = computed(() => `tel:${phone.value.replace(/[^\d+]/g, '')}`)
 
-const measure = () => {
-  scrollQueued = false
-  const next = window.scrollY > 8
-  if (next !== scrolled.value) scrolled.value = next
+const barHeight = computed(() => (mdAndUp.value ? 108 : 64))
+
+const isActive = (to: string) => {
+  const path = to.split('?')[0] || '/'
+  if (path === '/') return route.path === '/'
+  return route.path === path || route.path.startsWith(`${path}/`)
 }
-
-// Coalesce scroll events into one measurement per frame.
-const onScroll = () => {
-  if (scrollQueued) return
-  scrollQueued = true
-  requestAnimationFrame(measure)
-}
-
-onMounted(() => {
-  onScroll()
-  window.addEventListener('scroll', onScroll, { passive: true })
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', onScroll)
-})
 
 watch(
-  () => route.path,
+  () => route.fullPath,
   () => {
-    menuOpen.value = false
+    drawer.value = false
   },
 )
 
-watch(menuOpen, (open) => {
-  if (import.meta.client) {
-    document.documentElement.style.overflow = open ? 'hidden' : ''
-  }
+watch(mdAndUp, (desktop) => {
+  if (desktop) drawer.value = false
 })
 </script>
 
 <template>
-  <header class="hd" :class="{ 'hd--scrolled': scrolled, 'hd--open': menuOpen }">
-    <div class="hd__inner">
-      <NuxtLink to="/" class="hd__brand" aria-label="返回首页">
-        <span v-if="siteConfig.brand.logo" class="hd__mark hd__mark--image">
-          <img :src="siteConfig.brand.logo" alt="" />
-        </span>
-        <span v-else class="hd__mark" aria-hidden="true">
-          <svg viewBox="0 0 40 40">
-            <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2" />
-            <path
-              d="M11 24c2.4-7.4 6.6-11 9-11s6.6 3.6 9 11"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linecap="round"
-            />
-            <path
-              d="M13.6 27.4c1.6-4 4-6 6.4-6s4.8 2 6.4 6"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linecap="round"
-            />
-            <circle cx="20" cy="10.4" r="1.7" fill="currentColor" />
-          </svg>
-        </span>
-        <span class="hd__brand-text">
-          <span class="hd__name">{{ siteConfig.brand.name }}</span>
-          <span class="hd__name-en">{{ siteConfig.brand.nameEn }}</span>
-        </span>
-      </NuxtLink>
-
-      <nav class="hd__nav" aria-label="主导航">
-        <NuxtLink
-          v-for="item in siteConfig.nav"
-          :key="item.to"
-          :to="item.to"
-          class="hd__link"
-          :class="{ 'hd__link--active': isActive(item.to) }"
-        >
-          {{ item.label }}
-        </NuxtLink>
-      </nav>
-
-      <button
-        class="hd__burger"
-        type="button"
-        :aria-expanded="menuOpen"
-        aria-label="打开菜单"
-        @click="menuOpen = !menuOpen"
-      >
-        <span /><span /><span />
-      </button>
-    </div>
-
-    <Transition name="drawer">
-      <div v-if="menuOpen" class="drawer">
-        <nav class="drawer__nav" aria-label="移动端导航">
-          <NuxtLink v-for="item in siteConfig.nav" :key="item.to" :to="item.to" class="drawer__link">
-            <span>{{ item.label }}</span>
-            <small>{{ item.labelEn }}</small>
+  <v-app-bar app flat color="surface" :height="barHeight" class="site-appbar" scroll-behavior="elevate">
+    <div class="site-header">
+      <div v-if="mdAndUp" class="utility">
+        <div class="utility__inner">
+          <NuxtLink
+            v-for="link in utilityLinks"
+            :key="link.to"
+            :to="link.to"
+            class="utility__link"
+          >
+            <v-icon icon="mdi-shield-check-outline" size="15" class="mr-1" />
+            {{ link.label }}
           </NuxtLink>
-        </nav>
-        <div class="drawer__foot">
-          <a :href="`tel:${siteConfig.brand.phone.replace(/\s/g, '')}`">{{ siteConfig.brand.phone }}</a>
-          <a :href="`mailto:${siteConfig.brand.email}`">{{ siteConfig.brand.email }}</a>
-          <p>{{ siteConfig.brand.address }}</p>
+          <a class="utility__link" :href="phoneHref">
+            <v-icon icon="mdi-phone-outline" size="15" class="mr-1" />
+            {{ phone }}
+          </a>
         </div>
       </div>
-    </Transition>
-  </header>
+
+      <div class="nav-row">
+        <SiteLogo />
+
+        <nav class="nav-links" aria-label="主导航">
+          <template v-for="item in nav" :key="item.label">
+            <v-menu
+              v-if="item.children?.length"
+              open-on-hover
+              open-delay="60"
+              close-delay="120"
+              location="bottom"
+              :offset="10"
+            >
+              <template #activator="{ props: menuProps }">
+                <v-btn
+                  v-bind="menuProps"
+                  :to="item.to"
+                  variant="text"
+                  class="nav-link"
+                  :class="{ 'nav-link--active': isActive(item.to) }"
+                >
+                  {{ item.label }}
+                  <v-icon icon="mdi-chevron-down" size="14" class="ml-1" />
+                </v-btn>
+              </template>
+
+              <v-list class="nav-menu" density="comfortable" elevation="8">
+                <v-list-item
+                  v-for="child in item.children"
+                  :key="child.to"
+                  :to="child.to"
+                  :title="child.label"
+                  color="primary"
+                >
+                  <template #append>
+                    <v-icon icon="mdi-chevron-right" size="15" opacity="0.45" />
+                  </template>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+
+            <v-btn
+              v-else
+              :to="item.to"
+              variant="text"
+              class="nav-link"
+              :class="{ 'nav-link--active': isActive(item.to) }"
+            >
+              {{ item.label }}
+            </v-btn>
+          </template>
+        </nav>
+
+        <v-btn
+          class="d-md-none"
+          icon="mdi-menu"
+          variant="text"
+          aria-label="打开菜单"
+          @click="drawer = true"
+        />
+      </div>
+    </div>
+  </v-app-bar>
+
+  <v-navigation-drawer v-model="drawer" temporary location="right" width="320" class="mobile-drawer">
+    <div class="mobile-drawer__head">
+      <SiteLogo :size="38" />
+      <v-btn icon="mdi-close" variant="text" aria-label="关闭菜单" @click="drawer = false" />
+    </div>
+    <v-divider />
+
+    <v-list nav density="comfortable" class="mobile-drawer__list">
+      <template v-for="item in nav" :key="item.label">
+        <v-list-group v-if="item.children?.length" :value="item.label">
+          <template #activator="{ props: groupProps }">
+            <v-list-item
+              v-bind="groupProps"
+              :title="item.label"
+              :subtitle="item.labelEn"
+              class="mobile-drawer__parent"
+            />
+          </template>
+          <v-list-item :to="item.to" :title="`全部${item.label}`" @click="drawer = false" />
+          <v-list-item
+            v-for="child in item.children"
+            :key="child.to"
+            :to="child.to"
+            :title="child.label"
+            @click="drawer = false"
+          />
+        </v-list-group>
+
+        <v-list-item
+          v-else
+          :to="item.to"
+          :title="item.label"
+          :subtitle="item.labelEn"
+          @click="drawer = false"
+        />
+      </template>
+    </v-list>
+
+    <div class="mobile-drawer__foot">
+      <a :href="phoneHref">
+        <v-icon icon="mdi-phone-outline" size="17" />
+        {{ phone }}
+      </a>
+      <a :href="`mailto:${siteConfig.brand.email}`">
+        <v-icon icon="mdi-email-outline" size="17" />
+        {{ siteConfig.brand.email }}
+      </a>
+      <p>
+        <v-icon icon="mdi-map-marker-outline" size="17" />
+        {{ siteConfig.brand.address }}
+      </p>
+    </div>
+  </v-navigation-drawer>
 </template>
 
 <style scoped>
-.hd {
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  right: 0;
-  left: 0;
-  background: var(--c-primary);
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+.site-appbar {
+  border-bottom: 1px solid rgba(16, 35, 58, 0.08);
 }
 
-.hd--scrolled {
-  border-bottom-color: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 8px 24px rgba(13, 71, 161, 0.18);
+.site-appbar :deep(.v-toolbar__content) {
+  height: 100%;
+  padding: 0;
 }
 
-.hd__inner {
+.site-header {
   display: flex;
   width: 100%;
-  height: var(--header-h);
-  padding: 0 var(--container-pad);
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+  height: 100%;
+  flex-direction: column;
 }
 
-.hd__brand {
+.utility {
+  display: flex;
+  height: 36px;
+  flex-shrink: 0;
+  align-items: center;
+  background: #0d47a1;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.utility__inner,
+.nav-row {
+  display: flex;
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  align-items: center;
+}
+
+.utility__inner {
+  gap: 28px;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+}
+
+.utility__link {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
-  flex-shrink: 0;
+  color: inherit;
+  transition: color 0.2s var(--ease);
 }
 
-.hd__mark {
-  display: block;
-  width: 36px;
-  height: 36px;
+.utility__link:hover {
   color: #fff;
 }
 
-.hd__mark svg {
-  width: 100%;
-  height: 100%;
+.nav-row {
+  height: 72px;
+  gap: 20px;
+  justify-content: space-between;
 }
 
-.hd__mark--image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.hd__brand-text {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  line-height: 1.15;
-}
-
-.hd__name {
-  color: #fff;
-  font-size: 18px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-}
-
-.hd__name-en {
-  color: rgba(255, 255, 255, 0.68);
-  font-family: var(--font-en);
-  font-size: 9.5px;
-  font-weight: 400;
-  letter-spacing: 0.16em;
-}
-
-.hd__nav {
+.nav-links {
   display: flex;
   margin-left: auto;
   align-items: center;
-  gap: clamp(18px, 2.2vw, 34px);
+  gap: 2px;
 }
 
-.hd__link {
-  position: relative;
-  padding: 6px 0;
-  color: rgba(255, 255, 255, 0.9);
+.nav-link {
+  padding-inline: 13px;
+  color: #33414b;
   font-size: 14.5px;
   font-weight: 500;
-  letter-spacing: 0.1em;
-  transition: color 0.25s var(--ease);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  transition: color 0.2s var(--ease), background-color 0.2s var(--ease);
 }
 
-.hd__link::after {
+.nav-link:hover {
+  color: #1976d2;
+  background: rgba(25, 118, 210, 0.06);
+}
+
+.nav-link--active {
+  color: #1976d2;
+  background: rgba(25, 118, 210, 0.09);
+}
+
+.mobile-drawer__head {
+  display: flex;
+  padding: 14px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-drawer__list {
+  padding-top: 8px;
+}
+
+.mobile-drawer__list :deep(.v-list-item-title) {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.mobile-drawer__list :deep(.v-list-item-subtitle) {
+  font-family: var(--font-en);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  opacity: 0.5;
+}
+
+.mobile-drawer__foot {
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
-  height: 1px;
-  background: currentColor;
-  content: '';
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s var(--ease);
-}
-
-.hd__link:hover,
-.hd__link--active {
-  color: #fff;
-}
-
-.hd__link:hover::after,
-.hd__link--active::after {
-  transform: scaleX(1);
-}
-
-.hd__burger {
-  display: none;
-  width: 42px;
-  height: 34px;
-  padding: 8px 2px;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.hd__burger span {
-  display: block;
-  width: 100%;
-  height: 1.5px;
-  border-radius: 2px;
-  background: #fff;
-  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
-}
-
-.hd--open .hd__burger span:nth-child(1) {
-  transform: translateY(8.5px) rotate(45deg);
-}
-
-.hd--open .hd__burger span:nth-child(2) {
-  opacity: 0;
-}
-
-.hd--open .hd__burger span:nth-child(3) {
-  transform: translateY(-8.5px) rotate(-45deg);
-}
-
-/* drawer */
-.drawer {
-  position: fixed;
-  z-index: 1;
-  inset: 0;
   display: flex;
-  padding: calc(var(--header-h) + 16px) var(--container-pad) 40px;
+  padding: 20px;
   flex-direction: column;
-  justify-content: space-between;
-  background: var(--c-cream);
-  overflow-y: auto;
+  gap: 10px;
+  border-top: 1px solid rgba(16, 35, 58, 0.08);
+  color: #5b6472;
+  font-size: 13px;
 }
 
-.drawer__nav {
-  display: grid;
-}
-
-.drawer__link {
+.mobile-drawer__foot a,
+.mobile-drawer__foot p {
   display: flex;
-  padding: 18px 0;
-  align-items: baseline;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--c-line);
-  color: var(--c-ink);
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-}
-
-.drawer__link small {
-  color: var(--c-primary);
-  font-family: var(--font-en);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-}
-
-.drawer__foot {
-  display: flex;
-  margin-top: 36px;
-  flex-direction: column;
+  align-items: center;
   gap: 6px;
-  color: var(--c-muted);
-  font-size: 14px;
 }
 
-.drawer__foot p {
-  margin-top: 4px;
+.mobile-drawer__foot a:hover {
+  color: #1976d2;
 }
 
-.drawer-enter-active,
-.drawer-leave-active {
-  transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
-}
-
-.drawer-enter-from,
-.drawer-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-@media (max-width: 1100px) {
-  .hd__nav {
-    gap: 16px;
+@media (max-width: 1279px) {
+  .utility__inner,
+  .nav-row {
+    padding-inline: 24px;
   }
 
-  .hd__link {
-    font-size: 13px;
+  .nav-link {
+    padding-inline: 9px;
+    font-size: 13.5px;
   }
 }
 
-@media (max-width: 900px) {
-  .hd__nav {
+@media (max-width: 959px) {
+  .nav-links {
     display: none;
   }
 
-  .hd__burger {
-    display: flex;
+  .nav-row {
+    height: 64px;
+    padding-inline: 24px;
   }
+
+  .utility {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav-row {
+    padding-inline: 16px;
+  }
+}
+</style>
+
+<style>
+.nav-menu {
+  min-width: 184px;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  padding: 6px;
+}
+
+.nav-menu .v-list-item {
+  min-height: 42px;
+  border-radius: 10px;
+}
+
+.nav-menu .v-list-item-title {
+  font-size: 14px;
+  letter-spacing: 0.04em;
 }
 </style>

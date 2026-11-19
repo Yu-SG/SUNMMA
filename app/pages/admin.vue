@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useDisplay } from 'vuetify'
+import { useDisplay, useTheme } from 'vuetify'
 import type { SiteConfig } from '#shared/site'
 import AdminImageField from '~/components/admin/AdminImageField.vue'
 import AdminLinesField from '~/components/admin/AdminLinesField.vue'
@@ -30,13 +30,14 @@ type SectionMeta = {
 const FALLBACK_META: AdminMeta = { updatedAt: null, dbPath: '' }
 
 import type { EChartsOption } from 'echarts'
-import { applyStudioTheme } from '~/utils/vuetify'
 import {
   applyDocumentTheme,
   loadStudioTheme,
   saveStudioTheme,
   themePresets,
 } from '~/utils/studio-theme'
+
+definePageMeta({ layout: 'admin' })
 
 useSeoMeta({
   title: '内容管理 | Content Studio',
@@ -94,6 +95,17 @@ const restoreDialog = ref(false)
 
 const { width, smAndUp, mdAndUp } = useDisplay()
 
+const studioTheme = useTheme()
+
+/** Applies the studio palette + light/dark mode through Vuetify's theme instance. */
+const applyThemePrefs = (prefs: { primary: string; dark: boolean }) => {
+  for (const name of Object.keys(studioTheme.themes.value)) {
+    const definition = studioTheme.themes.value[name]
+    if (definition?.colors) definition.colors.primary = prefs.primary
+  }
+  studioTheme.change(prefs.dark ? 'dark' : 'light')
+}
+
 const themePrefs = ref(loadStudioTheme())
 const darkMode = computed({
   get: () => themePrefs.value.dark,
@@ -111,7 +123,7 @@ watch(
   (prefs) => {
     if (!import.meta.client) return
     applyDocumentTheme(prefs)
-    applyStudioTheme(prefs)
+    applyThemePrefs(prefs)
     saveStudioTheme(prefs)
   },
   { deep: true, immediate: true },
@@ -245,10 +257,13 @@ const dashStats = computed(() => {
 
 const publicPages = [
   { to: '/', label: '首页', en: 'Home', icon: 'mdi-home-variant-outline' },
+  { to: '/about', label: '关于我们', en: 'About', icon: 'mdi-domain' },
   { to: '/products', label: '产品中心', en: 'Products', icon: 'mdi-package-variant-closed' },
-  { to: '/news', label: '新闻中心', en: 'News', icon: 'mdi-newspaper-variant-outline' },
-  { to: '/academic', label: '学术交流', en: 'Academic', icon: 'mdi-school-outline' },
+  { to: '/news', label: '新闻动态', en: 'News', icon: 'mdi-newspaper-variant-outline' },
+  { to: '/investor', label: '投资者关系', en: 'Investors', icon: 'mdi-chart-line' },
+  { to: '/jobs', label: '加入我们', en: 'Careers', icon: 'mdi-account-tie-outline' },
   { to: '/contact', label: '联系我们', en: 'Contact', icon: 'mdi-map-marker-outline' },
+  { to: '/pharmacovigilance', label: '药物警戒', en: 'PV', icon: 'mdi-shield-check-outline' },
 ]
 
 const seoChecks = computed(() => {

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 675" width="900" height="675" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef1ff" stop-opacity="1"/><stop offset="1" stop-color="#d6dcff" stop-opacity="1"/></linearGradient><radialGradient id="halo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="1" stop-color="#d6dcff" stop-opacity="0"/></radialGradient></defs><rect width="900" height="675" fill="url(#bg)"/><circle cx="730" cy="112" r="240" fill="url(#halo)"/><circle cx="160" cy="580" r="180" stroke="#283593" stroke-opacity="0.1" stroke-width="1.5"/><circle cx="160" cy="580" r="120" stroke="#283593" stroke-opacity="0.08" stroke-width="1.5"/><rect x="0" y="0" width="900" height="675" fill="url(#bg)" opacity="0.35"/><g opacity="0.9">
+    <g transform="translate(450 350) rotate(-24)">
+      <rect x="-160" y="-58" width="320" height="116" rx="58" fill="#fff" opacity="0.9"/>
+      <rect x="-160" y="-58" width="170" height="116" rx="58" fill="#283593" opacity="0.2"/>
+      <path d="M0 -58 v116" stroke="#283593" stroke-opacity="0.35" stroke-width="3"/>
+      <rect x="-160" y="-58" width="320" height="116" rx="58" stroke="#283593" stroke-opacity="0.35" stroke-width="3" fill="none"/>
+    </g></g><text x="60" y="90" fill="#283593" fill-opacity="0.5" font-family="Outfit, Segoe UI, sans-serif" font-size="22" letter-spacing="6">XXX</text><rect x="0.5" y="0.5" width="899" height="674" stroke="#283593" stroke-opacity="0.12"/></svg>

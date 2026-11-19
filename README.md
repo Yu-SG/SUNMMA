@@ -69,6 +69,24 @@ public/                     # 图片、robots.txt、sitemap.xml
 - **外观设置**：顶栏调色板图标可切换主题色（7 个预设）与深色模式；选择写入 `localStorage`（`studio:theme`），刷新后保持。为避免深色模式白闪，`nuxt.config.ts` 在 `<head>` 里内联了一段脚本，在首帧前先把文档背景涂成深色；Vuetify 的主题在创建实例时就按已存偏好初始化。
 - 分区可通过 URL hash 直达，例如 `/admin#brand`、`/admin#products`；`/admin` 默认概览。
 
+## 前台页面（按 giantech.net.cn 的信息架构重做）
+
+全站使用 **Vuetify 4**（`vuetify-nuxt-module`），桌面端多级菜单 + 移动端抽屉导航。
+
+| 路由 | 内容 |
+|---|---|
+| `/` | 轮播 Banner、企业动态 / 政策法规 双栏新闻、发展历程、产品中心、社会招聘 / 校园招聘 |
+| `/about` | 公司简介、数据与能力、价值观、发展历程时间轴 |
+| `/news` | 新闻列表：分类筛选（企业动态 / 政策法规）、分页（`?page=2`） |
+| `/news/[id]` | 新闻详情，含上下篇 |
+| `/products` | 产品中心：制剂产品 / 原料药 + 治疗领域双层筛选、产品详情弹窗、在研管线 |
+| `/investor` | 投资者关系：公告列表、投资者联络、信息披露说明 |
+| `/jobs` | 加入我们：社会招聘 / 校园招聘筛选、岗位详情、投递方式 |
+| `/contact` | 联系方式 + 留言表单 |
+| `/pharmacovigilance` | 药物警戒：紧急提示、处理流程、不良反应上报表单 |
+
+表单统一提交到 `POST /api/forms`（有 `CONTENT_KV` 时写 KV 的 `forms:<时间戳>`，否则追加 `.data/forms.jsonl`）。
+
 ## 图片上传
 
 首页横幅与产品图片支持直接上传，不必手填路径：

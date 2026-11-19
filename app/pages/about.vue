@@ -1,765 +1,522 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { siteConfig } from '~/config/site'
 
-const brand = siteConfig.brand
-const { pillars, capabilities, stats, company } = siteConfig
-
-const storyText = [
-  `${brand.founded} 年，几位来自细胞治疗、基因工程与药物化学领域的科学家聚在一起，希望回答一个长期困扰行业的问题：如何让前沿技术更高效地转化为真正可用的药物。`,
-  '从第一套工程化细胞筛选平台，到今天的三大核心技术平台与覆盖细胞治疗、抗体及核酸药物的研发管线，我们始终把临床需求放在研发的第一位。',
-  `今天，${brand.name} 已与全球多家药企和学术机构建立长期合作。我们开放平台、共享能力，也共同承担创新过程中的风险与回报。`,
-]
+const page = siteConfig.pages.about
+const who = computed(() => page.sections[0])
+const rnd = computed(() => page.sections[1])
+const culture = computed(() => page.sections[2])
+const milestones = computed(() => page.milestones)
 
 useSeoMeta({
-  title: `关于我们｜${brand.name}`,
-  description: brand.description,
-  ogTitle: `关于我们｜${brand.name}`,
-  ogDescription: brand.description,
+  title: `关于我们｜${siteConfig.brand.name} 制药`,
+  description: page.intro[0] || siteConfig.brand.description,
+  ogTitle: `关于我们｜${siteConfig.brand.name} 制药`,
+  ogDescription: page.intro[0] || siteConfig.brand.description,
 })
-const anchorItems = [
-  { id: 'story', label: '我们的故事' },
-  { id: 'values', label: '价值观' },
-  { id: 'platforms', label: '技术平台' },
-]</script>
+</script>
 
 <template>
-  <div>
-    <!-- ================= hero ================= -->
-    <PageHero
-      en="About us"
-      zh="关于我们"
-      :title="['我们相信，', '创新的价值在于被需要。']"
-      :lead="brand.description"
-      art="molecule"
+  <div class="about">
+    <SitePageHead
+      :title="page.title"
+      :subtitle="page.subtitle"
+      :intro="page.intro"
     />
 
-    <!-- ================= story ================= -->
-    <section id="story" class="about__story section">
-      <span class="watermark about__watermark" aria-hidden="true">Story</span>
-
-      <div class="container">
-        <SectionHead en="Our Story" zh="我们的故事" data-reveal />
-
-        <div class="about__story-grid">
-          <div class="about__story-copy" data-reveal>
-            <p class="about__since">Since {{ brand.founded }}</p>
-
-            <h2 class="about__story-title">
-              {{ brand.tagline }}，<br>从一间实验室开始。
-            </h2>
-
-            <div class="about__story-body">
-              <p v-for="(paragraph, i) in storyText" :key="i">{{ paragraph }}</p>
+    <!-- 公司简介 -->
+    <section class="section section--intro">
+      <v-container>
+        <v-row align="center">
+          <v-col cols="12" lg="7" md="7">
+            <p class="eyebrow font-en">ABOUT XXX</p>
+            <h2 class="section-title">公司简介</h2>
+            <div class="copy">
+              <p v-for="(text, index) in page.intro" :key="index">{{ text }}</p>
+              <p v-for="(text, index) in who?.paragraphs ?? []" :key="`who-${index}`">{{ text }}</p>
             </div>
-
-            <svg class="about__squiggle" viewBox="0 0 230 26" aria-hidden="true">
-              <path
-                d="M2 18c32-13 56 6 88-3s48-14 74 2c16 9 38 6 62 2"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.3"
-                stroke-linecap="round"
-              />
-            </svg>
-          </div>
-
-          <aside class="about__side card" data-reveal>
-            <div class="about__side-top">
-              <p class="about__side-label font-en">Company Profile</p>
-              <span class="big-num big-num--blue about__num" aria-hidden="true">
-                <span class="big-num__hash">#</span>01
-              </span>
-            </div>
-
-            <div class="frame about__frame">
-              <ArtPanel variant="lab" />
-            </div>
-
-            <dl class="about__profile">
-              <div v-for="row in company" :key="row.label" class="about__row">
-                <dt>{{ row.label }}</dt>
-                <dd>{{ row.value }}</dd>
+            <div class="company-facts">
+              <div v-for="fact in siteConfig.company" :key="fact.label" class="company-fact">
+                <span class="company-fact__label">{{ fact.label }}</span>
+                <span class="company-fact__value">{{ fact.value }}</span>
               </div>
-            </dl>
-          </aside>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= values (blue) ================= -->
-    <section id="values" class="about__values">
-  
-      <div class="about__values-body">
-        <span class="watermark about__values-watermark" aria-hidden="true">Values</span>
-
-        <div class="container">
-          <div class="about__values-head" data-reveal>
-            <SectionHead en="Our Values" zh="我们的价值观" light />
-            <p class="about__values-note">
-              四条原则，决定我们选择什么样的问题，也决定我们如何与伙伴相处。
-            </p>
-          </div>
-
-          <div class="about__values-grid">
-            <article
-              v-for="item in pillars"
-              :key="item.index"
-              class="about__value"
-              data-reveal
-            >
-              <span class="big-num about__value-num" aria-hidden="true">
-                <span class="big-num__hash">#</span>{{ item.index }}
-              </span>
-              <h3 class="about__value-title">{{ item.title }}</h3>
-              <p class="about__value-en font-en">{{ item.titleEn }}</p>
-              <p class="about__value-text">{{ item.description }}</p>
-            </article>
-          </div>
-
-          <svg class="about__values-squiggle" viewBox="0 0 300 40" aria-hidden="true">
-            <path
-              d="M4 28c40-20 66 6 104-8s58-18 92 4c16 11 44 8 44 8"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.2"
-              stroke-linecap="round"
-            />
-          </svg>
-        </div>
-      </div>
-
-      </section>
-
-    <!-- ================= platforms ================= -->
-    <section id="platforms" class="about__plat section section--white">
-      <div class="container">
-        <div class="about__plat-head" data-reveal>
-          <SectionHead en="Platforms" zh="技术平台" />
-          <p class="about__plat-note">
-            从靶点验证、候选分子设计到 CMC 放大与临床支持，平台化能力让不同项目共享同一套科学与工程体系。
-          </p>
-        </div>
-
-        <ul class="about__plat-list">
-          <li
-            v-for="item in capabilities"
-            :key="item.index"
-            class="about__plat-row"
-            data-reveal
-          >
-            <span class="about__plat-ico" aria-hidden="true">
-              <svg v-if="item.index === '01'" viewBox="0 0 32 32">
-                <path
-                  d="M12 4c0 5 8 7 8 12s-8 7-8 12"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M20 4c0 5-8 7-8 12s8 7 8 12"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M13 9h6M11.5 14h9M11.5 20h9M13 25h6"
-                  stroke="currentColor"
-                  stroke-width="1.2"
-                  stroke-linecap="round"
-                />
-              </svg>
-
-              <svg v-else-if="item.index === '02'" viewBox="0 0 32 32">
-                <circle
-                  cx="16"
-                  cy="16"
-                  r="10.5"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                />
-                <circle
-                  cx="16"
-                  cy="16"
-                  r="4"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                />
-                <circle cx="16" cy="5.5" r="2.2" fill="currentColor" />
-                <circle cx="25.5" cy="21.2" r="2.2" fill="currentColor" />
-                <circle cx="6.5" cy="21.2" r="2.2" fill="currentColor" />
-              </svg>
-
-              <svg v-else viewBox="0 0 32 32">
-                <path
-                  d="M6 5v22h21"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M10 21l5.5-6.5 4 3.5L26 9"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <circle cx="26" cy="9" r="2" fill="currentColor" />
-              </svg>
-            </span>
-
-            <div class="about__plat-main">
-              <h3 class="about__plat-title">{{ item.title }}</h3>
-              <p class="about__plat-en font-en">{{ item.titleEn }}</p>
             </div>
+          </v-col>
 
-            <p class="about__plat-desc">{{ item.description }}</p>
+          <v-col cols="12" lg="5" md="5">
+            <div class="intro-art">
+              <v-img src="/images/hero-3.svg" alt="XXX 研发与质量分析" cover eager class="intro-art__img" />
+              <div class="intro-art__badge">
+                <span class="intro-art__num font-en">20+</span>
+                <span class="intro-art__label">年专注医药研发与制造</span>
+              </div>
+            </div>
+          </v-col>
+        </v-row>
 
-            <span class="about__plat-no font-en" aria-hidden="true">{{ item.index }}</span>
-          </li>
-        </ul>
-
-        <div class="about__plat-stats" data-reveal>
-          <div v-for="stat in stats" :key="stat.label" class="about__plat-stat">
-            <strong class="font-en">{{ stat.value }}</strong>
-            <span>{{ stat.label }}</span>
-          </div>
-        </div>
-
-        <div class="about__plat-foot" data-reveal>
-          <ArrowLink to="/pipeline" label="查看研发管线" />
-        </div>
-      </div>
+        <v-row class="stats">
+          <v-col v-for="stat in siteConfig.stats" :key="stat.label" cols="6" md="3">
+            <v-card class="stat-card">
+              <p class="stat-card__value font-en">{{ stat.value }}</p>
+              <p class="stat-card__label">{{ stat.label }}</p>
+              <p class="stat-card__en font-en">{{ stat.labelEn }}</p>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
     </section>
 
-    <ContactBlock id="contact" />
-    <SectionAnchor :items="anchorItems" />
+    <!-- 研发与质量 -->
+    <section class="section section--capabilities">
+      <v-container>
+        <SectionHead
+          en="R&D and Quality"
+          :zh="rnd?.title ?? '研发与质量'"
+          desc="从工艺开发到商业化供货，我们把研发、质量与注册放在同一条链路上。"
+        />
+
+        <div class="copy copy--narrow">
+          <p v-for="(text, index) in rnd?.paragraphs ?? []" :key="index">{{ text }}</p>
+        </div>
+
+        <v-row class="capability-grid">
+          <v-col v-for="item in siteConfig.capabilities" :key="item.index" cols="12" md="4">
+            <v-card class="capability-card">
+              <div class="capability-card__head">
+                <v-icon :icon="item.icon" size="30" color="primary" />
+                <span class="capability-card__index font-en">{{ item.index }}</span>
+              </div>
+              <h3 class="capability-card__title">{{ item.title }}</h3>
+              <p class="capability-card__en font-en">{{ item.titleEn }}</p>
+              <p class="capability-card__text">{{ item.description }}</p>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </section>
+
+    <!-- 发展历程 -->
+    <section class="section section--history">
+      <v-container>
+        <SectionHead
+          en="Development History"
+          zh="发展历程"
+          desc="以终为始，守正出奇。二十余年的每一步，都围绕「让好药更可及」。"
+        />
+
+        <v-timeline side="end" density="comfortable" truncate-line="both" class="history-timeline">
+          <v-timeline-item
+            v-for="milestone in milestones"
+            :key="milestone.period"
+            dot-color="primary"
+            size="small"
+            fill-dot
+          >
+            <template #opposite>
+              <span class="history-timeline__period font-en">{{ milestone.period }}</span>
+            </template>
+            <v-card class="history-timeline__card">
+              <span class="history-timeline__period history-timeline__period--inline font-en">
+                {{ milestone.period }}
+              </span>
+              <h3 class="history-timeline__title">{{ milestone.title }}</h3>
+              <p class="history-timeline__text">{{ milestone.text }}</p>
+            </v-card>
+          </v-timeline-item>
+        </v-timeline>
+      </v-container>
+    </section>
+
+    <!-- 企业文化 -->
+    <section class="section section--values">
+      <v-container>
+        <SectionHead
+          en="Culture"
+          :zh="culture?.title ?? '企业文化'"
+          desc="我们尊重医药产业的客观规律，允许试错，但不允许对严谨和品质的妥协。"
+        />
+
+        <div class="copy copy--narrow">
+          <p v-for="(text, index) in culture?.paragraphs ?? []" :key="index">{{ text }}</p>
+        </div>
+
+        <v-row class="pillar-grid">
+          <v-col v-for="pillar in siteConfig.pillars" :key="pillar.index" cols="12" sm="6" lg="3">
+            <v-card class="pillar-card">
+              <span class="pillar-card__index font-en">#{{ pillar.index }}</span>
+              <h3 class="pillar-card__title">{{ pillar.title }}</h3>
+              <p class="pillar-card__en font-en">{{ pillar.titleEn }}</p>
+              <p class="pillar-card__text">{{ pillar.description }}</p>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </section>
+
+    <!-- CTA -->
+    <section class="section section--cta">
+      <v-container>
+        <v-sheet class="cta" rounded="xl">
+          <div>
+            <p class="cta__en font-en">WORK WITH US</p>
+            <h2 class="cta__title">与我们一起，把难而正确的事做下去。</h2>
+            <p class="cta__text">无论是产品合作、临床研究，还是加入我们的团队，都欢迎你主动联系我们。</p>
+          </div>
+          <div class="cta__actions">
+            <v-btn color="white" size="large" to="/jobs">查看岗位</v-btn>
+            <v-btn variant="outlined" color="white" size="large" to="/contact">联系我们</v-btn>
+          </div>
+        </v-sheet>
+      </v-container>
+    </section>
   </div>
 </template>
 
 <style scoped>
-/* ================= story ================= */
-.about__story {
-  position: relative;
-  padding: 100px 0 120px;
-  background: var(--c-cream);
-  overflow: hidden;
+.section {
+  padding: 84px 0;
 }
 
-.about__watermark {
-  top: 24px;
-  right: -10px;
-  font-size: clamp(100px, 12vw, 180px);
+.section--intro {
+  background: #fff;
 }
 
-.about__story-grid {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: clamp(40px, 6vw, 88px);
-  align-items: start;
+.section--capabilities {
+  background: #f5f7fa;
 }
 
-.about__since {
-  color: var(--c-primary);
-  font-family: var(--font-script);
-  font-size: clamp(26px, 2.6vw, 36px);
-  line-height: 1;
-  letter-spacing: 0.01em;
-  transform: rotate(-3deg);
-  transform-origin: left center;
+.section--history {
+  background: #fff;
 }
 
-.about__story-title {
-  margin-top: 18px;
-  color: var(--c-ink);
-  font-size: clamp(22px, 2.5vw, 30px);
-  font-weight: 500;
-  line-height: 1.85;
-  letter-spacing: 0.08em;
+.section--values {
+  background: #f5f7fa;
 }
 
-.about__story-body {
-  max-width: 580px;
-  margin-top: 26px;
+.section--cta {
+  padding: 60px 0 84px;
+  background: #fff;
 }
 
-.about__story-body p {
-  color: var(--c-text);
+.eyebrow {
+  color: #1976d2;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+}
+
+.section-title {
+  margin-top: 8px;
+  color: #10233a;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.copy {
+  margin-top: 22px;
+  color: #5b6472;
   font-size: 15px;
-  line-height: 2.15;
-  letter-spacing: 0.06em;
+  line-height: 2;
 }
 
-.about__story-body p + p {
-  margin-top: 1.4em;
+.copy p + p {
+  margin-top: 14px;
 }
 
-.about__squiggle {
-  width: 230px;
-  height: 26px;
-  margin-top: 36px;
-  color: var(--c-primary-400);
+.copy--narrow {
+  max-width: 840px;
 }
 
-.about__side {
-  padding: 30px;
-}
-
-.about__side-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.about__side-label {
-  padding-top: 6px;
-  color: var(--c-muted);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.about__num {
-  font-size: clamp(40px, 4vw, 54px);
-  line-height: 0.8;
-}
-
-.about__frame {
-  height: 172px;
-  margin-top: 18px;
-}
-
-.about__profile {
-  margin-top: 22px;
-}
-
-.about__row {
-  display: flex;
-  padding: 14px 0;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 18px;
-  border-top: 1px solid var(--c-line);
-}
-
-.about__row:last-child {
-  border-bottom: 1px solid var(--c-line);
-}
-
-.about__row dt {
-  color: var(--c-muted);
-  font-size: 12.5px;
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-}
-
-.about__row dd {
-  color: var(--c-ink);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-align: right;
-}
-
-/* ================= values ================= */
-.about__values {
-  position: relative;
-  background: var(--c-cream);
-}
-
-.about__values-body {
-  position: relative;
-  padding: 64px 0 96px;
-  background: var(--c-primary);
-  color: rgba(255, 255, 255, 0.86);
-  overflow: hidden;
-}
-
-.about__values-watermark {
-  top: 16px;
-  right: -24px;
-  color: rgba(255, 255, 255, 0.07);
-  font-size: clamp(110px, 13vw, 200px);
-}
-
-.about__values-head {
-  position: relative;
-  z-index: 2;
+.company-facts {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
-  gap: 48px;
-  align-items: end;
-  margin-bottom: 46px;
-}
-
-.about__values-head :deep(.head01) {
-  margin-bottom: 0;
-}
-
-.about__values-note {
-  max-width: 430px;
-  padding-bottom: 6px;
-  color: rgba(255, 255, 255, 0.74);
-  font-size: 14.5px;
-  line-height: 2.05;
-  letter-spacing: 0.06em;
-}
-
-.about__values-grid {
-  position: relative;
-  z-index: 2;
-  display: grid;
+  margin-top: 30px;
+  padding-top: 24px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
+  gap: 12px 32px;
+  border-top: 1px solid rgba(16, 35, 58, 0.09);
 }
 
-.about__value {
-  padding: 32px 34px 36px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.06);
-  transition: background 0.4s var(--ease), border-color 0.4s var(--ease),
-    transform 0.4s var(--ease);
+.company-fact {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
 }
 
-.about__value:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.11);
-  transform: translateY(-4px);
+.company-fact__label {
+  min-width: 64px;
+  color: #7b8794;
+  font-size: 13px;
 }
 
-.about__value-num {
-  color: rgba(255, 255, 255, 0.92);
-  font-size: clamp(38px, 3.8vw, 54px);
-  line-height: 0.8;
-}
-
-.about__value-title {
-  margin-top: 22px;
-  color: var(--c-white);
-  font-size: clamp(19px, 1.9vw, 23px);
+.company-fact__value {
+  color: #10233a;
+  font-size: 14.5px;
   font-weight: 500;
-  line-height: 1.7;
-  letter-spacing: 0.08em;
 }
 
-.about__value-en {
+.intro-art {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  box-shadow: 0 24px 50px rgba(13, 71, 161, 0.16);
+}
+
+.intro-art__img {
+  height: 420px;
+}
+
+.intro-art__badge {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  padding: 14px 18px;
+  flex-direction: column;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 10px 26px rgba(13, 71, 161, 0.18);
+}
+
+.intro-art__num {
+  color: #1976d2;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.intro-art__label {
   margin-top: 6px;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 11.5px;
-  letter-spacing: 0.18em;
+  color: #5b6472;
+  font-size: 12px;
+}
+
+.stats {
+  margin-top: 26px;
+}
+
+.stat-card {
+  height: 100%;
+  padding: 20px 20px 18px;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  text-align: center;
+}
+
+.stat-card__value {
+  color: #1976d2;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.stat-card__label {
+  margin-top: 8px;
+  color: #10233a;
+  font-size: 13px;
+}
+
+.stat-card__en {
+  margin-top: 4px;
+  color: #8b98a6;
+  font-size: 10px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.about__value-text {
-  margin-top: 18px;
-  color: rgba(255, 255, 255, 0.78);
-  font-size: 14px;
-  line-height: 2.1;
-  letter-spacing: 0.06em;
+.capability-grid {
+  margin-top: 34px;
 }
 
-.about__values-squiggle {
-  position: relative;
-  z-index: 2;
-  width: 300px;
-  height: 40px;
-  margin: 54px 0 0 auto;
-  color: rgba(255, 255, 255, 0.5);
+.capability-card {
+  height: 100%;
+  padding: 26px 24px;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  background: #fff;
 }
 
-/* ================= platforms ================= */
-.about__plat {
-  padding: 110px 0 120px;
-  background: var(--c-white);
-}
-
-.about__plat-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
-  gap: 48px;
-  align-items: end;
-  margin-bottom: 30px;
-}
-
-.about__plat-head :deep(.head01) {
-  margin-bottom: 0;
-}
-
-.about__plat-note {
-  max-width: 450px;
-  padding-bottom: 6px;
-  color: var(--c-muted);
-  font-size: 14.5px;
-  line-height: 2.1;
-  letter-spacing: 0.06em;
-}
-
-.about__plat-list {
-  margin-top: 26px;
-  border-top: 1px solid var(--c-line);
-}
-
-.about__plat-row {
-  display: grid;
-  grid-template-columns: 66px minmax(0, 0.92fr) minmax(0, 1.45fr) 40px;
-  padding: 32px 0;
+.capability-card__head {
+  display: flex;
   align-items: center;
-  gap: 28px;
-  border-bottom: 1px solid var(--c-line);
+  justify-content: space-between;
 }
 
-.about__plat-ico {
-  display: grid;
-  width: 58px;
-  height: 58px;
-  place-items: center;
-  border-radius: 16px;
-  background: rgba(25, 118, 210, 0.08);
-  color: var(--c-primary);
-  transition: background 0.35s var(--ease), color 0.35s var(--ease),
-    transform 0.35s var(--ease);
+.capability-card__index {
+  color: rgba(25, 118, 210, 0.32);
+  font-size: 24px;
 }
 
-.about__plat-ico svg {
-  width: 28px;
-  height: 28px;
-}
-
-.about__plat-row:hover .about__plat-ico {
-  background: var(--c-primary);
-  color: var(--c-white);
-  transform: translateY(-2px);
-}
-
-.about__plat-title {
-  color: var(--c-ink);
+.capability-card__title {
+  margin-top: 16px;
+  color: #10233a;
   font-size: 19px;
-  font-weight: 500;
-  line-height: 1.7;
-  letter-spacing: 0.07em;
+  font-weight: 600;
 }
 
-.about__plat-en {
+.capability-card__en {
   margin-top: 4px;
-  color: var(--c-primary);
-  font-size: 11.5px;
+  color: #8b98a6;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.capability-card__text {
+  margin-top: 14px;
+  color: #5b6472;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+
+.history-timeline {
+  max-width: 1000px;
+  margin: 10px auto 0;
+}
+
+.history-timeline__period {
+  color: #1976d2;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+}
+
+.history-timeline__period--inline {
+  display: none;
+}
+
+.history-timeline__card {
+  padding: 22px 24px;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+}
+
+.history-timeline__title {
+  color: #10233a;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.history-timeline__text {
+  margin-top: 10px;
+  color: #5b6472;
+  font-size: 14px;
+  line-height: 1.95;
+}
+
+.pillar-grid {
+  margin-top: 32px;
+}
+
+.pillar-card {
+  height: 100%;
+  padding: 24px 22px;
+  border-top: 3px solid #1976d2;
+  background: #fff;
+}
+
+.pillar-card__index {
+  color: rgba(25, 118, 210, 0.3);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+}
+
+.pillar-card__title {
+  margin-top: 10px;
+  color: #10233a;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.pillar-card__en {
+  margin-top: 4px;
+  color: #8b98a6;
+  font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.about__plat-desc {
-  color: var(--c-muted);
-  font-size: 14.5px;
-  line-height: 2.05;
-  letter-spacing: 0.06em;
+.pillar-card__text {
+  margin-top: 14px;
+  color: #5b6472;
+  font-size: 13.5px;
+  line-height: 1.9;
 }
 
-.about__plat-no {
-  color: rgba(25, 118, 210, 0.4);
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  text-align: right;
+.cta {
+  display: flex;
+  padding: 46px 50px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  background: linear-gradient(120deg, #0d47a1, #1976d2 60%, #26c6da);
+  color: #fff;
 }
 
-.about__plat-stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 64px;
-  padding: 34px 0;
-  border-top: 1px solid var(--c-line);
-  border-bottom: 1px solid var(--c-line);
+.cta__en {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 11px;
+  letter-spacing: 0.28em;
 }
 
-.about__plat-stat {
-  padding: 0 26px;
-  border-left: 1px solid var(--c-line);
-}
-
-.about__plat-stat:first-child {
-  padding-left: 0;
-  border-left: 0;
-}
-
-.about__plat-stat strong {
-  display: block;
-  color: var(--c-primary);
-  font-size: clamp(30px, 3vw, 40px);
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: 0.02em;
-}
-
-.about__plat-stat span {
-  display: block;
-  margin-top: 6px;
-  color: var(--c-muted);
-  font-size: 12px;
-  line-height: 1.85;
+.cta__title {
+  margin-top: 8px;
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
   letter-spacing: 0.04em;
 }
 
-.about__plat-foot {
-  display: flex;
-  margin-top: 40px;
-  justify-content: flex-end;
+.cta__text {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14px;
 }
 
-/* ================= responsive ================= */
-@media (max-width: 1100px) {
-  .about__story-grid {
-    gap: 48px;
+.cta__actions {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 960px) {
+  .section {
+    padding: 56px 0;
   }
 
-  .about__plat-row {
-    grid-template-columns: 62px minmax(0, 1fr) minmax(0, 1.4fr);
-    gap: 22px;
+  .section-title {
+    font-size: 26px;
   }
 
-  .about__plat-no {
+  .intro-art__img {
+    height: 300px;
+  }
+
+  .cta {
+    padding: 32px 26px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cta__title {
+    font-size: 22px;
+  }
+
+  .history-timeline__period {
     display: none;
   }
 
-  .about__plat-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 24px;
-  }
-
-  .about__plat-stat:nth-child(odd) {
-    padding-left: 0;
-    border-left: 0;
+  .history-timeline__period--inline {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12.5px;
   }
 }
 
-@media (max-width: 900px) {
-  .about__story-grid {
+@media (max-width: 600px) {
+  .company-facts {
     grid-template-columns: 1fr;
-    gap: 44px;
   }
 
-  .about__side {
-    max-width: 560px;
-  }
-
-  .about__values-head,
-  .about__plat-head {
-    grid-template-columns: 1fr;
-    gap: 18px;
-    align-items: start;
-  }
-
-  .about__plat-row {
-    grid-template-columns: 62px minmax(0, 1fr);
-    gap: 18px 22px;
-    padding: 26px 0;
-  }
-
-  .about__plat-title {
-    font-size: 18px;
-  }
-
-  .about__plat-desc {
-    grid-column: 2;
-  }
-}
-
-@media (max-width: 768px) {
-  .about__story {
-    padding: 68px 0 76px;
-  }
-
-  .about__story-grid {
-    gap: 36px;
-  }
-
-  .about__side {
-    padding: 22px;
-  }
-
-  .about__frame {
-    height: 150px;
-  }
-
-  .about__squiggle {
-    width: 190px;
-    margin-top: 28px;
-  }
-
-  .about__values-body {
-    padding: 52px 0 68px;
-  }
-
-  .about__values-head {
-    margin-bottom: 32px;
-  }
-
-  .about__values-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .about__value {
-    padding: 26px 24px 28px;
-  }
-
-  .about__value-title {
-    margin-top: 18px;
-  }
-
-  .about__values-squiggle {
-    width: 220px;
-    margin-top: 36px;
-  }
-
-  .about__plat {
-    padding: 68px 0 78px;
-  }
-
-  .about__plat-row {
-    grid-template-columns: 46px minmax(0, 1fr);
-    gap: 14px 16px;
-    padding: 24px 0;
-  }
-
-  .about__plat-ico {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-  }
-
-  .about__plat-ico svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .about__plat-desc {
-    grid-column: 1 / -1;
-  }
-
-  .about__plat-stats {
-    margin-top: 44px;
-    padding: 26px 0;
-  }
-
-  .about__plat-stat {
-    padding: 0 12px;
-  }
-
-  .about__plat-stat strong {
-    font-size: 28px;
-  }
-
-  .about__plat-foot {
-    margin-top: 30px;
-    justify-content: flex-start;
+  .stat-card__value {
+    font-size: 26px;
   }
 }
 </style>
