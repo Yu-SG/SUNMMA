@@ -1,16 +1,18 @@
+# Cloudflare Workers / Pages 配置
+#
+# 说明：
+# - Workers 构建（日志里执行 `npx wrangler deploy`）会读这份配置；
+#   不能出现 `pages_build_output_dir`，否则 wrangler 会按 Pages 项目解析，
+#   与 Nitro 生成的 ASSETS 绑定冲突（报 "ASSETS 这个名称在 Pages 项目中已被保留"）。
+# - Pages 构建只要在控制台把 Build output directory 设成 `dist` 即可，不需要这个字段。
 name = "summaaz"
 compatibility_date = "2025-09-01"
 compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = "dist"
 
-# 内容存储用的 Workers KV。
-#
-# 二选一：
-# A) 在 Cloudflare 后台 Workers & Pages → KV 新建命名空间，把 ID 填到下面并取消注释；
-# B) 删除下面这三行，改为在 Pages 项目 Settings → Bindings 里添加 KV 绑定（变量名 CONTENT_KV）。
-#
-# 注意：ID 必须是真实存在的命名空间，占位符会让部署失败。
-# 本地调试可以用 `npx wrangler pages dev dist`（会自动模拟一个本地 KV）。
+# 内容存储用的 Workers KV（二选一）：
+# A) 在这里填真实命名空间 ID 并取消注释；
+# B) 删掉下面三行，改在 Cloudflare 控制台 → 项目 → Settings → Bindings 添加 KV，变量名必须叫 CONTENT_KV。
+# ID 必须是真实存在的命名空间，占位符会导致部署失败。
 #
 # [[kv_namespaces]]
 # binding = "CONTENT_KV"
