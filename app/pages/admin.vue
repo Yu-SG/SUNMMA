@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useDisplay, useTheme } from 'vuetify'
-import type { SiteConfig } from '#shared/site'
+import type { SiteConfig, SiteFormField, SiteFormsPage } from '#shared/site'
 import AdminImageField from '~/components/admin/AdminImageField.vue'
 import AdminLinesField from '~/components/admin/AdminLinesField.vue'
 import StudioGroupHead from '~/components/admin/StudioGroupHead.vue'
@@ -16,7 +16,21 @@ type SessionPayload = { authenticated: boolean; meta: AdminMeta }
 type Banner = { src: string; alt: string; position?: string }
 type DraftConfig = Omit<SiteConfig, 'banners'> & { banners: Banner[] }
 
-type SectionId = 'dash' | 'brand' | 'banners' | 'products' | 'news' | 'academic' | 'copy' | 'json'
+type SectionId =
+  | 'dash'
+  | 'brand'
+  | 'banners'
+  | 'products'
+  | 'news'
+  | 'about'
+  | 'academic'
+  | 'investor'
+  | 'jobs'
+  | 'copy'
+  | 'contact'
+  | 'pv'
+  | 'site'
+  | 'json'
 type SectionMeta = {
   id: SectionId
   label: string
@@ -174,7 +188,7 @@ const sections: SectionMeta[] = [
     label: '产品中心',
     en: 'Products',
     icon: 'mdi-package-variant-closed',
-    note: '产品列表按这里的顺序展示在「产品中心」页面。',
+    note: '顺序即展示顺序。药品分类、治疗领域、剂型、规格、适应症、持有人用于产品详情弹窗。',
     count: true,
     unit: '个',
   },
@@ -183,9 +197,18 @@ const sections: SectionMeta[] = [
     label: '新闻中心',
     en: 'News',
     icon: 'mdi-newspaper-variant-outline',
-    note: '正文一行一段，段落顺序即展示顺序。',
+    note: '正文一行一段；分类建议用 企业动态 / 政策法规。',
     count: true,
     unit: '篇',
+  },
+  {
+    id: 'about',
+    label: '关于我们',
+    en: 'About',
+    icon: 'mdi-office-building-outline',
+    note: '页面标题、引言、公司简介分段与发展历程时间线；前三组依次对应「公司简介 / 研发与质量 / 企业文化」。',
+    count: true,
+    unit: '项',
   },
   {
     id: 'academic',
@@ -197,11 +220,56 @@ const sections: SectionMeta[] = [
     unit: '项',
   },
   {
+    id: 'investor',
+    label: '投资者关系',
+    en: 'Investors',
+    icon: 'mdi-chart-line',
+    note: '公告按列表顺序展示；类型提供 临时公告 / 定期报告 / 投资者关系活动，也可自定义。',
+    count: true,
+    unit: '条',
+  },
+  {
+    id: 'jobs',
+    label: '加入我们',
+    en: 'Careers',
+    icon: 'mdi-account-tie-outline',
+    note: '在招岗位按列表顺序展示；类型建议用 社会招聘 / 校园招聘。',
+    count: true,
+    unit: '个',
+  },
+  {
     id: 'copy',
     label: '首页文案',
     en: 'Copy',
     icon: 'mdi-text-box-outline',
     note: '首屏标题、品牌寄语与数据条；多行文本框均为「一行一条」。',
+    count: true,
+    unit: '条',
+  },
+  {
+    id: 'contact',
+    label: '联系我们',
+    en: 'Contact',
+    icon: 'mdi-map-marker-outline',
+    note: '页面文案与表单字段；字段顺序即前台表单顺序。',
+    count: true,
+    unit: '项',
+  },
+  {
+    id: 'pv',
+    label: '药物警戒',
+    en: 'PV',
+    icon: 'mdi-shield-check-outline',
+    note: '不良反应报告页的文案与表单字段，与「联系我们」共用同一套字段结构。',
+    count: true,
+    unit: '项',
+  },
+  {
+    id: 'site',
+    label: '站点信息',
+    en: 'Site',
+    icon: 'mdi-cog-outline',
+    note: '页脚、顶部工具链接与备案信息，修改后全站同步生效。',
     count: true,
     unit: '条',
   },
@@ -222,7 +290,11 @@ const historyDialog = ref(false)
 const navGroups = computed(() => {
   const groups: Array<{ title: string; ids: SectionId[] }> = [
     { title: '概览', ids: ['dash'] },
-    { title: '内容', ids: ['brand', 'banners', 'products', 'news', 'academic', 'copy'] },
+    {
+      title: '内容',
+      ids: ['brand', 'banners', 'products', 'news', 'about', 'academic', 'investor', 'jobs', 'copy'],
+    },
+    { title: '页面', ids: ['contact', 'pv', 'site'] },
     { title: '工具', ids: ['json'] },
   ]
   const query = sectionSearch.value.trim().toLowerCase()
@@ -249,9 +321,10 @@ const dashStats = computed(() => {
   return [
     { label: '产品', en: 'Products', value: d.products.length, unit: '个', icon: 'mdi-package-variant-closed', to: 'products' as SectionId },
     { label: '新闻', en: 'News', value: d.news.length, unit: '篇', icon: 'mdi-newspaper-variant-outline', to: 'news' as SectionId },
+    { label: '投资者公告', en: 'Announcements', value: d.pages.investor.items.length, unit: '条', icon: 'mdi-chart-line', to: 'investor' as SectionId },
+    { label: '招聘岗位', en: 'Jobs', value: d.pages.jobs.items.length, unit: '个', icon: 'mdi-account-tie-outline', to: 'jobs' as SectionId },
     { label: '首页横幅', en: 'Banners', value: d.banners.length, unit: '张', icon: 'mdi-image-multiple-outline', to: 'banners' as SectionId },
     { label: '学术成果', en: 'Papers', value: d.academic.papers.length, unit: '篇', icon: 'mdi-file-document-outline', to: 'academic' as SectionId },
-
   ]
 })
 
@@ -299,7 +372,10 @@ const dashContentTotal = computed(() => {
     d.banners.length +
     d.academic.papers.length +
     d.academic.events.length +
-    d.academic.collab.length
+    d.academic.collab.length +
+    d.pages.investor.items.length +
+    d.pages.jobs.items.length +
+    d.pages.about.milestones.length
   )
 })
 const seoScore = computed(() => {
@@ -359,6 +435,8 @@ const compositionOption = computed<EChartsOption>(() => {
     ? [
         { name: '产品', value: d.products.length },
         { name: '新闻', value: d.news.length },
+        { name: '公告', value: d.pages.investor.items.length },
+        { name: '岗位', value: d.pages.jobs.items.length },
         { name: '横幅', value: d.banners.length },
         { name: '论文', value: d.academic.papers.length },
         { name: '活动', value: d.academic.events.length },
@@ -556,14 +634,80 @@ const countFor = (id: SectionId): number | null => {
       return draft.value.products.length
     case 'news':
       return draft.value.news.length
+    case 'about':
+      return draft.value.pages.about.sections.length + draft.value.pages.about.milestones.length
     case 'academic':
       return draft.value.academic.papers.length + draft.value.academic.events.length
+    case 'investor':
+      return draft.value.pages.investor.items.length
+    case 'jobs':
+      return draft.value.pages.jobs.items.length
+    case 'contact':
+      return draft.value.pages.contact.fields.length
+    case 'pv':
+      return draft.value.pages.pharmacovigilance.fields.length
+    case 'site':
+      return draft.value.site.utilityLinks.length + draft.value.site.footerLinks.length
     case 'copy':
       return draft.value.company.length + draft.value.stats.length
     default:
       return null
   }
 }
+
+const investorTypeOptions = ['临时公告', '定期报告', '投资者关系活动']
+const jobTypeOptions = ['社会招聘', '校园招聘']
+const formFieldTypeOptions = [
+  { title: '单行文本', value: 'text' },
+  { title: '电话号码', value: 'tel' },
+  { title: '电子邮箱', value: 'email' },
+  { title: '多行文本', value: 'textarea' },
+  { title: '下拉选择', value: 'select' },
+]
+
+/** 下拉切换字段类型时补上 options，避免 AdminLinesField 收到 undefined。 */
+const changeFieldType = (field: SiteFormField, value: unknown) => {
+  field.type = (typeof value === 'string' ? value : 'text') as SiteFormField['type']
+  if (field.type === 'select' && !Array.isArray(field.options)) field.options = []
+}
+
+const productCategoryOptions = computed(() => {
+  const base = draft.value?.pages.products.categories ?? ['制剂产品', '原料药']
+  const used = (draft.value?.products ?? []).map((product) => product.category).filter(Boolean)
+  return [...new Set([...base, ...used])]
+})
+
+const productGroupOptions = computed(() => {
+  const base = draft.value?.pages.products.groups ?? []
+  const used = (draft.value?.products ?? [])
+    .map((product) => product.group)
+    .filter((group): group is string => Boolean(group))
+  return [...new Set([...base, ...used])]
+})
+
+/** 「联系我们」「药物警戒」共用同一套页面元信息 + 表单字段编辑界面。 */
+const formPages = computed(() => {
+  const d = draft.value
+  if (!d) return []
+  return [
+    {
+      id: 'contact' as SectionId,
+      label: '联系我们',
+      en: 'Contact',
+      icon: 'mdi-map-marker-outline',
+      note: '页面文案与表单字段；字段顺序即前台表单顺序。',
+      page: d.pages.contact as SiteFormsPage,
+    },
+    {
+      id: 'pv' as SectionId,
+      label: '药物警戒',
+      en: 'PV',
+      icon: 'mdi-shield-check-outline',
+      note: '不良反应报告页的文案与表单字段；字段顺序即前台表单顺序。',
+      page: d.pages.pharmacovigilance as SiteFormsPage,
+    },
+  ]
+})
 
 const notify = (message: string, color: 'success' | 'error' | 'info' = 'success') => {
   snackbarText.value = message
@@ -774,12 +918,64 @@ watch(active, (next) => {
 
 const addBanner = () => draft.value?.banners.push({ src: '', alt: '', position: '50% 50%' })
 const addProduct = () =>
-  draft.value?.products.push({ code: '', name: '', category: '', tag: '', description: '', image: '' })
-const addNews = () => draft.value?.news.push({ date: '', category: '', title: '', excerpt: '', body: [] })
+  draft.value?.products.push({
+    code: '',
+    name: '',
+    category: '制剂产品',
+    group: '',
+    form: '',
+    spec: '',
+    tag: '',
+    description: '',
+    image: '',
+    indication: '',
+    holder: '',
+    detail: '',
+  })
+const addNews = () =>
+  draft.value?.news.push({
+    id: `n-${Date.now().toString(36)}`,
+    date: '',
+    category: '企业动态',
+    title: '',
+    excerpt: '',
+    body: [],
+    cover: '',
+    sourceUrl: '',
+  })
 const addPaper = () => draft.value?.academic.papers.push({ year: '', title: '', journal: '', tags: [] })
 const addEvent = () => draft.value?.academic.events.push({ date: '', name: '', place: '', role: '' })
 const addCompany = () => draft.value?.company.push({ label: '', value: '' })
 const addStat = () => draft.value?.stats.push({ value: '', label: '', labelEn: '' })
+
+const addAboutSection = () =>
+  draft.value?.pages.about.sections.push({ title: '', paragraphs: [] })
+const addMilestone = () =>
+  draft.value?.pages.about.milestones.push({ period: '', title: '', text: '' })
+const addInvestorItem = () =>
+  draft.value?.pages.investor.items.push({
+    date: '',
+    type: '临时公告',
+    title: '',
+    url: '',
+    summary: '',
+    body: [],
+  })
+const addJob = () =>
+  draft.value?.pages.jobs.items.push({
+    id: `job-${Date.now().toString(36)}`,
+    type: '社会招聘',
+    title: '',
+    department: '',
+    location: '',
+    headcount: '',
+    description: '',
+    requirements: [],
+  })
+const addUtilityLink = () => draft.value?.site.utilityLinks.push({ label: '', to: '' })
+const addFooterLink = () => draft.value?.site.footerLinks.push({ label: '', url: '' })
+const addFormField = (page: SiteFormsPage) =>
+  page.fields.push({ name: '', label: '', type: 'text', required: false, placeholder: '' })
 
 /* ------------------------------------------------------------------ *
  * 未保存离开提醒
@@ -818,7 +1014,7 @@ onBeforeUnmount(() => {
           <p class="text-overline text-primary mb-1">Content Studio</p>
           <h1 class="text-h4 font-weight-medium mb-3">内容管理</h1>
           <p class="text-body-2 text-medium-emphasis mb-6">
-            登录后可编辑官网站点的品牌信息、首页横幅、产品、新闻与文案。
+            登录后可编辑官网站点的品牌信息、首页横幅、产品、新闻、关于、投资者、招聘与页面内容。
           </p>
 
           <v-form @submit.prevent="login">
@@ -1073,7 +1269,7 @@ onBeforeUnmount(() => {
       <v-main class="lux-main">
         <div class="lux-content pa-4 pa-md-6">
             <!-- ======================= 站点概览 ======================= -->
-            <div v-show="active === 'dash'" class="dash-board">
+            <div v-show="active === 'dash'" id="dash" class="dash-board">
               <v-row density="compact">
                 <v-col cols="12" md="8">
                   <v-card class="dash-hero" rounded="xl">
@@ -1245,6 +1441,7 @@ onBeforeUnmount(() => {
 <!-- ======================= 品牌信息 ======================= -->
             <StudioSectionCard
               v-show="active === 'brand'"
+              id="brand"
               title="品牌信息"
               en="Brand"
               icon="mdi-domain"
@@ -1309,6 +1506,7 @@ onBeforeUnmount(() => {
             <!-- ======================= 首页横幅 ======================= -->
             <StudioSectionCard
               v-show="active === 'banners'"
+              id="banners"
               title="首页横幅"
               en="Banners"
               icon="mdi-image-multiple-outline"
@@ -1367,10 +1565,11 @@ onBeforeUnmount(() => {
             <!-- ======================= 产品中心 ======================= -->
             <StudioSectionCard
               v-show="active === 'products'"
+              id="products"
               title="产品中心"
               en="Products"
               icon="mdi-package-variant-closed"
-              note="产品列表按这里的顺序展示在「产品中心」页面。"
+              note="顺序即展示顺序。药品分类、治疗领域、剂型、规格、适应症、持有人用于产品详情弹窗。"
               :count="draft.products.length"
               unit="个"
             >
@@ -1399,22 +1598,72 @@ onBeforeUnmount(() => {
                     <v-text-field v-model="product.name" label="产品名称" hide-details="auto" />
                   </v-col>
                   <v-col cols="12" md="6">
-                    <v-text-field v-model="product.category" label="分类" hide-details="auto" />
+                    <v-select
+                      v-model="product.category"
+                      :items="productCategoryOptions"
+                      label="药品分类"
+                      hint="制剂产品 / 原料药"
+                      persistent-hint
+                      hide-details="auto"
+                    />
                   </v-col>
                   <v-col cols="12" md="6">
-                    <v-text-field v-model="product.tag" label="标签" placeholder="敏感肌适用" hide-details="auto" />
+                    <v-select
+                      v-model="product.group"
+                      :items="productGroupOptions"
+                      label="治疗领域"
+                      hint="对应「产品中心」的治疗领域筛选"
+                      persistent-hint
+                      hide-details="auto"
+                    />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="product.tag" label="标签" placeholder="医保乙类" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="product.form" label="剂型" placeholder="注射剂" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="product.spec" label="规格" placeholder="2ml:4mg" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="product.holder" label="持有人" placeholder="XXX 制药有限公司" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-textarea
+                      v-model="product.indication"
+                      label="适应症"
+                      :rows="3"
+                      hide-details="auto"
+                      placeholder="用于……"
+                    />
                   </v-col>
                   <v-col cols="12">
                     <AdminImageField
                       v-model="product.image"
-                      label="图片路径"
-                      placeholder="/images/banner-4.jpg"
+                      label="产品图片（列表卡片与详情弹窗大图）"
+                      placeholder="/images/product-1.svg"
                       hint="可上传、拖拽或从图片库选择"
                       @error="notify($event, 'error')"
                     />
                   </v-col>
                   <v-col cols="12">
-                    <v-textarea v-model="product.description" label="产品描述" :rows="3" hide-details="auto" />
+                    <v-textarea
+                      v-model="product.description"
+                      label="产品描述（列表卡片摘要）"
+                      :rows="3"
+                      hide-details="auto"
+                    />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-textarea
+                      v-model="product.detail"
+                      label="产品说明（详情弹窗正文）"
+                      :rows="4"
+                      hint="详情弹窗中的完整说明；留空时前台回退显示「产品描述」。"
+                      persistent-hint
+                      hide-details="auto"
+                    />
                   </v-col>
                 </v-row>
               </StudioRepeaterItem>
@@ -1427,10 +1676,11 @@ onBeforeUnmount(() => {
             <!-- ======================= 新闻中心 ======================= -->
             <StudioSectionCard
               v-show="active === 'news'"
+              id="news"
               title="新闻中心"
               en="News"
               icon="mdi-newspaper-variant-outline"
-              note="正文一行一段，段落顺序即展示顺序。"
+              note="正文一行一段；分类建议用 企业动态 / 政策法规。"
               :count="draft.news.length"
               unit="篇"
             >
@@ -1452,16 +1702,49 @@ onBeforeUnmount(() => {
               >
                 <v-row density="compact">
                   <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="item.id"
+                      label="新闻 ID（可选）"
+                      placeholder="n-2026-07"
+                      hint="详情页路由 /news/{id}，请保持唯一；新增时自动生成，可修改。"
+                      persistent-hint
+                      hide-details="auto"
+                    />
+                  </v-col>
+                  <v-col cols="12" md="6">
                     <v-text-field v-model="item.date" label="日期" placeholder="2026.10.18" hide-details="auto" />
                   </v-col>
                   <v-col cols="12" md="6">
-                    <v-text-field v-model="item.category" label="分类" placeholder="公司动态" hide-details="auto" />
+                    <v-text-field
+                      v-model="item.category"
+                      label="分类"
+                      placeholder="企业动态 / 政策法规"
+                      hide-details="auto"
+                    />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="item.sourceUrl"
+                      label="原文链接（可选）"
+                      placeholder="https://..."
+                      hide-details="auto"
+                    />
                   </v-col>
                   <v-col cols="12">
                     <v-text-field v-model="item.title" label="标题" hide-details="auto" />
                   </v-col>
                   <v-col cols="12">
                     <v-textarea v-model="item.excerpt" label="摘要" :rows="2" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12">
+                    <AdminImageField
+                      :model-value="item.cover ?? ''"
+                      label="封面图"
+                      placeholder="/images/news-1.svg"
+                      hint="显示在新闻列表与详情页顶部"
+                      @update:model-value="item.cover = $event"
+                      @error="notify($event, 'error')"
+                    />
                   </v-col>
                   <v-col cols="12">
                     <AdminLinesField v-model="item.body" label="正文" :rows="5" hint="一行一段，空行会被忽略。" />
@@ -1474,9 +1757,123 @@ onBeforeUnmount(() => {
               </v-btn>
             </StudioSectionCard>
 
+            <!-- ======================= 关于我们 ======================= -->
+            <StudioSectionCard
+              v-show="active === 'about'"
+              id="about"
+              title="关于我们"
+              en="About"
+              icon="mdi-office-building-outline"
+              note="页面标题、引言、公司简介分段与发展历程时间线；前三组依次对应「公司简介 / 研发与质量 / 企业文化」。"
+              :count="draft.pages.about.sections.length + draft.pages.about.milestones.length"
+              unit="项"
+            >
+              <StudioGroupHead title="页面信息" icon="mdi-page-layout-header" />
+
+              <v-row density="compact">
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="draft.pages.about.title" label="页面标题" hide-details="auto" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="draft.pages.about.subtitle" label="副标题" hide-details="auto" />
+                </v-col>
+                <v-col cols="12">
+                  <AdminLinesField
+                    v-model="draft.pages.about.intro"
+                    label="引言"
+                    :rows="4"
+                    hint="一行一段，显示在页面头部与「公司简介」正文。"
+                  />
+                </v-col>
+              </v-row>
+
+              <StudioGroupHead
+                title="公司简介分段"
+                icon="mdi-text-box-outline"
+                :count="draft.pages.about.sections.length"
+                unit="组"
+              />
+
+              <v-alert v-if="!draft.pages.about.sections.length" type="info" variant="tonal" density="comfortable" class="mb-4">
+                还没有简介分段。
+              </v-alert>
+
+              <StudioRepeaterItem
+                v-for="(block, index) in draft.pages.about.sections"
+                :key="`about-section-${index}`"
+                :index="index"
+                :title="block.title || '未命名分段'"
+                :subtitle="`${block.paragraphs.length} 段正文`"
+                :can-move-up="index > 0"
+                :can-move-down="index < draft.pages.about.sections.length - 1"
+                @up="moveItem(draft.pages.about.sections, index, -1)"
+                @down="moveItem(draft.pages.about.sections, index, 1)"
+                @remove="removeItem(draft.pages.about.sections, index)"
+              >
+                <v-row density="compact">
+                  <v-col cols="12">
+                    <v-text-field v-model="block.title" label="小标题" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12">
+                    <AdminLinesField
+                      v-model="block.paragraphs"
+                      label="段落"
+                      :rows="4"
+                      hint="一行一段，空行会被忽略。"
+                    />
+                  </v-col>
+                </v-row>
+              </StudioRepeaterItem>
+
+              <v-btn variant="tonal" color="primary" prepend-icon="mdi-plus" class="mt-1" @click="addAboutSection">
+                添加分段
+              </v-btn>
+
+              <StudioGroupHead
+                title="发展历程"
+                icon="mdi-timeline-clock-outline"
+                :count="draft.pages.about.milestones.length"
+                unit="个"
+              />
+
+              <v-alert v-if="!draft.pages.about.milestones.length" type="info" variant="tonal" density="comfortable" class="mb-4">
+                还没有发展历程节点。
+              </v-alert>
+
+              <StudioRepeaterItem
+                v-for="(milestone, index) in draft.pages.about.milestones"
+                :key="`milestone-${index}`"
+                :index="index"
+                :title="milestone.title || '未命名节点'"
+                :subtitle="milestone.period"
+                :can-move-up="index > 0"
+                :can-move-down="index < draft.pages.about.milestones.length - 1"
+                @up="moveItem(draft.pages.about.milestones, index, -1)"
+                @down="moveItem(draft.pages.about.milestones, index, 1)"
+                @remove="removeItem(draft.pages.about.milestones, index)"
+              >
+                <v-row density="compact">
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="milestone.period" label="时间段" placeholder="2015—2017" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="milestone.title" label="标题" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-textarea v-model="milestone.text" label="说明" :rows="3" hide-details="auto" />
+                  </v-col>
+                </v-row>
+              </StudioRepeaterItem>
+
+              <v-btn variant="tonal" color="primary" prepend-icon="mdi-plus" class="mt-1" @click="addMilestone">
+                添加节点
+              </v-btn>
+            </StudioSectionCard>
+
             <!-- ======================= 学术交流 ======================= -->
             <StudioSectionCard
               v-show="active === 'academic'"
+              id="academic"
               title="学术交流"
               en="Academic"
               icon="mdi-school-outline"
@@ -1584,9 +1981,202 @@ onBeforeUnmount(() => {
               />
             </StudioSectionCard>
 
+            <!-- ======================= 投资者关系 ======================= -->
+            <StudioSectionCard
+              v-show="active === 'investor'"
+              id="investor"
+              title="投资者关系"
+              en="Investors"
+              icon="mdi-chart-line"
+              note="公告按列表顺序展示；类型提供 临时公告 / 定期报告 / 投资者关系活动，也可自定义。"
+              :count="draft.pages.investor.items.length"
+              unit="条"
+            >
+              <StudioGroupHead title="页面信息" icon="mdi-page-layout-header" />
+
+              <v-row density="compact">
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="draft.pages.investor.title" label="页面标题" hide-details="auto" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="draft.pages.investor.subtitle" label="副标题" hide-details="auto" />
+                </v-col>
+                <v-col cols="12">
+                  <AdminLinesField
+                    v-model="draft.pages.investor.intro"
+                    label="引言"
+                    :rows="3"
+                    hint="一行一段，显示在页面头部。"
+                  />
+                </v-col>
+              </v-row>
+
+              <StudioGroupHead
+                title="公告与信息披露"
+                icon="mdi-file-document-multiple-outline"
+                :count="draft.pages.investor.items.length"
+                unit="条"
+              />
+
+              <v-alert v-if="!draft.pages.investor.items.length" type="info" variant="tonal" density="comfortable" class="mb-4">
+                还没有公告，点击下方「添加一项」开始。
+              </v-alert>
+
+              <StudioRepeaterItem
+                v-for="(item, index) in draft.pages.investor.items"
+                :key="`investor-${index}`"
+                :index="index"
+                :title="item.title || '未命名公告'"
+                :subtitle="[item.date, item.type].filter(Boolean).join(' · ')"
+                :can-move-up="index > 0"
+                :can-move-down="index < draft.pages.investor.items.length - 1"
+                @up="moveItem(draft.pages.investor.items, index, -1)"
+                @down="moveItem(draft.pages.investor.items, index, 1)"
+                @remove="removeItem(draft.pages.investor.items, index)"
+              >
+                <v-row density="compact">
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="item.date" label="日期" placeholder="2026-10-18" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-combobox
+                      v-model="item.type"
+                      :items="investorTypeOptions"
+                      label="类型"
+                      variant="outlined"
+                      density="comfortable"
+                      rounded="lg"
+                      color="primary"
+                      hide-details="auto"
+                      hint="可选择预设类型，也可输入自定义类型。"
+                      persistent-hint
+                    />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field v-model="item.title" label="标题" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="item.url"
+                      label="原文链接（可选）"
+                      placeholder="https://..."
+                      hint="填写后详情弹窗显示「查看原文」。"
+                      persistent-hint
+                      hide-details="auto"
+                    />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-textarea v-model="item.summary" label="摘要" :rows="3" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12">
+                    <AdminLinesField
+                      :model-value="item.body ?? []"
+                      label="正文"
+                      :rows="4"
+                      hint="一行一段，显示在公告详情弹窗。"
+                      @update:model-value="item.body = $event"
+                    />
+                  </v-col>
+                </v-row>
+              </StudioRepeaterItem>
+
+              <v-btn variant="tonal" color="primary" prepend-icon="mdi-plus" class="mt-1" @click="addInvestorItem">
+                添加一项
+              </v-btn>
+            </StudioSectionCard>
+
+            <!-- ======================= 加入我们 ======================= -->
+            <StudioSectionCard
+              v-show="active === 'jobs'"
+              id="jobs"
+              title="加入我们"
+              en="Careers"
+              icon="mdi-account-tie-outline"
+              note="在招岗位按列表顺序展示；类型建议用 社会招聘 / 校园招聘。"
+              :count="draft.pages.jobs.items.length"
+              unit="个"
+            >
+              <StudioGroupHead title="页面信息" icon="mdi-page-layout-header" />
+
+              <v-row density="compact">
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="draft.pages.jobs.title" label="页面标题" hide-details="auto" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="draft.pages.jobs.subtitle" label="副标题" hide-details="auto" />
+                </v-col>
+                <v-col cols="12">
+                  <AdminLinesField
+                    v-model="draft.pages.jobs.intro"
+                    label="引言"
+                    :rows="3"
+                    hint="一行一段，显示在页面头部。"
+                  />
+                </v-col>
+              </v-row>
+
+              <StudioGroupHead
+                title="在招岗位"
+                icon="mdi-badge-account-outline"
+                :count="draft.pages.jobs.items.length"
+                unit="个"
+              />
+
+              <v-alert v-if="!draft.pages.jobs.items.length" type="info" variant="tonal" density="comfortable" class="mb-4">
+                还没有岗位，点击下方「添加一项」开始。
+              </v-alert>
+
+              <StudioRepeaterItem
+                v-for="(job, index) in draft.pages.jobs.items"
+                :key="`job-${index}`"
+                :index="index"
+                :title="job.title || '未命名岗位'"
+                :subtitle="[job.type, job.department, job.location].filter(Boolean).join(' · ')"
+                :can-move-up="index > 0"
+                :can-move-down="index < draft.pages.jobs.items.length - 1"
+                @up="moveItem(draft.pages.jobs.items, index, -1)"
+                @down="moveItem(draft.pages.jobs.items, index, 1)"
+                @remove="removeItem(draft.pages.jobs.items, index)"
+              >
+                <v-row density="compact">
+                  <v-col cols="12" md="6">
+                    <v-select v-model="job.type" :items="jobTypeOptions" label="招聘类型" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="job.title" label="岗位名称" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="job.department" label="所属部门" placeholder="研发中心 · 制剂部" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="job.location" label="工作地点" placeholder="上海" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="job.headcount" label="招聘人数" placeholder="3 人" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-textarea v-model="job.description" label="岗位职责" :rows="3" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12">
+                    <AdminLinesField
+                      v-model="job.requirements"
+                      label="任职要求"
+                      :rows="4"
+                      hint="一行一条，空行会被忽略。"
+                    />
+                  </v-col>
+                </v-row>
+              </StudioRepeaterItem>
+
+              <v-btn variant="tonal" color="primary" prepend-icon="mdi-plus" class="mt-1" @click="addJob">
+                添加一项
+              </v-btn>
+            </StudioSectionCard>
+
             <!-- ======================= 首页文案 ======================= -->
             <StudioSectionCard
               v-show="active === 'copy'"
+              id="copy"
               title="首页文案"
               en="Copy"
               icon="mdi-text-box-outline"
@@ -1695,9 +2285,230 @@ onBeforeUnmount(() => {
               </v-btn>
             </StudioSectionCard>
 
+            <!-- ======================= 联系我们 / 药物警戒 ======================= -->
+            <StudioSectionCard
+              v-for="formPage in formPages"
+              :key="formPage.id"
+              v-show="active === formPage.id"
+              :id="formPage.id"
+              :title="formPage.label"
+              :en="formPage.en"
+              :icon="formPage.icon"
+              :note="formPage.note"
+              :count="formPage.page.fields.length"
+              unit="项"
+            >
+              <StudioGroupHead title="页面信息" icon="mdi-page-layout-header" />
+
+              <v-row density="compact">
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="formPage.page.title" label="页面标题" hide-details="auto" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="formPage.page.subtitle" label="副标题" hide-details="auto" />
+                </v-col>
+                <v-col cols="12">
+                  <AdminLinesField
+                    v-model="formPage.page.intro"
+                    label="引言"
+                    :rows="3"
+                    hint="一行一段，显示在页面头部。"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-textarea v-model="formPage.page.note" label="页面备注" :rows="2" hide-details="auto" />
+                </v-col>
+              </v-row>
+
+              <StudioGroupHead
+                title="表单字段"
+                icon="mdi-form-textbox"
+                :count="formPage.page.fields.length"
+                unit="项"
+              />
+
+              <v-alert v-if="!formPage.page.fields.length" type="info" variant="tonal" density="comfortable" class="mb-4">
+                还没有表单字段，点击下方「添加字段」开始。
+              </v-alert>
+
+              <StudioRepeaterItem
+                v-for="(field, index) in formPage.page.fields"
+                :key="`${formPage.id}-field-${index}`"
+                :index="index"
+                :title="field.label || '未命名字段'"
+                :subtitle="[field.name, field.type, field.required ? '必填' : ''].filter(Boolean).join(' · ')"
+                :can-move-up="index > 0"
+                :can-move-down="index < formPage.page.fields.length - 1"
+                @up="moveItem(formPage.page.fields, index, -1)"
+                @down="moveItem(formPage.page.fields, index, 1)"
+                @remove="removeItem(formPage.page.fields, index)"
+              >
+                <v-row density="compact">
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="field.name"
+                      label="字段标识"
+                      placeholder="name"
+                      hint="提交到后端的字段名，建议用英文小驼峰。"
+                      persistent-hint
+                      hide-details="auto"
+                    />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="field.label" label="显示名称" placeholder="姓名" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-select
+                      :model-value="field.type"
+                      :items="formFieldTypeOptions"
+                      label="字段类型"
+                      hide-details="auto"
+                      @update:model-value="changeFieldType(field, $event)"
+                    />
+                  </v-col>
+                  <v-col cols="12" md="6" class="d-flex align-center">
+                    <v-switch
+                      v-model="field.required"
+                      label="必填"
+                      color="primary"
+                      density="compact"
+                      hide-details
+                      inset
+                    />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field v-model="field.placeholder" label="占位提示" hide-details="auto" />
+                  </v-col>
+                  <v-col v-if="field.type === 'select'" cols="12">
+                    <AdminLinesField
+                      v-if="field.options"
+                      v-model="field.options"
+                      label="下拉选项"
+                      :rows="3"
+                      hint="一行一个选项，空行会被忽略。"
+                    />
+                  </v-col>
+                </v-row>
+              </StudioRepeaterItem>
+
+              <v-btn
+                variant="tonal"
+                color="primary"
+                prepend-icon="mdi-plus"
+                class="mt-1"
+                @click="addFormField(formPage.page)"
+              >
+                添加字段
+              </v-btn>
+            </StudioSectionCard>
+
+            <!-- ======================= 站点信息 ======================= -->
+            <StudioSectionCard
+              v-show="active === 'site'"
+              id="site"
+              title="站点信息"
+              en="Site"
+              icon="mdi-cog-outline"
+              note="页脚、顶部工具链接与备案信息，修改后全站同步生效。"
+              :count="draft.site.utilityLinks.length + draft.site.footerLinks.length"
+              unit="条"
+            >
+              <StudioGroupHead title="基础信息" icon="mdi-phone-outline" />
+
+              <v-row density="compact">
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="draft.site.phone" label="站点电话" placeholder="400-820-2026" hide-details="auto" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="draft.site.icp" label="ICP 备案号" hide-details="auto" />
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="draft.site.license" label="互联网药品信息服务资格证书" hide-details="auto" />
+                </v-col>
+                <v-col cols="12">
+                  <v-textarea v-model="draft.site.disclaimer" label="页脚免责声明" :rows="3" hide-details="auto" />
+                </v-col>
+              </v-row>
+
+              <StudioGroupHead
+                title="顶部工具链接"
+                icon="mdi-link-variant"
+                :count="draft.site.utilityLinks.length"
+                unit="条"
+              />
+
+              <v-alert v-if="!draft.site.utilityLinks.length" type="info" variant="tonal" density="comfortable" class="mb-4">
+                还没有顶部工具链接。
+              </v-alert>
+
+              <StudioRepeaterItem
+                v-for="(link, index) in draft.site.utilityLinks"
+                :key="`utility-link-${index}`"
+                :index="index"
+                :title="link.label || '未命名链接'"
+                :subtitle="link.to"
+                :can-move-up="index > 0"
+                :can-move-down="index < draft.site.utilityLinks.length - 1"
+                @up="moveItem(draft.site.utilityLinks, index, -1)"
+                @down="moveItem(draft.site.utilityLinks, index, 1)"
+                @remove="removeItem(draft.site.utilityLinks, index)"
+              >
+                <v-row density="compact">
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="link.label" label="链接文字" placeholder="药物警戒" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="link.to" label="站内路径" placeholder="/pharmacovigilance" hide-details="auto" />
+                  </v-col>
+                </v-row>
+              </StudioRepeaterItem>
+
+              <v-btn variant="tonal" color="primary" prepend-icon="mdi-plus" class="mt-1" @click="addUtilityLink">
+                添加链接
+              </v-btn>
+
+              <StudioGroupHead
+                title="页脚链接"
+                icon="mdi-link-box-variant-outline"
+                :count="draft.site.footerLinks.length"
+                unit="条"
+              />
+
+              <v-alert v-if="!draft.site.footerLinks.length" type="info" variant="tonal" density="comfortable" class="mb-4">
+                还没有页脚链接。
+              </v-alert>
+
+              <StudioRepeaterItem
+                v-for="(link, index) in draft.site.footerLinks"
+                :key="`footer-link-${index}`"
+                :index="index"
+                :title="link.label || '未命名链接'"
+                :subtitle="link.url"
+                :can-move-up="index > 0"
+                :can-move-down="index < draft.site.footerLinks.length - 1"
+                @up="moveItem(draft.site.footerLinks, index, -1)"
+                @down="moveItem(draft.site.footerLinks, index, 1)"
+                @remove="removeItem(draft.site.footerLinks, index)"
+              >
+                <v-row density="compact">
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="link.label" label="链接文字" placeholder="国家药品监督管理局" hide-details="auto" />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="link.url" label="外部链接" placeholder="https://www.nmpa.gov.cn" hide-details="auto" />
+                  </v-col>
+                </v-row>
+              </StudioRepeaterItem>
+
+              <v-btn variant="tonal" color="primary" prepend-icon="mdi-plus" class="mt-1" @click="addFooterLink">
+                添加链接
+              </v-btn>
+            </StudioSectionCard>
+
             <!-- ======================= 原始 JSON ======================= -->
             <StudioSectionCard
               v-show="active === 'json'"
+              id="json"
               title="原始 JSON"
               en="Raw"
               icon="mdi-code-json"
