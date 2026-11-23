@@ -1491,6 +1491,15 @@ onBeforeUnmount(() => {
                   />
                 </v-col>
                 <v-col cols="12">
+                  <AdminImageField
+                    v-model="draft.brand.logoLight"
+                    label="深色底 Logo（页脚用）"
+                    placeholder="留空则沿用上面的 Logo"
+                    hint="页脚是深色底，建议上传白字透明底版本，显示高度 46px"
+                    @error="notify($event, 'error')"
+                  />
+                </v-col>
+                <v-col cols="12">
                   <v-textarea
                     v-model="draft.brand.description"
                     label="品牌简介"

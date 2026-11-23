@@ -18,15 +18,13 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
       <v-container class="footer-inner">
         <v-row density="compact">
           <v-col cols="12" lg="3" md="6">
-            <div class="footer-brand">
-              <img
-                v-if="siteConfig.brand.logo"
-                :src="siteConfig.brand.logo"
-                :alt="siteConfig.brand.name"
-                class="footer-brand__logo"
-              />
-              <SiteLogo v-else light :size="40" />
-            </div>
+            <img
+              v-if="siteConfig.brand.logo"
+              :src="siteConfig.brand.logoLight || siteConfig.brand.logo"
+              :alt="siteConfig.brand.name"
+              class="footer-brand__logo"
+            />
+            <SiteLogo v-else light :size="40" />
             <p class="footer-desc">{{ siteConfig.brand.description }}</p>
             <div v-if="siteConfig.social.wechat" class="footer-qr">
               <v-img
@@ -146,17 +144,11 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
   padding-inline: 24px;
 }
 
-.footer-brand {
-  display: inline-flex;
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: #fff;
-}
-
 .footer-brand__logo {
   display: block;
   width: auto;
-  height: 42px;
+  max-width: 260px;
+  height: 46px;
 }
 
 .footer-desc {

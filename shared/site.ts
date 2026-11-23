@@ -3,6 +3,8 @@ export interface SiteBrand {
   shortName: string
   nameEn: string
   logo: string
+  /** 深色背景（页脚）用的浅色 Logo；留空则回退到 logo。 */
+  logoLight: string
   tagline: string
   taglineEn: string
   description: string
@@ -208,6 +210,7 @@ export const defaultContent: SiteConfig = {
     shortName: '舒美奇',
     nameEn: 'SUMAZ',
     logo: '/images/brand/logo.png',
+    logoLight: '/images/brand/logo-light.png',
     tagline: '药品研发与上市许可持有人专业企业',
     taglineEn: 'MAH · R&D · Quality',
     description:
