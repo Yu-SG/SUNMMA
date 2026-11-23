@@ -99,6 +99,18 @@ useSeoMeta({
 
     <section class="section">
       <v-container>
+        <div class="sales-bar">
+          <span class="sales-bar__label">
+            <v-icon icon="mdi-phone-in-talk-outline" size="18" />
+            销售中心
+          </span>
+          <span class="sales-bar__contacts">
+            <a class="sales-bar__item" href="tel:13925189289">杨总监　13925189289</a>
+            <span class="sales-bar__dot" aria-hidden="true">·</span>
+            <a class="sales-bar__item" href="tel:18908019189">高先生　18908019189</a>
+          </span>
+        </div>
+
         <div class="filters">
           <div class="filter-row">
             <span class="filter-label">药品分类</span>
@@ -345,6 +357,51 @@ useSeoMeta({
 .section {
   padding: 48px 0 76px;
   background: #fff;
+}
+
+.sales-bar {
+  display: flex;
+  margin-bottom: 18px;
+  padding: 14px 22px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+  border: 1px solid rgba(25, 118, 210, 0.18);
+  border-radius: 14px;
+  background: #f3f9ff;
+}
+
+.sales-bar__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #0d47a1;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.sales-bar__contacts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: #33414b;
+  font-size: 14px;
+}
+
+.sales-bar__item {
+  color: #10233a;
+  letter-spacing: 0.02em;
+  transition: color 0.2s var(--ease);
+}
+
+.sales-bar__item:hover {
+  color: #1976d2;
+}
+
+.sales-bar__dot {
+  color: #9aa6b2;
 }
 
 .filters {
