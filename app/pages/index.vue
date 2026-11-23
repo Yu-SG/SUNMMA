@@ -80,8 +80,8 @@ useSeoMeta({
           </v-col>
 
           <v-col cols="12" md="6" lg="6">
-            <p class="eyebrow font-en">ABOUT SUMAZ</p>
-            <h2 class="section-title">药品上市许可持有人</h2>
+            <p class="eyebrow font-en">ABOUT SUMAAZ</p>
+            <h2 class="section-title">舒美奇成都生物科技有限公司</h2>
             <div class="copy">
               <p v-for="(text, index) in about.intro" :key="index">{{ text }}</p>
             </div>

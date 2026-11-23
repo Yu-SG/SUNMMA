@@ -29,7 +29,7 @@ useSeoMeta({
       <v-container>
         <v-row align="center">
           <v-col cols="12" lg="7" md="7">
-            <p class="eyebrow font-en">ABOUT SUMAZ</p>
+            <p class="eyebrow font-en">ABOUT SUMAAZ</p>
             <h2 class="section-title">公司简介</h2>
             <div class="copy">
               <p v-for="(text, index) in page.intro" :key="index">{{ text }}</p>

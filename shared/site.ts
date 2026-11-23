@@ -208,7 +208,7 @@ export const defaultContent: SiteConfig = {
   brand: {
     name: '舒美奇',
     shortName: '舒美奇',
-    nameEn: 'SUMAZ',
+    nameEn: 'SUMAAZ',
     logo: '/images/brand/logo.png',
     logoLight: '/images/brand/logo-light.png',
     tagline: '药品研发与上市许可持有人专业企业',
@@ -224,7 +224,7 @@ export const defaultContent: SiteConfig = {
 
   hero: {
     heading: ['舒美奇', '成都生物科技有限公司'],
-    script: 'SUMAZ · SINCE 2016',
+    script: 'SUMAAZ · SINCE 2016',
     side: '舒美奇成都生物科技有限公司成立于 2016 年，位于成都高新区天府生命科技园，专注化学药制剂与中药新药研发。作为药品上市许可持有人，我们对每一个取得注册证书的品种履行上市放行与质量责任。',
   },
 
@@ -512,10 +512,10 @@ export const defaultContent: SiteConfig = {
   },
 
   stats: [
-    { value: '12', label: '个已上市品种', labelEn: 'Marketed Products' },
-    { value: '8', label: '个申报或在研品种', labelEn: 'In Registration' },
-    { value: '3', label: '个在研新药', labelEn: 'New Drugs' },
-    { value: '24', label: '家受托生产与供应伙伴', labelEn: 'Partners' },
+    { value: '12', label: '已上市品种', labelEn: 'Marketed Products' },
+    { value: '8', label: '申报或在研品种', labelEn: 'In Registration' },
+    { value: '3', label: '在研新药', labelEn: 'New Drugs' },
+    { value: '24', label: '受托生产与供应伙伴', labelEn: 'Partners' },
   ],
 
   message: {
@@ -706,7 +706,7 @@ export const defaultContent: SiteConfig = {
   pages: {
     about: {
       title: '关于我们',
-      subtitle: '药品上市许可持有人 · 质量责任主体',
+      subtitle: '舒美奇成都生物科技有限公司',
       intro: [
         '舒美奇成都生物科技有限公司（简称“舒美奇”）成立于 2016 年，坐落于四川省成都市高新区天府生命科技园孵化楼，主要从事化学药制剂和中药新药的研发。',
         '公司为药品上市许可持有人，履行药品上市放行责任，对其取得药品注册证书的药品质量负责。',
@@ -876,7 +876,7 @@ export const defaultContent: SiteConfig = {
   greeting: {
     title: '企业寄语',
     name: '舒美奇',
-    nameEn: 'SUMAZ',
+    nameEn: 'SUMAAZ',
     role: '药品上市许可持有人',
     message: [
       '舒美奇成立于 2016 年，选择了一条不轻松的路：以药品上市许可持有人的身份，对药品质量负全责。',

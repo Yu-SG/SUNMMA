@@ -121,7 +121,7 @@ export default defineNuxtConfig({
             '舒美奇成都生物科技有限公司成立于 2016 年，位于成都高新区天府生命科技园，专注化学药制剂与中药新药研发，是药品上市许可持有人。',
         },
         { name: 'robots', content: 'index, follow, max-image-preview:large' },
-        { property: 'og:site_name', content: 'SUMAZ' },
+        { property: 'og:site_name', content: 'SUMAAZ' },
         { property: 'og:locale', content: 'zh_CN' },
         { property: 'og:type', content: 'website' },
         { name: 'twitter:card', content: 'summary_large_image' },
