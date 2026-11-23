@@ -254,7 +254,7 @@ useSeoMeta({
             </p>
           </div>
           <div class="cta__actions">
-            <v-btn color="white" size="large" to="/contact" append-icon="mdi-arrow-right">联系我们</v-btn>
+            <v-btn color="white" size="large" to="/about#contact" append-icon="mdi-arrow-right">联系我们</v-btn>
             <v-btn variant="outlined" color="white" size="large" to="/quality">质量管理</v-btn>
           </div>
         </v-sheet>

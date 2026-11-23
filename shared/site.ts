@@ -255,7 +255,6 @@ export const defaultContent: SiteConfig = {
       ],
     },
     { label: '加入我们', labelEn: 'Careers', to: '/jobs' },
-    { label: '联系我们', labelEn: 'Contact', to: '/contact' },
     { label: '药物警戒', labelEn: 'Pharmacovigilance', to: '/pharmacovigilance' },
   ],
 

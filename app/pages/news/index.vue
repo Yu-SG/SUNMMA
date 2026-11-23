@@ -103,7 +103,7 @@ useSeoMeta({
                 />
               </v-list>
 
-              <v-card class="side-card" to="/contact">
+              <v-card class="side-card" to="/about#contact">
                 <p class="side-card__label font-en">CONTACT</p>
                 <p class="side-card__title">媒体与品牌合作</p>
                 <p class="side-card__text">如需采访、转载或品牌合作，请联系我们。</p>

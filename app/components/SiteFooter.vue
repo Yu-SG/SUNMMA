@@ -50,6 +50,9 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
               <li v-for="item in navLinks" :key="item.to">
                 <NuxtLink :to="item.to">{{ item.label }}</NuxtLink>
               </li>
+              <li>
+                <NuxtLink to="/about#contact">联系我们</NuxtLink>
+              </li>
             </ul>
           </v-col>
 

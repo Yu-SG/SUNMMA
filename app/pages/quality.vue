@@ -180,7 +180,7 @@ useSeoMeta({
             <h2 class="cta__title">质量是持有人的第一责任。</h2>
             <p class="cta__text">如需了解体系文件、受托生产或供应商合作，欢迎与我们联系。</p>
           </div>
-          <v-btn color="white" size="large" to="/contact" append-icon="mdi-arrow-right">联系我们</v-btn>
+          <v-btn color="white" size="large" to="/about#contact" append-icon="mdi-arrow-right">联系我们</v-btn>
         </v-sheet>
       </v-container>
     </section>

@@ -147,22 +147,8 @@ useSeoMeta({
       </v-container>
     </section>
 
-    <!-- CTA -->
-    <section class="section section--cta">
-      <v-container>
-        <v-sheet class="cta" rounded="xl">
-          <div>
-            <p class="cta__en font-en">WORK WITH US</p>
-            <h2 class="cta__title">产品合作、委托生产、研发合作，都欢迎聊一聊。</h2>
-            <p class="cta__text">舒美奇成都生物科技有限公司 · 成都高新区天府生命科技园</p>
-          </div>
-          <div class="cta__actions">
-            <v-btn color="white" size="large" to="/contact">联系我们</v-btn>
-            <v-btn variant="outlined" color="white" size="large" to="/quality">质量管理</v-btn>
-          </div>
-        </v-sheet>
-      </v-container>
-    </section>
+    <!-- 联系我们（与关于我们同页） -->
+    <SiteContactSection />
   </div>
 </template>
 
@@ -185,11 +171,6 @@ useSeoMeta({
 
 .section--values {
   background: #f5f7fa;
-}
-
-.section--cta {
-  padding: 60px 0 84px;
-  background: #fff;
 }
 
 .eyebrow {
@@ -416,43 +397,6 @@ useSeoMeta({
   letter-spacing: 0.08em;
 }
 
-.cta {
-  display: flex;
-  padding: 46px 50px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 30px;
-  background: linear-gradient(158deg, #0b2c56 0%, #143f74 55%, #1b5aa6 100%);
-  color: #fff;
-}
-
-.cta__en {
-  color: rgba(255, 255, 255, 0.66);
-  font-size: 11px;
-  letter-spacing: 0.28em;
-}
-
-.cta__title {
-  margin-top: 8px;
-  color: #fff;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.cta__text {
-  margin-top: 10px;
-  color: rgba(255, 255, 255, 0.78);
-  font-size: 14px;
-}
-
-.cta__actions {
-  display: flex;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
 @media (max-width: 960px) {
   .section {
     padding: 56px 0;
@@ -464,16 +408,6 @@ useSeoMeta({
 
   .intro-art__img {
     height: 300px;
-  }
-
-  .cta {
-    padding: 32px 26px;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .cta__title {
-    font-size: 22px;
   }
 
   .history-timeline__period {

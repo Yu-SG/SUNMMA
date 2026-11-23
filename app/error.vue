@@ -23,7 +23,7 @@ useSeoMeta({
         <div class="error-actions">
           <v-btn color="primary" rounded="lg" to="/">返回首页</v-btn>
           <v-btn variant="tonal" rounded="lg" to="/products">产品中心</v-btn>
-          <v-btn variant="text" rounded="lg" to="/contact">联系我们</v-btn>
+          <v-btn variant="text" rounded="lg" to="/about#contact">联系我们</v-btn>
         </div>
       </v-container>
     </v-main>

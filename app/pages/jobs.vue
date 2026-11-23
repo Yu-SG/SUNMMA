@@ -118,7 +118,7 @@ useSeoMeta({
                 <v-icon icon="mdi-email-outline" size="16" />
                 简历请通过「联系我们」提交
               </span>
-              <v-btn color="primary" to="/contact" append-icon="mdi-send-outline">
+              <v-btn color="primary" to="/about#contact" append-icon="mdi-send-outline">
                 投递简历
               </v-btn>
             </div>

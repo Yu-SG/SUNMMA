@@ -103,6 +103,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/pipeline': { redirect: { to: '/products', statusCode: 301 } },
     '/investor': { redirect: { to: '/about', statusCode: 301 } },
+    '/contact': { redirect: { to: '/about#contact', statusCode: 301 } },
     '/admin': { ssr: false },
   },
 

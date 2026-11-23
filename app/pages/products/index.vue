@@ -324,7 +324,7 @@ useSeoMeta({
               <p class="product-dialog__text">{{ selected.detail || selected.description }}</p>
 
               <div class="product-dialog__actions">
-                <v-btn color="primary" to="/contact" @click="dialogOpen = false">咨询合作</v-btn>
+                <v-btn color="primary" to="/about#contact" @click="dialogOpen = false">咨询合作</v-btn>
                 <v-btn variant="text" @click="dialogOpen = false">关闭</v-btn>
               </div>
             </div>
