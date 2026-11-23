@@ -207,7 +207,7 @@ export const defaultContent: SiteConfig = {
     name: '舒美奇',
     shortName: '舒美奇',
     nameEn: 'SUMAZ',
-    logo: '',
+    logo: '/images/brand/logo.png',
     tagline: '药品研发与上市许可持有人专业企业',
     taglineEn: 'MAH · R&D · Quality',
     description:

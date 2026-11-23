@@ -19,7 +19,7 @@ useJsonLd('organization', () => ({
   name: siteConfig.brand.name,
   alternateName: siteConfig.brand.nameEn,
   url: abs('/'),
-  logo: abs(siteConfig.brand.logo || '/images/logo.png'),
+  logo: abs(siteConfig.brand.logo || '/images/brand/logo.png'),
   description: siteConfig.brand.description,
   email: siteConfig.brand.email,
   telephone: siteConfig.brand.phone,

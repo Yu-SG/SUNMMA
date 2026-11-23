@@ -44,7 +44,7 @@ useJsonLd('article', () => {
     publisher: {
       '@type': 'Organization',
       name: siteConfig.brand.name,
-      logo: { '@type': 'ImageObject', url: abs(siteConfig.brand.logo || '/images/logo.png') },
+      logo: { '@type': 'ImageObject', url: abs(siteConfig.brand.logo || '/images/brand/logo.png') },
     },
   }
 })

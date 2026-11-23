@@ -71,7 +71,7 @@ watch(mdAndUp, (desktop) => {
       </div>
 
       <div class="nav-row">
-        <SiteLogo />
+        <SiteLogo :size="46" />
 
         <nav class="nav-links" aria-label="主导航">
           <template v-for="item in nav" :key="item.label">

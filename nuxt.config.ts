@@ -132,6 +132,9 @@ export default defineNuxtConfig({
         },
       ],
       link: [
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/images/brand/mark-32.png' },
+        { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/images/brand/mark-48.png' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/images/brand/mark-180.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {

@@ -18,7 +18,15 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
       <v-container class="footer-inner">
         <v-row density="compact">
           <v-col cols="12" lg="3" md="6">
-            <SiteLogo light :size="40" />
+            <div class="footer-brand">
+              <img
+                v-if="siteConfig.brand.logo"
+                :src="siteConfig.brand.logo"
+                :alt="siteConfig.brand.name"
+                class="footer-brand__logo"
+              />
+              <SiteLogo v-else light :size="40" />
+            </div>
             <p class="footer-desc">{{ siteConfig.brand.description }}</p>
             <div v-if="siteConfig.social.wechat" class="footer-qr">
               <v-img
@@ -81,7 +89,7 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
                 </span>
               </li>
               <li v-if="!siteConfig.site.phone && !siteConfig.brand.email" class="footer-hours">
-                电话与邮箱信息整理中，请通过「联系我们」留言
+                电话与邮箱信息整理中
               </li>
             </ul>
           </v-col>
@@ -134,6 +142,19 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
 .footer-inner {
   max-width: 1240px;
   padding-inline: 24px;
+}
+
+.footer-brand {
+  display: inline-flex;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.footer-brand__logo {
+  display: block;
+  width: auto;
+  height: 36px;
 }
 
 .footer-desc {
