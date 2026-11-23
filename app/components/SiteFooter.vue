@@ -17,32 +17,7 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
     <div class="footer-main">
       <v-container class="footer-inner">
         <v-row density="compact">
-          <v-col cols="12" lg="3" md="6">
-            <img
-              v-if="siteConfig.brand.logo"
-              :src="siteConfig.brand.logoLight || siteConfig.brand.logo"
-              :alt="siteConfig.brand.name"
-              class="footer-brand__logo"
-            />
-            <SiteLogo v-else light :size="40" />
-            <p class="footer-desc">{{ siteConfig.brand.description }}</p>
-            <div v-if="siteConfig.social.wechat" class="footer-qr">
-              <v-img
-                src="/images/qr-wechat.svg"
-                alt="微信公众号二维码"
-                width="92"
-                height="92"
-                eager
-                class="footer-qr__img"
-              />
-              <div>
-                <p class="footer-qr__title">微信公众号</p>
-                <p class="footer-qr__hint">扫码关注 {{ siteConfig.brand.name }} 最新动态</p>
-              </div>
-            </div>
-          </v-col>
-
-          <v-col cols="6" lg="2" md="3" sm="6">
+          <v-col cols="6" lg="3" md="3" sm="6">
             <h3 class="footer-title">站点导航</h3>
             <ul class="footer-list">
               <li v-for="item in navLinks" :key="item.to">
@@ -54,7 +29,7 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
             </ul>
           </v-col>
 
-          <v-col cols="6" lg="2" md="3" sm="6">
+          <v-col cols="6" lg="3" md="3" sm="6">
             <h3 class="footer-title">产品与栏目</h3>
             <ul class="footer-list">
               <li v-for="category in productLinks" :key="category">
@@ -67,7 +42,7 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
             </ul>
           </v-col>
 
-          <v-col cols="12" lg="3" md="6" sm="6">
+          <v-col cols="12" lg="3" md="3" sm="6">
             <h3 class="footer-title">联系方式</h3>
             <ul class="footer-list footer-list--contact">
               <li v-if="siteConfig.site.phone">
@@ -94,7 +69,7 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
             </ul>
           </v-col>
 
-          <v-col cols="12" lg="2" md="6" sm="6">
+          <v-col cols="12" lg="3" md="3" sm="6">
             <h3 class="footer-title">友情链接</h3>
             <ul class="footer-list">
               <li v-for="link in siteConfig.site.footerLinks" :key="link.url">
@@ -135,53 +110,13 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
 
 .footer-main {
   width: 100%;
-  padding: 64px 0 48px;
+  padding: 56px 0 44px;
   border-top: 3px solid #1976d2;
 }
 
 .footer-inner {
   max-width: 1240px;
   padding-inline: 24px;
-}
-
-.footer-brand__logo {
-  display: block;
-  width: auto;
-  max-width: 260px;
-  height: 46px;
-}
-
-.footer-desc {
-  max-width: 380px;
-  margin-top: 18px;
-  color: #8fa6bd;
-  font-size: 13px;
-  line-height: 1.9;
-}
-
-.footer-qr {
-  display: flex;
-  margin-top: 22px;
-  align-items: center;
-  gap: 14px;
-}
-
-.footer-qr__img {
-  flex-shrink: 0;
-  border-radius: 10px;
-  background: #fff;
-}
-
-.footer-qr__title {
-  color: #fff;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.footer-qr__hint {
-  margin-top: 4px;
-  color: #8fa6bd;
-  font-size: 11.5px;
 }
 
 .footer-title {

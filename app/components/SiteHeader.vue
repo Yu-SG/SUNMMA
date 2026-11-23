@@ -9,11 +9,10 @@ const { mdAndUp } = useDisplay()
 const drawer = ref(false)
 
 const nav = computed(() => siteConfig.nav)
-const utilityLinks = computed(() => siteConfig.site.utilityLinks)
 const phone = computed(() => siteConfig.site.phone || siteConfig.brand.phone)
 const phoneHref = computed(() => `tel:${phone.value.replace(/[^\d+]/g, '')}`)
 
-const barHeight = computed(() => (mdAndUp.value ? 108 : 64))
+const barHeight = computed(() => (mdAndUp.value ? 72 : 64))
 const logoSize = computed(() => (mdAndUp.value ? 56 : 48))
 
 const isActive = (to: string) => {
@@ -53,24 +52,6 @@ watch(mdAndUp, (desktop) => {
 <template>
   <v-app-bar app flat color="surface" :height="barHeight" class="site-appbar" scroll-behavior="elevate">
     <div class="site-header">
-      <div v-if="mdAndUp" class="utility">
-        <div class="utility__inner">
-          <NuxtLink
-            v-for="link in utilityLinks"
-            :key="link.to"
-            :to="link.to"
-            class="utility__link"
-          >
-            <v-icon icon="mdi-shield-check-outline" size="15" class="mr-1" />
-            {{ link.label }}
-          </NuxtLink>
-          <a v-if="phone" class="utility__link" :href="phoneHref">
-            <v-icon icon="mdi-phone-outline" size="15" class="mr-1" />
-            {{ phone }}
-          </a>
-        </div>
-      </div>
-
       <div class="nav-row">
         <SiteLogo :size="logoSize" />
 
@@ -213,16 +194,6 @@ watch(mdAndUp, (desktop) => {
   flex-direction: column;
 }
 
-.utility {
-  display: flex;
-  height: 36px;
-  flex-shrink: 0;
-  align-items: center;
-  background: #0d47a1;
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.utility__inner,
 .nav-row {
   display: flex;
   width: 100%;
@@ -230,26 +201,6 @@ watch(mdAndUp, (desktop) => {
   margin-inline: auto;
   padding-inline: 24px;
   align-items: center;
-}
-
-.utility__inner {
-  gap: 28px;
-  font-size: 12.5px;
-  letter-spacing: 0.04em;
-}
-
-.utility__link {
-  display: inline-flex;
-  align-items: center;
-  color: inherit;
-  transition: color 0.2s var(--ease);
-}
-
-.utility__link:hover {
-  color: #fff;
-}
-
-.nav-row {
   height: 72px;
   gap: 20px;
   justify-content: space-between;
@@ -332,7 +283,6 @@ watch(mdAndUp, (desktop) => {
 }
 
 @media (max-width: 1279px) {
-  .utility__inner,
   .nav-row {
     padding-inline: 24px;
   }
@@ -351,10 +301,6 @@ watch(mdAndUp, (desktop) => {
   .nav-row {
     height: 64px;
     padding-inline: 24px;
-  }
-
-  .utility {
-    display: none;
   }
 }
 

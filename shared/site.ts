@@ -787,7 +787,6 @@ export const defaultContent: SiteConfig = {
         '呼吸系统',
         '激素与急危重症',
         '泌尿与局部麻醉',
-        '在研',
       ],
       categories: ['已上市', '在研与申报'],
     },

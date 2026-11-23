@@ -25,10 +25,10 @@ const dialogOpen = computed({
 const categories = computed(() => [ALL, ...page.categories])
 const groups = computed(() => [ALL, ...page.groups])
 
-const showResearch = computed(() => activeGroup.value === '在研')
-const researchItems = computed(() =>
-  siteConfig.pipeline.filter((item) => item.phase !== '已上市'),
+const showResearch = computed(
+  () => activeCategory.value === '在研与申报' && activeGroup.value === ALL,
 )
+const researchItems = computed(() => siteConfig.pipeline)
 
 const filtered = computed(() =>
   siteConfig.products.filter((product) => {
@@ -143,7 +143,7 @@ useSeoMeta({
 
         <div class="result-meta">
           <p v-if="showResearch">
-            共 <strong>{{ researchItems.length }}</strong> 个在研项目
+            共 <strong>{{ filtered.length + researchItems.length }}</strong> 个在研与申报品种
           </p>
           <p v-else>
             共 <strong>{{ filtered.length }}</strong> 个产品
@@ -155,46 +155,7 @@ useSeoMeta({
           </p>
         </div>
 
-        <div v-if="showResearch" class="research">
-          <v-alert
-            type="info"
-            variant="tonal"
-            rounded="xl"
-            icon="mdi-flask-outline"
-            class="research__notice"
-          >
-            在研与申报项目尚处于研究、审评或待申报阶段，尚未全部取得生产批件；以下信息仅用于研发进展交流，不构成产品推广。
-          </v-alert>
-
-          <v-row>
-            <v-col v-for="item in researchItems" :key="item.code" cols="12" md="6">
-              <v-card class="research-card">
-                <div class="research-card__head">
-                  <div>
-                    <p class="research-card__code font-en">{{ item.code }}</p>
-                    <h2 class="research-card__name">{{ item.name }}</h2>
-                  </div>
-                  <v-chip size="small" color="primary" variant="tonal">{{ item.phase }}</v-chip>
-                </div>
-
-                <dl class="research-card__meta">
-                  <div>
-                    <dt>治疗领域</dt>
-                    <dd>{{ item.category }}</dd>
-                  </div>
-                  <div>
-                    <dt>适应症</dt>
-                    <dd>{{ item.indication }}</dd>
-                  </div>
-                </dl>
-
-                <p class="research-card__note">在研项目 · 暂未上市，具体进度以公司公告为准</p>
-              </v-card>
-            </v-col>
-          </v-row>
-        </div>
-
-        <v-row v-else-if="filtered.length">
+        <v-row v-if="filtered.length">
           <v-col
             v-for="product in filtered"
             :key="product.code"
@@ -260,6 +221,51 @@ useSeoMeta({
             清除筛选
           </v-btn>
         </v-alert>
+
+        <div v-if="showResearch" class="research">
+          <div class="research__head">
+            <p class="research__label font-en">PIPELINE</p>
+            <h3 class="research__title">在研项目</h3>
+            <p class="research__text">以下项目处于研究、审评或待申报阶段，尚未取得生产批件。</p>
+          </div>
+
+          <v-alert
+            type="info"
+            variant="tonal"
+            rounded="xl"
+            icon="mdi-flask-outline"
+            class="research__notice"
+          >
+            在研与申报项目尚处于研究、审评或待申报阶段，尚未全部取得生产批件；以下信息仅用于研发进展交流，不构成产品推广。
+          </v-alert>
+
+          <v-row>
+            <v-col v-for="item in researchItems" :key="item.code" cols="12" md="6">
+              <v-card class="research-card">
+                <div class="research-card__head">
+                  <div>
+                    <p class="research-card__code font-en">{{ item.code }}</p>
+                    <h2 class="research-card__name">{{ item.name }}</h2>
+                  </div>
+                  <v-chip size="small" color="primary" variant="tonal">{{ item.phase }}</v-chip>
+                </div>
+
+                <dl class="research-card__meta">
+                  <div>
+                    <dt>治疗领域</dt>
+                    <dd>{{ item.category }}</dd>
+                  </div>
+                  <div>
+                    <dt>适应症</dt>
+                    <dd>{{ item.indication }}</dd>
+                  </div>
+                </dl>
+
+                <p class="research-card__note">在研项目 · 暂未上市，具体进度以公司公告为准</p>
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
       </v-container>
     </section>
 
@@ -513,8 +519,38 @@ useSeoMeta({
   padding: 26px;
 }
 
+.research {
+  margin-top: 40px;
+  padding-top: 34px;
+  border-top: 1px solid rgba(16, 35, 58, 0.09);
+}
+
+.research__head {
+  margin-bottom: 18px;
+}
+
+.research__label {
+  color: #1976d2;
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+}
+
+.research__title {
+  margin-top: 6px;
+  color: #10233a;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.research__text {
+  margin-top: 8px;
+  color: #6b7c8f;
+  font-size: 13.5px;
+}
+
 .research__notice {
-  margin-bottom: 8px;
+  margin-bottom: 14px;
   padding: 14px 18px;
   font-size: 13px;
 }
