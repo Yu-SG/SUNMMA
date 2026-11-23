@@ -7,6 +7,16 @@ const brand = siteConfig.brand
 const phone = siteConfig.site.phone || brand.phone
 const phoneHref = computed(() => `tel:${phone.replace(/[^\d+]/g, '')}`)
 const mapHref = computed(() => `https://map.baidu.com/search/${encodeURIComponent(brand.address)}`)
+
+const departments = [
+  { name: '生产部', phone: '028-65220800-8003' },
+  { name: '质量部', phone: '028-65220800-8006' },
+  { name: '办公室', phone: '028-65220800-8001' },
+  { name: '药物警戒部', phone: '028-65220800-8008' },
+  { name: '药政部', phone: '028-85182488' },
+]
+
+const salesContact = { name: '杨博', phone: '13925189289' }
 </script>
 
 <template>
@@ -26,6 +36,13 @@ const mapHref = computed(() => `https://map.baidu.com/search/${encodeURIComponen
 
             <ul class="contact-list">
               <li>
+                <span class="contact-list__icon"><v-icon icon="mdi-domain" size="20" /></span>
+                <div>
+                  <span class="contact-list__label">公司名称</span>
+                  <span class="contact-list__value">舒美奇成都生物科技有限公司</span>
+                </div>
+              </li>
+              <li>
                 <span class="contact-list__icon"><v-icon icon="mdi-map-marker-outline" size="20" /></span>
                 <div>
                   <span class="contact-list__label">公司地址</span>
@@ -42,7 +59,7 @@ const mapHref = computed(() => `https://map.baidu.com/search/${encodeURIComponen
               <li v-if="brand.email">
                 <span class="contact-list__icon"><v-icon icon="mdi-email-outline" size="20" /></span>
                 <div>
-                  <span class="contact-list__label">电子邮箱</span>
+                  <span class="contact-list__label">药物警戒邮箱</span>
                   <a class="contact-list__value" :href="`mailto:${brand.email}`">{{ brand.email }}</a>
                 </div>
               </li>
@@ -77,6 +94,20 @@ const mapHref = computed(() => `https://map.baidu.com/search/${encodeURIComponen
           </v-card>
         </v-col>
       </v-row>
+
+      <div class="departments">
+        <h3 class="departments__title">部门联络</h3>
+        <ul class="departments__grid">
+          <li v-for="dept in departments" :key="dept.name" class="department">
+            <span class="department__name">{{ dept.name }}</span>
+            <span class="department__phone font-en">{{ dept.phone }}</span>
+          </li>
+          <li class="department department--sales">
+            <span class="department__name">产品销售联系人</span>
+            <span class="department__phone font-en">{{ salesContact.name }} · {{ salesContact.phone }}</span>
+          </li>
+        </ul>
+      </div>
     </v-container>
   </section>
 </template>
@@ -90,6 +121,61 @@ const mapHref = computed(() => `https://map.baidu.com/search/${encodeURIComponen
 
 .contact-row {
   row-gap: 26px;
+}
+
+.departments {
+  margin-top: 42px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(16, 35, 58, 0.09);
+}
+
+.departments__title {
+  color: #10233a;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.departments__grid {
+  display: grid;
+  padding: 0;
+  margin: 18px 0 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 18px;
+  list-style: none;
+}
+
+.department {
+  display: flex;
+  padding: 14px 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.department__name {
+  color: #33414b;
+  font-size: 13.5px;
+}
+
+.department__phone {
+  color: #1976d2;
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.department--sales {
+  border-color: rgba(25, 118, 210, 0.28);
+  background: #f3f9ff;
+}
+
+.department--sales .department__name {
+  color: #0d47a1;
+  font-weight: 500;
 }
 
 .contact-info__label {
@@ -258,6 +344,12 @@ a.contact-list__value:hover {
   margin-top: 22px;
 }
 
+@media (max-width: 959px) {
+  .departments__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 700px) {
   .contact-section {
     padding: 54px 0 60px;
@@ -269,6 +361,10 @@ a.contact-list__value:hover {
 
   .contact-info__title {
     font-size: 24px;
+  }
+
+  .departments__grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

@@ -4,7 +4,10 @@ import { siteConfig } from '~/config/site'
 
 const page = siteConfig.pages.pharmacovigilance
 const phone = siteConfig.site.phone || siteConfig.brand.phone
+const hotline = '028-65220800-8008'
+const pvEmail = siteConfig.brand.email || 'smqcdpv@126.com'
 const phoneHref = computed(() => `tel:${phone.replace(/[^\d+]/g, '')}`)
+const hotlineHref = `tel:${hotline.replace(/[^\d+]/g, '')}`
 
 const steps = [
   { title: '提交报告', text: '通过表单或热线告诉我们药品名称、用药情况与不良反应表现。' },
@@ -36,7 +39,7 @@ useSeoMeta({
           <p class="pv-alert__title">紧急情况请先就医</p>
           <p class="pv-alert__text">
             如出现严重或危及生命的不良反应，请立即前往医院就诊。
-            <template v-if="phone">同时可拨打我们的药物警戒热线 {{ phone }} 转 3。</template>
+            <template v-if="hotline">同时可拨打我们的药物警戒热线 {{ hotline }}。</template>
             <template v-else>就诊后可通过本页表单提交报告，我们会按药物警戒流程处理。</template>
             本表单不替代医疗诊断与治疗。
           </p>
@@ -48,15 +51,19 @@ useSeoMeta({
               <v-card class="hotline-card">
                 <p class="hotline-card__label font-en">PHARMACOVIGILANCE HOTLINE</p>
                 <h2 class="hotline-card__title">药物警戒热线</h2>
-                <template v-if="phone">
-                  <a class="hotline-card__phone font-en" :href="phoneHref">
-                    {{ phone }}
+                <template v-if="hotline">
+                  <a class="hotline-card__phone font-en" :href="hotlineHref">
+                    {{ hotline }}
                   </a>
-                  <p class="hotline-card__time">周一至周五 9:00 – 17:30（转 3）</p>
+                  <p class="hotline-card__time">周一至周五 9:00 – 17:30</p>
                   <v-divider class="my-4" />
                 </template>
                 <p v-else class="hotline-card__pending">
                   热线号码与报告邮箱整理中，请通过右侧表单提交报告。
+                </p>
+                <p v-if="pvEmail" class="hotline-card__email">
+                  报告邮箱：
+                  <a :href="`mailto:${pvEmail}`">{{ pvEmail }}</a>
                 </p>
                 <p class="hotline-card__note">
                   你也可以直接通过右侧表单提交报告，我们会在 24 小时内响应。
