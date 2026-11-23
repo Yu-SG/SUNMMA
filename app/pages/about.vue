@@ -147,6 +147,9 @@ useSeoMeta({
       </v-container>
     </section>
 
+    <!-- 荣誉资质（放在联系我们上方） -->
+    <SiteHonorsSection />
+
     <!-- 联系我们（与关于我们同页） -->
     <SiteContactSection />
   </div>
