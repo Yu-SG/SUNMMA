@@ -62,7 +62,6 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
               <li v-for="category in newsLinks" :key="category">
                 <NuxtLink :to="{ path: '/news', query: { category } }">{{ category }}</NuxtLink>
               </li>
-              <li><NuxtLink to="/investor">投资者关系</NuxtLink></li>
               <li><NuxtLink to="/jobs">加入我们</NuxtLink></li>
             </ul>
           </v-col>
@@ -154,7 +153,7 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
 .footer-brand__logo {
   display: block;
   width: auto;
-  height: 36px;
+  height: 42px;
 }
 
 .footer-desc {

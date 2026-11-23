@@ -346,7 +346,7 @@ useSeoMeta({
   margin-top: 14px;
   flex-direction: column;
   color: #fff;
-  font-size: clamp(36px, 4.6vw, 58px);
+  font-size: clamp(32px, 4.6vw, 58px);
   font-weight: 700;
   letter-spacing: 0.06em;
   line-height: 1.26;

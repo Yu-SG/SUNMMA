@@ -220,8 +220,8 @@ export const defaultContent: SiteConfig = {
   },
 
   hero: {
-    heading: ['药品上市许可持有人', '全生命周期', '质量责任主体'],
-    script: 'SUMAZ · MAH SINCE 2016',
+    heading: ['舒美奇', '成都生物科技有限公司'],
+    script: 'SUMAZ · SINCE 2016',
     side: '舒美奇成都生物科技有限公司成立于 2016 年，位于成都高新区天府生命科技园，专注化学药制剂与中药新药研发。作为药品上市许可持有人，我们对每一个取得注册证书的品种履行上市放行与质量责任。',
   },
 
@@ -254,7 +254,6 @@ export const defaultContent: SiteConfig = {
         { label: '政策法规', to: '/news?category=政策法规' },
       ],
     },
-    { label: '投资者关系', labelEn: 'Investors', to: '/investor' },
     { label: '加入我们', labelEn: 'Careers', to: '/jobs' },
     { label: '联系我们', labelEn: 'Contact', to: '/contact' },
     { label: '药物警戒', labelEn: 'Pharmacovigilance', to: '/pharmacovigilance' },

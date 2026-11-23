@@ -14,6 +14,7 @@ const phone = computed(() => siteConfig.site.phone || siteConfig.brand.phone)
 const phoneHref = computed(() => `tel:${phone.value.replace(/[^\d+]/g, '')}`)
 
 const barHeight = computed(() => (mdAndUp.value ? 108 : 64))
+const logoSize = computed(() => (mdAndUp.value ? 56 : 48))
 
 const isActive = (to: string) => {
   const path = to.split('?')[0] || '/'
@@ -71,7 +72,7 @@ watch(mdAndUp, (desktop) => {
       </div>
 
       <div class="nav-row">
-        <SiteLogo :size="46" />
+        <SiteLogo :size="logoSize" />
 
         <nav class="nav-links" aria-label="主导航">
           <template v-for="item in nav" :key="item.label">
@@ -137,7 +138,6 @@ watch(mdAndUp, (desktop) => {
 
   <v-navigation-drawer v-model="drawer" temporary location="right" width="320" class="mobile-drawer">
     <div class="mobile-drawer__head">
-      <SiteLogo :size="38" />
       <v-btn icon="mdi-close" variant="text" aria-label="关闭菜单" @click="drawer = false" />
     </div>
     <v-divider />
@@ -286,7 +286,7 @@ watch(mdAndUp, (desktop) => {
   display: flex;
   padding: 14px 16px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .mobile-drawer__list {
