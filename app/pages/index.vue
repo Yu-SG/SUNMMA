@@ -8,8 +8,6 @@ const { mdAndUp } = useDisplay()
 const carouselHeight = computed(() => (mdAndUp.value ? 560 : 500))
 const about = siteConfig.pages.about
 const milestones = computed(() => about.milestones)
-const facts = computed(() => siteConfig.company)
-const stats = computed(() => siteConfig.stats)
 const pillars = computed(() => siteConfig.pillars)
 const partners = computed(() => siteConfig.partners)
 
@@ -86,26 +84,9 @@ useSeoMeta({
               <p v-for="(text, index) in about.intro" :key="index">{{ text }}</p>
             </div>
 
-            <div class="facts">
-              <div v-for="fact in facts" :key="fact.label" class="fact">
-                <span class="fact__label">{{ fact.label }}</span>
-                <span class="fact__value">{{ fact.value }}</span>
-              </div>
-            </div>
-
             <v-btn variant="text" color="primary" to="/about" append-icon="mdi-arrow-right" class="px-0 mt-2">
               了解舒美奇
             </v-btn>
-          </v-col>
-        </v-row>
-
-        <v-row class="stats">
-          <v-col v-for="stat in stats" :key="stat.label" cols="6" md="3">
-            <v-card class="stat-card">
-              <p class="stat-card__value font-en">{{ stat.value }}</p>
-              <p class="stat-card__label">{{ stat.label }}</p>
-              <p class="stat-card__en font-en">{{ stat.labelEn }}</p>
-            </v-card>
           </v-col>
         </v-row>
       </v-container>
@@ -427,64 +408,6 @@ useSeoMeta({
   font-size: 13px;
 }
 
-.facts {
-  display: grid;
-  margin-top: 24px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px 20px;
-}
-
-.fact {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.fact__label {
-  color: #9aa6b2;
-  font-size: 12px;
-}
-
-.fact__value {
-  color: #10233a;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.6;
-}
-
-.stats {
-  margin-top: 44px;
-}
-
-.stat-card {
-  height: 100%;
-  padding: 22px 20px;
-  border: 1px solid rgba(16, 35, 58, 0.08);
-  background: #f8fbfe;
-  text-align: center;
-}
-
-.stat-card__value {
-  color: #1976d2;
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-.stat-card__label {
-  margin-top: 8px;
-  color: #33414b;
-  font-size: 13.5px;
-}
-
-.stat-card__en {
-  margin-top: 4px;
-  color: #9aa6b2;
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
 /* products -------------------------------------------------------------- */
 .product-card {
   height: 100%;
@@ -784,14 +707,6 @@ useSeoMeta({
 
   .section-title {
     font-size: 26px;
-  }
-
-  .facts {
-    grid-template-columns: 1fr;
-  }
-
-  .stats {
-    margin-top: 30px;
   }
 }
 </style>

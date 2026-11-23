@@ -35,12 +35,6 @@ useSeoMeta({
               <p v-for="(text, index) in page.intro" :key="index">{{ text }}</p>
               <p v-for="(text, index) in who?.paragraphs ?? []" :key="`who-${index}`">{{ text }}</p>
             </div>
-            <div class="company-facts">
-              <div v-for="fact in siteConfig.company" :key="fact.label" class="company-fact">
-                <span class="company-fact__label">{{ fact.label }}</span>
-                <span class="company-fact__value">{{ fact.value }}</span>
-              </div>
-            </div>
           </v-col>
 
           <v-col cols="12" lg="5" md="5">
@@ -51,16 +45,6 @@ useSeoMeta({
                 <span class="intro-art__label">年成立于成都高新区</span>
               </div>
             </div>
-          </v-col>
-        </v-row>
-
-        <v-row class="stats">
-          <v-col v-for="stat in siteConfig.stats" :key="stat.label" cols="6" md="3">
-            <v-card class="stat-card">
-              <p class="stat-card__value font-en">{{ stat.value }}</p>
-              <p class="stat-card__label">{{ stat.label }}</p>
-              <p class="stat-card__en font-en">{{ stat.labelEn }}</p>
-            </v-card>
           </v-col>
         </v-row>
       </v-container>
@@ -205,33 +189,6 @@ useSeoMeta({
   max-width: 840px;
 }
 
-.company-facts {
-  display: grid;
-  margin-top: 30px;
-  padding-top: 24px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px 32px;
-  border-top: 1px solid rgba(16, 35, 58, 0.09);
-}
-
-.company-fact {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-}
-
-.company-fact__label {
-  min-width: 64px;
-  color: #7b8794;
-  font-size: 13px;
-}
-
-.company-fact__value {
-  color: #10233a;
-  font-size: 14.5px;
-  font-weight: 500;
-}
-
 .intro-art {
   position: relative;
   overflow: hidden;
@@ -266,38 +223,6 @@ useSeoMeta({
   margin-top: 6px;
   color: #5b6472;
   font-size: 12px;
-}
-
-.stats {
-  margin-top: 26px;
-}
-
-.stat-card {
-  height: 100%;
-  padding: 20px 20px 18px;
-  border: 1px solid rgba(16, 35, 58, 0.08);
-  text-align: center;
-}
-
-.stat-card__value {
-  color: #1976d2;
-  font-size: 34px;
-  font-weight: 600;
-  line-height: 1.1;
-}
-
-.stat-card__label {
-  margin-top: 8px;
-  color: #10233a;
-  font-size: 13px;
-}
-
-.stat-card__en {
-  margin-top: 4px;
-  color: #8b98a6;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 
 .capability-grid {
@@ -421,16 +346,6 @@ useSeoMeta({
     display: block;
     margin-bottom: 6px;
     font-size: 12.5px;
-  }
-}
-
-@media (max-width: 600px) {
-  .company-facts {
-    grid-template-columns: 1fr;
-  }
-
-  .stat-card__value {
-    font-size: 26px;
   }
 }
 </style>
