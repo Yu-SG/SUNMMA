@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { siteConfig } from '~/config/site'
 
-const year = new Date().getFullYear()
 const phoneHref = computed(() => {
   const raw = siteConfig.site.phone || siteConfig.brand.phone
   return `tel:${raw.replace(/[^\d+]/g, '')}`
@@ -38,7 +37,7 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
               <li v-for="category in newsLinks" :key="category">
                 <NuxtLink :to="{ path: '/news', query: { category } }">{{ category }}</NuxtLink>
               </li>
-              <li><NuxtLink to="/jobs">加入我们</NuxtLink></li>
+              <li><NuxtLink to="/jobs">招聘信息</NuxtLink></li>
             </ul>
           </v-col>
 
@@ -78,23 +77,6 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
             </ul>
           </v-col>
         </v-row>
-      </v-container>
-    </div>
-
-    <div class="footer-legal">
-      <v-container class="footer-legal__inner">
-        <p class="footer-legal__line">
-          <span>© {{ year }} {{ siteConfig.brand.nameEn }}. All rights reserved.</span>
-          <a v-if="siteConfig.site.icp" href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">
-            {{ siteConfig.site.icp }}
-          </a>
-        </p>
-        <p v-if="siteConfig.site.license" class="footer-legal__line">
-          《互联网药品信息服务资格证书》编号：{{ siteConfig.site.license }}
-        </p>
-        <p class="footer-legal__line footer-legal__disclaimer">
-          {{ siteConfig.site.disclaimer }}
-        </p>
       </v-container>
     </div>
   </v-footer>
@@ -170,57 +152,18 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
   color: #7c93a9;
 }
 
-.footer-legal {
-  width: 100%;
-  padding: 22px 0 26px;
-  background: rgba(0, 0, 0, 0.24);
-}
-
-.footer-legal__inner {
-  max-width: 1240px;
-  padding-inline: 24px;
-}
-
-.footer-legal__line {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  gap: 8px 24px;
-  color: #7f95aa;
-  font-size: 12px;
-  line-height: 1.9;
-}
-
-.footer-legal__line + .footer-legal__line {
-  margin-top: 6px;
-}
-
-.footer-legal__line a {
-  color: #9fb3c8;
-}
-
-.footer-legal__line a:hover {
-  color: #64b5f6;
-}
-
-.footer-legal__disclaimer {
-  color: #6e8499;
-}
-
 @media (max-width: 960px) {
   .footer-main {
-    padding: 44px 0 32px;
+    padding: 44px 0 40px;
   }
 
-  .footer-inner,
-  .footer-legal__inner {
+  .footer-inner {
     padding-inline: 24px;
   }
 }
 
 @media (max-width: 600px) {
-  .footer-inner,
-  .footer-legal__inner {
+  .footer-inner {
     padding-inline: 16px;
   }
 }

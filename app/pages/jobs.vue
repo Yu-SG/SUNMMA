@@ -33,9 +33,9 @@ watch(
 )
 
 useSeoMeta({
-  title: `加入我们｜${siteConfig.brand.name}`,
+  title: `招聘信息｜${siteConfig.brand.name}`,
   description: page.intro[0] || `${siteConfig.brand.name}招聘`,
-  ogTitle: `加入我们｜${siteConfig.brand.name}`,
+  ogTitle: `招聘信息｜${siteConfig.brand.name}`,
   ogDescription: page.intro[0] || '',
 })
 </script>

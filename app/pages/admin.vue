@@ -230,7 +230,7 @@ const sections: SectionMeta[] = [
   },
   {
     id: 'jobs',
-    label: '加入我们',
+    label: '招聘信息',
     en: 'Careers',
     icon: 'mdi-account-tie-outline',
     note: '在招岗位按列表顺序展示；类型建议用 社会招聘 / 校园招聘。',
@@ -334,7 +334,7 @@ const publicPages = [
   { to: '/products', label: '产品中心', en: 'Products', icon: 'mdi-package-variant-closed' },
   { to: '/news', label: '新闻动态', en: 'News', icon: 'mdi-newspaper-variant-outline' },
   { to: '/investor', label: '投资者关系', en: 'Investors', icon: 'mdi-chart-line' },
-  { to: '/jobs', label: '加入我们', en: 'Careers', icon: 'mdi-account-tie-outline' },
+  { to: '/jobs', label: '招聘信息', en: 'Careers', icon: 'mdi-account-tie-outline' },
   { to: '/about#contact', label: '联系我们', en: 'Contact', icon: 'mdi-map-marker-outline' },
   { to: '/pharmacovigilance', label: '药物警戒', en: 'PV', icon: 'mdi-shield-check-outline' },
 ]
@@ -2094,11 +2094,11 @@ onBeforeUnmount(() => {
               </v-btn>
             </StudioSectionCard>
 
-            <!-- ======================= 加入我们 ======================= -->
+            <!-- ======================= 招聘信息 ======================= -->
             <StudioSectionCard
               v-show="active === 'jobs'"
               id="jobs"
-              title="加入我们"
+              title="招聘信息"
               en="Careers"
               icon="mdi-account-tie-outline"
               note="在招岗位按列表顺序展示；类型建议用 社会招聘 / 校园招聘。"

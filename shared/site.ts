@@ -237,7 +237,6 @@ export const defaultContent: SiteConfig = {
 
   nav: [
     { label: '首页', labelEn: 'Home', to: '/' },
-    { label: '关于我们', labelEn: 'About', to: '/about' },
     {
       label: '产品中心',
       labelEn: 'Products',
@@ -247,7 +246,6 @@ export const defaultContent: SiteConfig = {
         { label: '在研与申报', to: '/products?category=在研与申报' },
       ],
     },
-    { label: '质量管理', labelEn: 'Quality', to: '/quality' },
     {
       label: '新闻动态',
       labelEn: 'News',
@@ -257,8 +255,10 @@ export const defaultContent: SiteConfig = {
         { label: '政策法规', to: '/news?category=政策法规' },
       ],
     },
-    { label: '加入我们', labelEn: 'Careers', to: '/jobs' },
+    { label: '质量管理', labelEn: 'Quality', to: '/quality' },
+    { label: '招聘信息', labelEn: 'Careers', to: '/jobs' },
     { label: '药物警戒', labelEn: 'Pharmacovigilance', to: '/pharmacovigilance' },
+    { label: '关于我们', labelEn: 'About', to: '/about' },
   ],
 
   products: [
@@ -800,7 +800,7 @@ export const defaultContent: SiteConfig = {
     },
 
     jobs: {
-      title: '加入我们',
+      title: '招聘信息',
       subtitle: '与优秀的人，做有难度的事',
       intro: ['岗位信息整理中，欢迎通过「联系我们」与我们沟通。'],
       items: [],
