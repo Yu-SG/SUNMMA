@@ -9,9 +9,9 @@ const culture = computed(() => page.sections[2])
 const milestones = computed(() => page.milestones)
 
 useSeoMeta({
-  title: `关于我们｜${siteConfig.brand.name} 制药`,
+  title: `关于我们｜${siteConfig.brand.name}`,
   description: page.intro[0] || siteConfig.brand.description,
-  ogTitle: `关于我们｜${siteConfig.brand.name} 制药`,
+  ogTitle: `关于我们｜${siteConfig.brand.name}`,
   ogDescription: page.intro[0] || siteConfig.brand.description,
 })
 </script>
@@ -29,7 +29,7 @@ useSeoMeta({
       <v-container>
         <v-row align="center">
           <v-col cols="12" lg="7" md="7">
-            <p class="eyebrow font-en">ABOUT XXX</p>
+            <p class="eyebrow font-en">ABOUT SUMAZ</p>
             <h2 class="section-title">公司简介</h2>
             <div class="copy">
               <p v-for="(text, index) in page.intro" :key="index">{{ text }}</p>
@@ -45,10 +45,10 @@ useSeoMeta({
 
           <v-col cols="12" lg="5" md="5">
             <div class="intro-art">
-              <v-img src="/images/hero-3.svg" alt="XXX 研发与质量分析" cover eager class="intro-art__img" />
+              <v-img src="/images/about/park.jpg" alt="天府生命科技园" cover eager class="intro-art__img" />
               <div class="intro-art__badge">
-                <span class="intro-art__num font-en">20+</span>
-                <span class="intro-art__label">年专注医药研发与制造</span>
+                <span class="intro-art__num font-en">2016</span>
+                <span class="intro-art__label">年成立于成都高新区</span>
               </div>
             </div>
           </v-col>
@@ -72,7 +72,7 @@ useSeoMeta({
         <SectionHead
           en="R&D and Quality"
           :zh="rnd?.title ?? '研发与质量'"
-          desc="从工艺开发到商业化供货，我们把研发、质量与注册放在同一条链路上。"
+          desc="专长于注射剂、口服液和口服固体制剂，同时发展注射乳剂、凝胶剂、眼用制剂等复杂制剂。"
         />
 
         <div class="copy copy--narrow">
@@ -101,7 +101,7 @@ useSeoMeta({
         <SectionHead
           en="Development History"
           zh="发展历程"
-          desc="以终为始，守正出奇。二十余年的每一步，都围绕「让好药更可及」。"
+          desc="从 2016 年成立到 12 个品种上市，我们把每一步都落在批件与放行记录上。"
         />
 
         <v-timeline side="end" density="comfortable" truncate-line="both" class="history-timeline">
@@ -131,25 +131,19 @@ useSeoMeta({
     <section class="section section--values">
       <v-container>
         <SectionHead
-          en="Culture"
-          :zh="culture?.title ?? '企业文化'"
-          desc="我们尊重医药产业的客观规律，允许试错，但不允许对严谨和品质的妥协。"
+          en="Partnership"
+          :zh="culture?.title ?? '委托生产与对外合作'"
+          desc="合作的剂型覆盖冻干针剂、粉针剂、乳剂、水针剂、胶囊剂、口服溶液剂等，两级放行责任清晰。"
         />
 
         <div class="copy copy--narrow">
           <p v-for="(text, index) in culture?.paragraphs ?? []" :key="index">{{ text }}</p>
         </div>
 
-        <v-row class="pillar-grid">
-          <v-col v-for="pillar in siteConfig.pillars" :key="pillar.index" cols="12" sm="6" lg="3">
-            <v-card class="pillar-card">
-              <span class="pillar-card__index font-en">#{{ pillar.index }}</span>
-              <h3 class="pillar-card__title">{{ pillar.title }}</h3>
-              <p class="pillar-card__en font-en">{{ pillar.titleEn }}</p>
-              <p class="pillar-card__text">{{ pillar.description }}</p>
-            </v-card>
-          </v-col>
-        </v-row>
+        <v-sheet class="quote" rounded="xl">
+          <p class="quote__text">{{ siteConfig.message.title.join('') }}</p>
+          <p class="quote__sub">舒美奇 · 合作理念</p>
+        </v-sheet>
       </v-container>
     </section>
 
@@ -159,12 +153,12 @@ useSeoMeta({
         <v-sheet class="cta" rounded="xl">
           <div>
             <p class="cta__en font-en">WORK WITH US</p>
-            <h2 class="cta__title">与我们一起，把难而正确的事做下去。</h2>
-            <p class="cta__text">无论是产品合作、临床研究，还是加入我们的团队，都欢迎你主动联系我们。</p>
+            <h2 class="cta__title">产品合作、委托生产、研发合作，都欢迎聊一聊。</h2>
+            <p class="cta__text">舒美奇成都生物科技有限公司 · 成都高新区天府生命科技园</p>
           </div>
           <div class="cta__actions">
-            <v-btn color="white" size="large" to="/jobs">查看岗位</v-btn>
-            <v-btn variant="outlined" color="white" size="large" to="/contact">联系我们</v-btn>
+            <v-btn color="white" size="large" to="/contact">联系我们</v-btn>
+            <v-btn variant="outlined" color="white" size="large" to="/quality">质量管理</v-btn>
           </div>
         </v-sheet>
       </v-container>
@@ -400,43 +394,26 @@ useSeoMeta({
   line-height: 1.95;
 }
 
-.pillar-grid {
-  margin-top: 32px;
+.quote {
+  margin-top: 20px;
+  padding: 34px 36px;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  background: linear-gradient(120deg, #eef5fd, #f8fbfe);
 }
 
-.pillar-card {
-  height: 100%;
-  padding: 24px 22px;
-  border-top: 3px solid #1976d2;
-  background: #fff;
-}
-
-.pillar-card__index {
-  color: rgba(25, 118, 210, 0.3);
-  font-size: 13px;
-  letter-spacing: 0.16em;
-}
-
-.pillar-card__title {
-  margin-top: 10px;
-  color: #10233a;
-  font-size: 18px;
+.quote__text {
+  color: #0d47a1;
+  font-size: 20px;
   font-weight: 600;
-}
-
-.pillar-card__en {
-  margin-top: 4px;
-  color: #8b98a6;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.pillar-card__text {
-  margin-top: 14px;
-  color: #5b6472;
-  font-size: 13.5px;
+  letter-spacing: 0.06em;
   line-height: 1.9;
+}
+
+.quote__sub {
+  margin-top: 12px;
+  color: #7b8794;
+  font-size: 13px;
+  letter-spacing: 0.08em;
 }
 
 .cta {

@@ -21,7 +21,7 @@ export default defineNuxtPlugin(() => {
       { property: 'og:url', content: canonical.value },
       { name: 'twitter:card', content: 'summary_large_image' },
       // 默认分享图（页面可用 useSeoMeta 的 ogImage 覆盖）
-      { property: 'og:image', content: `${siteUrl.value}/images/og-cover.png` },
+      { property: 'og:image', content: `${siteUrl.value}/images/og-cover.jpg` },
       { property: 'og:image:width', content: '1200' },
       { property: 'og:image:height', content: '630' },
     ],

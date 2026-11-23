@@ -32,13 +32,10 @@ watch(
   { immediate: true },
 )
 
-const applyHref = (title: string) =>
-  `mailto:hr@xxx.com?subject=${encodeURIComponent(`应聘：${title}`)}`
-
 useSeoMeta({
-  title: `加入我们｜${siteConfig.brand.name} 制药`,
-  description: page.intro[0] || `${siteConfig.brand.name} 制药招聘`,
-  ogTitle: `加入我们｜${siteConfig.brand.name} 制药`,
+  title: `加入我们｜${siteConfig.brand.name}`,
+  description: page.intro[0] || `${siteConfig.brand.name}招聘`,
+  ogTitle: `加入我们｜${siteConfig.brand.name}`,
   ogDescription: page.intro[0] || '',
 })
 </script>
@@ -53,7 +50,7 @@ useSeoMeta({
           <div>
             <p class="jobs-head__label font-en">OPEN POSITIONS</p>
             <h2 class="jobs-head__title">在招岗位</h2>
-            <p class="jobs-head__text">共 {{ filtered.length }} 个岗位 · 简历请发送至 hr@xxx.com</p>
+            <p class="jobs-head__text">共 {{ filtered.length }} 个岗位</p>
           </div>
 
           <v-chip-group
@@ -119,9 +116,9 @@ useSeoMeta({
             <div class="job-card__foot">
               <span class="job-card__email">
                 <v-icon icon="mdi-email-outline" size="16" />
-                投递邮箱：hr@xxx.com
+                简历请通过「联系我们」提交
               </span>
-              <v-btn color="primary" :href="applyHref(job.title)" append-icon="mdi-send-outline">
+              <v-btn color="primary" to="/contact" append-icon="mdi-send-outline">
                 投递简历
               </v-btn>
             </div>
@@ -134,7 +131,7 @@ useSeoMeta({
             rounded="xl"
             class="mt-6"
           >
-            当前分类暂无在招岗位，欢迎发送简历至 hr@xxx.com，我们会主动与你联系。
+            当前暂无在招岗位，欢迎通过「联系我们」与我们沟通，岗位开放时我们会在本页更新。
           </v-alert>
         </div>
 

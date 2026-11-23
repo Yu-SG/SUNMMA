@@ -4,22 +4,19 @@ import { useDisplay } from 'vuetify'
 import { siteConfig } from '~/config/site'
 
 const { mdAndUp } = useDisplay()
-const abs = useAbsoluteUrl()
 
 const carouselHeight = computed(() => (mdAndUp.value ? 560 : 500))
-const newsCategories = computed(() => siteConfig.pages.news.categories)
-const milestones = computed(() => siteConfig.pages.about.milestones)
-const jobTypes = computed(() => siteConfig.pages.jobs.items.map((item) => item.type).filter((v, i, a) => a.indexOf(v) === i))
-
-const articlesOf = (category: string) =>
-  siteConfig.news.filter((article) => article.category === category).slice(0, 3)
-
-const jobsOf = (type: string) => siteConfig.pages.jobs.items.filter((item) => item.type === type)
+const about = siteConfig.pages.about
+const milestones = computed(() => about.milestones)
+const facts = computed(() => siteConfig.company)
+const stats = computed(() => siteConfig.stats)
+const pillars = computed(() => siteConfig.pillars)
+const partners = computed(() => siteConfig.partners)
 
 useSeoMeta({
-  title: `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`,
+  title: `${siteConfig.brand.name}｜${siteConfig.brand.tagline}`,
   description: siteConfig.brand.description,
-  ogTitle: `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`,
+  ogTitle: `${siteConfig.brand.name}｜${siteConfig.brand.tagline}`,
   ogDescription: siteConfig.brand.description,
 })
 </script>
@@ -62,81 +59,55 @@ useSeoMeta({
       </v-container>
     </section>
 
-    <!-- 新闻动态 -->
-    <section class="section section--news">
+    <!-- 公司简介 -->
+    <section class="section section--about">
       <v-container>
-        <SectionHead
-          en="News"
-          zh="新闻动态"
-          desc="了解 XXX 的研发进展、合作动态，以及医药行业的政策法规变化。"
-          to="/news"
-        />
-
-        <v-row>
-          <v-col v-for="category in newsCategories" :key="category" cols="12" md="6">
-            <div class="news-panel">
-              <div class="news-panel__head">
-                <div>
-                  <p class="news-panel__en font-en">{{ category === '企业动态' ? 'Company' : 'Policy' }}</p>
-                  <h3 class="news-panel__title">{{ category }}</h3>
-                </div>
-                <v-btn
-                  variant="text"
-                  size="small"
-                  color="primary"
-                  :to="{ path: '/news', query: { category } }"
-                  append-icon="mdi-arrow-right"
-                >
-                  MORE
-                </v-btn>
+        <v-row align="center">
+          <v-col cols="12" md="6" lg="6">
+            <div class="about-art">
+              <v-img
+                src="/images/about/park.jpg"
+                alt="天府生命科技园"
+                cover
+                eager
+                class="about-art__img"
+              />
+              <div class="about-art__badge">
+                <span class="about-art__since font-en">SINCE 2016</span>
+                <span class="about-art__label">成都高新区 · 天府生命科技园</span>
               </div>
-
-              <v-list class="news-panel__list" lines="three" density="comfortable">
-                <v-list-item
-                  v-for="article in articlesOf(category)"
-                  :key="article.id ?? article.title"
-                  :to="`/news/${article.id}`"
-                  class="news-panel__item"
-                >
-                  <span class="news-panel__date font-en">{{ article.date }}</span>
-                  <div class="news-panel__body">
-                    <p class="news-panel__name">{{ article.title }}</p>
-                    <p class="news-panel__excerpt">{{ article.excerpt }}</p>
-                  </div>
-                  <template #append>
-                    <v-icon icon="mdi-chevron-right" size="18" opacity="0.35" />
-                  </template>
-                </v-list-item>
-              </v-list>
             </div>
           </v-col>
-        </v-row>
-      </v-container>
-    </section>
 
-    <!-- 发展历程 -->
-    <section class="section section--history">
-      <v-container>
-        <SectionHead
-          en="Development History"
-          zh="发展历程"
-          desc="二十余年，从技术服务到原料药与制剂一体化，我们始终围绕临床需求做长期投入。"
-          to="/about"
-          link-text="ABOUT"
-        />
-
-        <div class="timeline">
-          <div v-for="(milestone, index) in milestones" :key="milestone.period" class="timeline__item">
-            <div class="timeline__rail" aria-hidden="true">
-              <span class="timeline__dot">{{ index + 1 }}</span>
+          <v-col cols="12" md="6" lg="6">
+            <p class="eyebrow font-en">ABOUT SUMAZ</p>
+            <h2 class="section-title">药品上市许可持有人</h2>
+            <div class="copy">
+              <p v-for="(text, index) in about.intro" :key="index">{{ text }}</p>
             </div>
-            <v-card class="timeline__card">
-              <p class="timeline__period font-en">{{ milestone.period }}</p>
-              <h3 class="timeline__title">{{ milestone.title }}</h3>
-              <p class="timeline__text">{{ milestone.text }}</p>
+
+            <div class="facts">
+              <div v-for="fact in facts" :key="fact.label" class="fact">
+                <span class="fact__label">{{ fact.label }}</span>
+                <span class="fact__value">{{ fact.value }}</span>
+              </div>
+            </div>
+
+            <v-btn variant="text" color="primary" to="/about" append-icon="mdi-arrow-right" class="px-0 mt-2">
+              了解舒美奇
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <v-row class="stats">
+          <v-col v-for="stat in stats" :key="stat.label" cols="6" md="3">
+            <v-card class="stat-card">
+              <p class="stat-card__value font-en">{{ stat.value }}</p>
+              <p class="stat-card__label">{{ stat.label }}</p>
+              <p class="stat-card__en font-en">{{ stat.labelEn }}</p>
             </v-card>
-          </div>
-        </div>
+          </v-col>
+        </v-row>
       </v-container>
     </section>
 
@@ -146,7 +117,7 @@ useSeoMeta({
         <SectionHead
           en="Products"
           zh="产品中心"
-          desc="覆盖呼吸、心血管、神经、肌肉-骨骼、血液和造血器官、消化道和代谢等多个治疗领域。"
+          desc="12 个已上市品种、8 个申报或在研品种、3 个在研新药，覆盖抗感染、心血管、神经系统、麻醉与围术期、营养与代谢、呼吸系统等治疗领域。"
           to="/products"
         />
 
@@ -192,46 +163,101 @@ useSeoMeta({
       </v-container>
     </section>
 
-    <!-- 加入我们 -->
-    <section class="section section--jobs">
+    <!-- 质量管理 -->
+    <section class="section section--quality">
       <v-container>
         <SectionHead
-          en="Join Us"
-          zh="加入我们"
-          desc="我们正在寻找对医药行业抱有长期热情的人。"
-          to="/jobs"
+          en="Quality Management"
+          zh="质量管理体系"
+          desc="按 14 个章节建立质量管理体系，覆盖药品研制、生产经营、上市后研究与不良反应监测全生命周期。"
+          to="/quality"
+          link-text="QUALITY"
         />
 
         <v-row>
-          <v-col v-for="type in jobTypes" :key="type" cols="12" md="6">
-            <v-card
-              class="job-card"
-              :to="{ path: '/jobs', query: { type } }"
-            >
-              <v-img
-                :src="type === '社会招聘' ? '/images/job-social.svg' : '/images/job-campus.svg'"
-                :alt="type"
-                height="180"
-                cover
-                eager
-              />
-              <div class="job-card__body">
-                <p class="job-card__en font-en">CAREERS</p>
-                <h3 class="job-card__title">{{ type }}</h3>
-                <p class="job-card__text">期待您的加入</p>
-                <p class="job-card__meta">
-                  {{ jobsOf(type).length }} 个在招岗位
-                  <span>·</span>
-                  上海 / 浙江台州
-                </p>
-                <span class="job-card__more">
-                  查看岗位
-                  <v-icon icon="mdi-arrow-right" size="16" />
-                </span>
-              </div>
+          <v-col v-for="pillar in pillars" :key="pillar.index" cols="12" sm="6" lg="3">
+            <v-card class="quality-card">
+              <span class="quality-card__index font-en">#{{ pillar.index }}</span>
+              <h3 class="quality-card__title">{{ pillar.title }}</h3>
+              <p class="quality-card__text">{{ pillar.description }}</p>
             </v-card>
           </v-col>
         </v-row>
+      </v-container>
+    </section>
+
+    <!-- 发展历程 -->
+    <section class="section section--history">
+      <v-container>
+        <SectionHead
+          en="Development History"
+          zh="发展历程"
+          desc="从 2016 年成立到 12 个品种上市，我们把每一步都落在批件与放行记录上。"
+          to="/about"
+          link-text="ABOUT"
+        />
+
+        <div class="timeline">
+          <div v-for="(milestone, index) in milestones" :key="milestone.period" class="timeline__item">
+            <div class="timeline__rail" aria-hidden="true">
+              <span class="timeline__dot">{{ index + 1 }}</span>
+            </div>
+            <v-card class="timeline__card">
+              <p class="timeline__period font-en">{{ milestone.period }}</p>
+              <h3 class="timeline__title">{{ milestone.title }}</h3>
+              <p class="timeline__text">{{ milestone.text }}</p>
+            </v-card>
+          </div>
+        </div>
+      </v-container>
+    </section>
+
+    <!-- 对外合作 -->
+    <section class="section section--partners">
+      <v-container>
+        <SectionHead
+          en="Partnership"
+          zh="对外合作"
+          desc="能用众力，则无敌于天下；能用众智，则无畏于圣人。唯有合作，才能创造价值。"
+        />
+
+        <v-row>
+          <v-col cols="12" lg="5">
+            <div class="partner-copy">
+              <p>
+                公司开发项目主要依托自有技术团队，同时加强与研发单位的制剂开发合作，发展复杂制剂，包括注射乳剂、凝胶剂、眼用制剂等。
+              </p>
+              <p>
+                对外合作开发创新药，目前布局产品包括抗骨质疏松、镇痛方向的化学药品与中药新药，合作科研院所包括北京协和、上海复旦等。药品持有人委托生产方面，合作剂型覆盖冻干针剂、粉针剂、乳剂、水针剂、胶囊剂、散剂、颗粒剂、凝胶剂、口服液等。
+              </p>
+            </div>
+          </v-col>
+
+          <v-col cols="12" lg="7">
+            <div class="partner-cloud">
+              <span v-for="name in partners" :key="name" class="partner-chip">{{ name }}</span>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </section>
+
+    <!-- 联系我们 -->
+    <section class="section section--cta">
+      <v-container>
+        <v-sheet class="cta" rounded="xl">
+          <div class="cta__text">
+            <p class="cta__en font-en">WORK WITH US</p>
+            <h2 class="cta__title">产品合作、委托生产、研发合作，都欢迎聊一聊。</h2>
+            <p class="cta__desc">
+              舒美奇成都生物科技有限公司 · 成都高新区天府生命科技园
+            </p>
+          </div>
+          <div class="cta__actions">
+            <v-btn color="white" size="large" to="/contact" append-icon="mdi-arrow-right">联系我们</v-btn>
+            <v-btn variant="outlined" color="white" size="large" to="/quality">质量管理</v-btn>
+          </div>
+        </v-sheet>
       </v-container>
     </section>
   </div>
@@ -242,7 +268,15 @@ useSeoMeta({
   padding: 88px 0;
 }
 
-.section--news {
+.section--about {
+  background: #fff;
+}
+
+.section--products {
+  background: #f5f7fa;
+}
+
+.section--quality {
   background: #fff;
 }
 
@@ -250,12 +284,13 @@ useSeoMeta({
   background: #f5f7fa;
 }
 
-.section--products {
+.section--partners {
   background: #fff;
 }
 
-.section--jobs {
-  background: linear-gradient(180deg, #f5f7fa 0%, #eef3f9 100%);
+.section--cta {
+  padding: 20px 0 88px;
+  background: #fff;
 }
 
 /* hero ------------------------------------------------------------------ */
@@ -277,9 +312,9 @@ useSeoMeta({
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(6, 22, 43, 0.88) 0%,
-    rgba(7, 28, 53, 0.68) 44%,
-    rgba(7, 28, 53, 0.12) 100%
+    rgba(6, 22, 43, 0.9) 0%,
+    rgba(7, 28, 53, 0.7) 44%,
+    rgba(7, 28, 53, 0.16) 100%
   );
   pointer-events: none;
 }
@@ -302,7 +337,7 @@ useSeoMeta({
 
 .hero__script {
   color: #bbdefb;
-  font-size: 15px;
+  font-size: 14px;
   letter-spacing: 0.24em;
 }
 
@@ -311,14 +346,14 @@ useSeoMeta({
   margin-top: 14px;
   flex-direction: column;
   color: #fff;
-  font-size: clamp(38px, 5vw, 62px);
+  font-size: clamp(36px, 4.6vw, 58px);
   font-weight: 700;
   letter-spacing: 0.06em;
-  line-height: 1.24;
+  line-height: 1.26;
 }
 
 .hero__side {
-  max-width: 560px;
+  max-width: 620px;
   margin-top: 20px;
   color: rgba(255, 255, 255, 0.8);
   font-size: 15px;
@@ -332,107 +367,222 @@ useSeoMeta({
   gap: 12px;
 }
 
-/* news ------------------------------------------------------------------ */
-.news-panel {
-  height: 100%;
-  padding: 26px 28px;
-  border: 1px solid rgba(16, 35, 58, 0.08);
-  border-radius: 18px;
-  background: #fff;
-  transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
-}
-
-.news-panel:hover {
-  box-shadow: 0 18px 44px rgba(13, 71, 161, 0.1);
-}
-
-.news-panel__head {
-  display: flex;
-  padding-bottom: 14px;
-  align-items: flex-start;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(16, 35, 58, 0.09);
-}
-
-.news-panel__en {
+/* about ----------------------------------------------------------------- */
+.eyebrow {
   color: #1976d2;
+  font-size: 11.5px;
+  letter-spacing: 0.28em;
+}
+
+.section-title {
+  margin-top: 8px;
+  color: #10233a;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.copy {
+  margin-top: 18px;
+  color: #5b6472;
+  font-size: 14.5px;
+  line-height: 2;
+}
+
+.copy p + p {
+  margin-top: 12px;
+}
+
+.about-art {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.about-art__img {
+  height: 460px;
+  border-radius: 20px;
+}
+
+.about-art__badge {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  padding: 14px 18px;
+  flex-direction: column;
+  gap: 4px;
+  border-radius: 14px;
+  background: rgba(6, 22, 43, 0.78);
+}
+
+.about-art__since {
+  color: #bbdefb;
   font-size: 11px;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.2em;
+}
+
+.about-art__label {
+  color: #fff;
+  font-size: 13px;
+}
+
+.facts {
+  display: grid;
+  margin-top: 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 20px;
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fact__label {
+  color: #9aa6b2;
+  font-size: 12px;
+}
+
+.fact__value {
+  color: #10233a;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.stats {
+  margin-top: 44px;
+}
+
+.stat-card {
+  height: 100%;
+  padding: 22px 20px;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  background: #f8fbfe;
+  text-align: center;
+}
+
+.stat-card__value {
+  color: #1976d2;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.stat-card__label {
+  margin-top: 8px;
+  color: #33414b;
+  font-size: 13.5px;
+}
+
+.stat-card__en {
+  margin-top: 4px;
+  color: #9aa6b2;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-.news-panel__title {
-  margin-top: 4px;
-  color: #10233a;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
-.news-panel__list {
-  padding: 0;
-  background: transparent;
-}
-
-.news-panel__item {
-  padding: 18px 0;
-  border-bottom: 1px dashed rgba(16, 35, 58, 0.1);
-}
-
-.news-panel__item:last-child {
-  border-bottom: 0;
-}
-
-.news-panel__item :deep(.v-list-item__content) {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.news-panel__date {
-  width: 78px;
-  flex-shrink: 0;
-  padding-top: 3px;
-  color: #1976d2;
-  font-size: 12px;
-  letter-spacing: 0.02em;
-}
-
-.news-panel__name {
+/* products -------------------------------------------------------------- */
+.product-card {
+  height: 100%;
   overflow: hidden;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  background: #fff;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(13, 71, 161, 0.12);
+}
+
+.product-card__img {
+  background: #fff;
+}
+
+.product-card__placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, #e3f2fd, #f5f7fa);
+}
+
+.product-card__body {
+  padding: 18px 20px 20px;
+}
+
+.product-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.product-card__name {
+  margin-top: 12px;
   color: #10233a;
-  font-size: 15.5px;
-  font-weight: 500;
-  line-height: 1.65;
-  text-overflow: ellipsis;
-  transition: color 0.2s var(--ease);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
-.news-panel__item:hover .news-panel__name {
-  color: #1976d2;
-}
-
-.news-panel__excerpt {
+.product-card__desc {
   display: -webkit-box;
-  margin-top: 6px;
+  margin-top: 8px;
   overflow: hidden;
   color: #7b8794;
   font-size: 13px;
-  line-height: 1.75;
+  line-height: 1.8;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
-/* timeline --------------------------------------------------------------- */
+.product-card__more {
+  display: inline-flex;
+  margin-top: 16px;
+  align-items: center;
+  gap: 4px;
+  color: #1976d2;
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+}
+
+/* quality --------------------------------------------------------------- */
+.quality-card {
+  height: 100%;
+  padding: 26px 24px;
+  border: 1px solid rgba(16, 35, 58, 0.08);
+  background: #f8fbfe;
+}
+
+.quality-card__index {
+  color: #1976d2;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+}
+
+.quality-card__title {
+  margin-top: 10px;
+  color: #10233a;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.quality-card__text {
+  margin-top: 10px;
+  color: #6b7c8f;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+
+/* timeline -------------------------------------------------------------- */
 .timeline {
   position: relative;
   display: grid;
   padding-top: 8px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 26px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .timeline__item {
@@ -482,7 +632,7 @@ useSeoMeta({
 
 .timeline__card {
   height: 100%;
-  padding: 24px 24px 26px;
+  padding: 22px 22px 24px;
   background: #fff;
   border: 1px solid rgba(16, 35, 58, 0.07);
 }
@@ -496,7 +646,7 @@ useSeoMeta({
 .timeline__title {
   margin-top: 8px;
   color: #10233a;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.03em;
   line-height: 1.5;
@@ -505,135 +655,73 @@ useSeoMeta({
 .timeline__text {
   margin-top: 10px;
   color: #5b6472;
-  font-size: 13.5px;
-  line-height: 1.9;
+  font-size: 13px;
+  line-height: 1.85;
 }
 
-/* products --------------------------------------------------------------- */
-.product-card {
-  height: 100%;
-  overflow: hidden;
-  border: 1px solid rgba(16, 35, 58, 0.08);
-  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+/* partners -------------------------------------------------------------- */
+.partner-copy {
+  color: #5b6472;
+  font-size: 14.5px;
+  line-height: 2;
 }
 
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(13, 71, 161, 0.12);
+.partner-copy p + p {
+  margin-top: 14px;
 }
 
-.product-card__img {
-  background: #eef3f9;
-}
-
-.product-card__placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(120deg, #e3f2fd, #f5f7fa);
-}
-
-.product-card__body {
-  padding: 18px 20px 20px;
-}
-
-.product-card__tags {
+.partner-cloud {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 10px;
 }
 
-.product-card__name {
-  margin-top: 12px;
-  color: #10233a;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-.product-card__desc {
-  display: -webkit-box;
-  margin-top: 8px;
-  overflow: hidden;
-  color: #7b8794;
+.partner-chip {
+  padding: 9px 16px;
+  border: 1px solid rgba(16, 35, 58, 0.1);
+  border-radius: 999px;
+  background: #f8fbfe;
+  color: #33414b;
   font-size: 13px;
-  line-height: 1.8;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  letter-spacing: 0.02em;
 }
 
-.product-card__more {
-  display: inline-flex;
-  margin-top: 16px;
-  align-items: center;
-  gap: 4px;
-  color: #1976d2;
-  font-size: 11.5px;
-  letter-spacing: 0.12em;
-}
-
-/* jobs ------------------------------------------------------------------- */
-.job-card {
+/* cta ------------------------------------------------------------------- */
+.cta {
   display: flex;
-  overflow: hidden;
-  flex-direction: row;
-  border: 1px solid rgba(16, 35, 58, 0.08);
-  background: #fff;
-  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  padding: 46px 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  background: linear-gradient(120deg, #0d47a1, #1976d2);
 }
 
-.job-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(13, 71, 161, 0.12);
-}
-
-.job-card :deep(.v-img) {
-  width: 44%;
-  flex-shrink: 0;
-}
-
-.job-card__body {
-  padding: 26px 28px;
-}
-
-.job-card__en {
-  color: #1976d2;
+.cta__en {
+  color: rgba(255, 255, 255, 0.62);
   font-size: 11px;
   letter-spacing: 0.24em;
 }
 
-.job-card__title {
-  margin-top: 6px;
-  color: #10233a;
-  font-size: 26px;
+.cta__title {
+  margin-top: 10px;
+  color: #fff;
+  font-size: 27px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
 }
 
-.job-card__text {
-  margin-top: 6px;
-  color: #5b6472;
+.cta__desc {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.78);
   font-size: 14px;
 }
 
-.job-card__meta {
-  margin-top: 14px;
-  color: #7b8794;
-  font-size: 12.5px;
-}
-
-.job-card__meta span {
-  margin: 0 6px;
-  opacity: 0.5;
-}
-
-.job-card__more {
-  display: inline-flex;
-  margin-top: 22px;
-  align-items: center;
-  gap: 4px;
-  color: #1976d2;
-  font-size: 14px;
-  font-weight: 500;
+.cta__actions {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 @media (max-width: 959px) {
@@ -670,12 +758,14 @@ useSeoMeta({
     left: 0;
   }
 
-  .job-card {
-    flex-direction: column;
+  .about-art__img {
+    height: 320px;
   }
 
-  .job-card :deep(.v-img) {
-    width: 100%;
+  .cta {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 30px 24px;
   }
 }
 
@@ -685,36 +775,23 @@ useSeoMeta({
   }
 
   .hero__script {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .hero__side {
     font-size: 13.5px;
   }
 
-  .news-panel {
-    padding: 20px 18px;
+  .section-title {
+    font-size: 26px;
   }
 
-  .news-panel__item :deep(.v-list-item__content) {
-    gap: 10px;
+  .facts {
+    grid-template-columns: 1fr;
   }
 
-  .news-panel__date {
-    width: 66px;
-    font-size: 11px;
-  }
-
-  .timeline__card {
-    padding: 20px 18px;
-  }
-
-  .job-card__body {
-    padding: 20px;
-  }
-
-  .job-card__title {
-    font-size: 22px;
+  .stats {
+    margin-top: 30px;
   }
 }
 </style>

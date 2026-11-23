@@ -19,7 +19,7 @@ useJsonLd('organization', () => ({
   name: siteConfig.brand.name,
   alternateName: siteConfig.brand.nameEn,
   url: abs('/'),
-  logo: abs(siteConfig.brand.logo || '/images/hero-1.svg'),
+  logo: abs(siteConfig.brand.logo || '/images/logo.png'),
   description: siteConfig.brand.description,
   email: siteConfig.brand.email,
   telephone: siteConfig.brand.phone,
@@ -43,7 +43,7 @@ useJsonLd('organization', () => ({
 useJsonLd('website', () => ({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: `${siteConfig.brand.name} 制药`,
+  name: `${siteConfig.brand.name}`,
   alternateName: siteConfig.brand.nameEn,
   url: abs('/'),
   inLanguage: 'zh-CN',

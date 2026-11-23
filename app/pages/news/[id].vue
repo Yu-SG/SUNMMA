@@ -44,17 +44,17 @@ useJsonLd('article', () => {
     publisher: {
       '@type': 'Organization',
       name: siteConfig.brand.name,
-      logo: { '@type': 'ImageObject', url: abs(siteConfig.brand.logo || '/images/hero-1.svg') },
+      logo: { '@type': 'ImageObject', url: abs(siteConfig.brand.logo || '/images/logo.png') },
     },
   }
 })
 
 useSeoMeta({
-  title: () => `${article.value?.title ?? '新闻详情'}｜${siteConfig.brand.name} 制药`,
+  title: () => `${article.value?.title ?? '新闻详情'}｜${siteConfig.brand.name}`,
   description: () => article.value?.excerpt ?? '',
   ogTitle: () => article.value?.title ?? '',
   ogDescription: () => article.value?.excerpt ?? '',
-    ogImage: () => abs(article.value?.cover && !article.value.cover.endsWith('.svg') ? article.value.cover : '/images/og-cover.png'),
+    ogImage: () => abs(article.value?.cover && !article.value.cover.endsWith('.svg') ? article.value.cover : '/images/og-cover.jpg'),
   ogType: 'article',
 })
 </script>
@@ -72,7 +72,7 @@ useSeoMeta({
           <div class="article__meta">
             <v-chip size="small" color="primary" variant="tonal">{{ article.category }}</v-chip>
             <time class="article__date font-en">{{ article.date }}</time>
-            <span class="article__source">来源：XXX 制药</span>
+            <span class="article__source">来源：{{ siteConfig.brand.name }}</span>
           </div>
 
           <v-img

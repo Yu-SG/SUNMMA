@@ -63,7 +63,7 @@ watch(mdAndUp, (desktop) => {
             <v-icon icon="mdi-shield-check-outline" size="15" class="mr-1" />
             {{ link.label }}
           </NuxtLink>
-          <a class="utility__link" :href="phoneHref">
+          <a v-if="phone" class="utility__link" :href="phoneHref">
             <v-icon icon="mdi-phone-outline" size="15" class="mr-1" />
             {{ phone }}
           </a>
@@ -180,11 +180,11 @@ watch(mdAndUp, (desktop) => {
     </v-list>
 
     <div class="mobile-drawer__foot">
-      <a :href="phoneHref">
+      <a v-if="phone" :href="phoneHref">
         <v-icon icon="mdi-phone-outline" size="17" />
         {{ phone }}
       </a>
-      <a :href="`mailto:${siteConfig.brand.email}`">
+      <a v-if="siteConfig.brand.email" :href="`mailto:${siteConfig.brand.email}`">
         <v-icon icon="mdi-email-outline" size="17" />
         {{ siteConfig.brand.email }}
       </a>

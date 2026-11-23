@@ -1068,7 +1068,7 @@ onBeforeUnmount(() => {
             <v-icon icon="mdi-dna" size="20" />
           </v-avatar>
           <div class="min-w-0">
-            <div class="lux-brand-title">{{ draft?.brand.shortName || 'XXX' }} Studio</div>
+            <div class="lux-brand-title">{{ draft?.brand.shortName || '舒美奇' }} Studio</div>
             <div class="lux-brand-sub">Content Studio</div>
           </div>
         </div>
@@ -1627,7 +1627,7 @@ onBeforeUnmount(() => {
                     <v-text-field v-model="product.spec" label="规格" placeholder="2ml:4mg" hide-details="auto" />
                   </v-col>
                   <v-col cols="12" md="6">
-                    <v-text-field v-model="product.holder" label="持有人" placeholder="XXX 制药有限公司" hide-details="auto" />
+                    <v-text-field v-model="product.holder" label="持有人" placeholder="舒美奇成都生物科技有限公司" hide-details="auto" />
                   </v-col>
                   <v-col cols="12">
                     <v-textarea
@@ -2417,7 +2417,7 @@ onBeforeUnmount(() => {
 
               <v-row density="compact">
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="draft.site.phone" label="站点电话" placeholder="400-820-2026" hide-details="auto" />
+                  <v-text-field v-model="draft.site.phone" label="站点电话" placeholder="如 028-8888 8888" hide-details="auto" />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field v-model="draft.site.icp" label="ICP 备案号" hide-details="auto" />

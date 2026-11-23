@@ -68,9 +68,9 @@ watch(
 )
 
 useSeoMeta({
-  title: `新闻动态｜${siteConfig.brand.name} 制药`,
-  description: page.intro[0] || `${siteConfig.brand.name} 制药新闻动态`,
-  ogTitle: `新闻动态｜${siteConfig.brand.name} 制药`,
+  title: `新闻动态｜${siteConfig.brand.name}`,
+  description: page.intro[0] || `${siteConfig.brand.name}新闻动态`,
+  ogTitle: `新闻动态｜${siteConfig.brand.name}`,
   ogDescription: page.intro[0] || '',
 })
 </script>
@@ -193,11 +193,11 @@ useSeoMeta({
                 rounded="lg"
                 class="mt-4"
               >
-                该分类下暂无内容，试试其他分类。
+                {{ total === 0 ? '企业动态与政策法规内容整理中，敬请期待。' : '该分类下暂无内容，试试其他分类。' }}
               </v-alert>
             </div>
 
-            <div class="pagination">
+            <div v-if="total > 0" class="pagination">
               <p class="pagination__count">共 {{ total }} 条</p>
               <v-pagination
                 :model-value="currentPage"

@@ -20,7 +20,7 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
           <v-col cols="12" lg="3" md="6">
             <SiteLogo light :size="40" />
             <p class="footer-desc">{{ siteConfig.brand.description }}</p>
-            <div class="footer-qr">
+            <div v-if="siteConfig.social.wechat" class="footer-qr">
               <v-img
                 src="/images/qr-wechat.svg"
                 alt="微信公众号二维码"
@@ -31,7 +31,7 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
               />
               <div>
                 <p class="footer-qr__title">微信公众号</p>
-                <p class="footer-qr__hint">扫码关注 XXX 最新动态</p>
+                <p class="footer-qr__hint">扫码关注 {{ siteConfig.brand.name }} 最新动态</p>
               </div>
             </div>
           </v-col>
@@ -62,13 +62,13 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
           <v-col cols="12" lg="3" md="6" sm="6">
             <h3 class="footer-title">联系方式</h3>
             <ul class="footer-list footer-list--contact">
-              <li>
+              <li v-if="siteConfig.site.phone">
                 <a :href="phoneHref">
                   <v-icon icon="mdi-phone-outline" size="15" />
                   {{ siteConfig.site.phone }}
                 </a>
               </li>
-              <li>
+              <li v-if="siteConfig.brand.email">
                 <a :href="`mailto:${siteConfig.brand.email}`">
                   <v-icon icon="mdi-email-outline" size="15" />
                   {{ siteConfig.brand.email }}
@@ -80,7 +80,9 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
                   {{ siteConfig.brand.address }}
                 </span>
               </li>
-              <li class="footer-hours">周一至周五 9:00 – 17:30</li>
+              <li v-if="!siteConfig.site.phone && !siteConfig.brand.email" class="footer-hours">
+                电话与邮箱信息整理中，请通过「联系我们」留言
+              </li>
             </ul>
           </v-col>
 
@@ -100,11 +102,11 @@ const newsLinks = computed(() => siteConfig.pages.news.categories)
       <v-container class="footer-legal__inner">
         <p class="footer-legal__line">
           <span>© {{ year }} {{ siteConfig.brand.nameEn }}. All rights reserved.</span>
-          <a href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">
+          <a v-if="siteConfig.site.icp" href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">
             {{ siteConfig.site.icp }}
           </a>
         </p>
-        <p class="footer-legal__line">
+        <p v-if="siteConfig.site.license" class="footer-legal__line">
           《互联网药品信息服务资格证书》编号：{{ siteConfig.site.license }}
         </p>
         <p class="footer-legal__line footer-legal__disclaimer">

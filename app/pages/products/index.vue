@@ -86,9 +86,9 @@ watch(
 )
 
 useSeoMeta({
-  title: `产品中心｜${siteConfig.brand.name} 制药`,
-  description: page.intro[0] || `${siteConfig.brand.name} 制药产品中心`,
-  ogTitle: `产品中心｜${siteConfig.brand.name} 制药`,
+  title: `产品中心｜${siteConfig.brand.name}`,
+  description: page.intro[0] || `${siteConfig.brand.name}产品中心`,
+  ogTitle: `产品中心｜${siteConfig.brand.name}`,
   ogDescription: page.intro[0] || '',
 })
 </script>
@@ -163,7 +163,7 @@ useSeoMeta({
             icon="mdi-flask-outline"
             class="research__notice"
           >
-            在研项目尚处于临床前或临床研究阶段，暂未形成上市产品；以下信息仅用于研发进展交流，不构成产品推广。在研项目按研发管线展示，不区分制剂产品与原料药。
+            在研与申报项目尚处于研究、审评或待申报阶段，尚未全部取得生产批件；以下信息仅用于研发进展交流，不构成产品推广。
           </v-alert>
 
           <v-row>
@@ -188,21 +188,7 @@ useSeoMeta({
                   </div>
                 </dl>
 
-                <div class="research-card__progress">
-                  <div class="research-card__progress-label">
-                    <span>研发进度</span>
-                    <span class="font-en">{{ item.progress }}%</span>
-                  </div>
-                  <v-progress-linear
-                    :model-value="item.progress"
-                    color="primary"
-                    height="6"
-                    rounded
-                    bg-color="surface-variant"
-                  />
-                </div>
-
-                <p class="research-card__note">在研项目 · 暂未上市</p>
+                <p class="research-card__note">在研项目 · 暂未上市，具体进度以公司公告为准</p>
               </v-card>
             </v-col>
           </v-row>

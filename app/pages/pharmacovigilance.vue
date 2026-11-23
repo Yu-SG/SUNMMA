@@ -3,7 +3,8 @@ import { computed } from 'vue'
 import { siteConfig } from '~/config/site'
 
 const page = siteConfig.pages.pharmacovigilance
-const phoneHref = computed(() => `tel:${siteConfig.site.phone.replace(/[^\d+]/g, '')}`)
+const phone = siteConfig.site.phone || siteConfig.brand.phone
+const phoneHref = computed(() => `tel:${phone.replace(/[^\d+]/g, '')}`)
 
 const steps = [
   { title: '提交报告', text: '通过表单或热线告诉我们药品名称、用药情况与不良反应表现。' },
@@ -12,9 +13,9 @@ const steps = [
 ]
 
 useSeoMeta({
-  title: `药物警戒｜${siteConfig.brand.name} 制药`,
-  description: page.intro[0] || `${siteConfig.brand.name} 制药药物警戒`,
-  ogTitle: `药物警戒｜${siteConfig.brand.name} 制药`,
+  title: `药物警戒｜${siteConfig.brand.name}`,
+  description: page.intro[0] || `${siteConfig.brand.name}药物警戒`,
+  ogTitle: `药物警戒｜${siteConfig.brand.name}`,
   ogDescription: page.intro[0] || '',
 })
 </script>
@@ -34,8 +35,10 @@ useSeoMeta({
         >
           <p class="pv-alert__title">紧急情况请先就医</p>
           <p class="pv-alert__text">
-            如出现严重或危及生命的不良反应，请立即前往医院就诊，并同时拨打我们的药物警戒热线
-            {{ siteConfig.site.phone }} 转 3。本表单不替代医疗诊断与治疗。
+            如出现严重或危及生命的不良反应，请立即前往医院就诊。
+            <template v-if="phone">同时可拨打我们的药物警戒热线 {{ phone }} 转 3。</template>
+            <template v-else>就诊后可通过本页表单提交报告，我们会按药物警戒流程处理。</template>
+            本表单不替代医疗诊断与治疗。
           </p>
         </v-alert>
 
@@ -45,14 +48,15 @@ useSeoMeta({
               <v-card class="hotline-card">
                 <p class="hotline-card__label font-en">PHARMACOVIGILANCE HOTLINE</p>
                 <h2 class="hotline-card__title">药物警戒热线</h2>
-                <a class="hotline-card__phone font-en" :href="phoneHref">
-                  {{ siteConfig.site.phone }}
-                </a>
-                <p class="hotline-card__time">周一至周五 9:00 – 17:30（转 3）</p>
-                <v-divider class="my-4" />
-                <p class="hotline-card__email">
-                  报告邮箱：
-                  <a href="mailto:pv@xxx.com">pv@xxx.com</a>
+                <template v-if="phone">
+                  <a class="hotline-card__phone font-en" :href="phoneHref">
+                    {{ phone }}
+                  </a>
+                  <p class="hotline-card__time">周一至周五 9:00 – 17:30（转 3）</p>
+                  <v-divider class="my-4" />
+                </template>
+                <p v-else class="hotline-card__pending">
+                  热线号码与报告邮箱整理中，请通过右侧表单提交报告。
                 </p>
                 <p class="hotline-card__note">
                   你也可以直接通过右侧表单提交报告，我们会在 24 小时内响应。
@@ -188,6 +192,13 @@ useSeoMeta({
   margin-top: 4px;
   color: var(--panel-muted);
   font-size: 12px;
+}
+
+.hotline-card__pending {
+  margin-top: 14px;
+  color: var(--panel-muted);
+  font-size: 13px;
+  line-height: 1.8;
 }
 
 .hotline-card :deep(.v-divider) {

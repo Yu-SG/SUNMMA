@@ -30,9 +30,9 @@ const openNotice = (item: Notice) => {
 }
 
 useSeoMeta({
-  title: `投资者关系｜${siteConfig.brand.name} 制药`,
-  description: page.intro[0] || `${siteConfig.brand.name} 制药投资者关系`,
-  ogTitle: `投资者关系｜${siteConfig.brand.name} 制药`,
+  title: `投资者关系｜${siteConfig.brand.name}`,
+  description: page.intro[0] || `${siteConfig.brand.name}投资者关系`,
+  ogTitle: `投资者关系｜${siteConfig.brand.name}`,
   ogDescription: page.intro[0] || '',
 })
 </script>
@@ -82,6 +82,17 @@ useSeoMeta({
                   <v-icon icon="mdi-file-document-outline" size="16" />
                 </span>
               </button>
+
+              <v-alert
+                v-if="!filtered.length"
+                type="info"
+                variant="tonal"
+                rounded="xl"
+                class="notice-empty"
+                icon="mdi-progress-clock"
+              >
+                公告与定期报告整理中，敬请期待。如需了解公司经营情况，欢迎通过「联系我们」与我们沟通。
+              </v-alert>
             </div>
           </v-col>
 
@@ -94,11 +105,11 @@ useSeoMeta({
                   我们欢迎投资者、分析师与媒体就公司经营与发展进行沟通。
                 </p>
                 <ul class="investor-contact__list">
-                  <li>
+                  <li v-if="siteConfig.brand.email">
                     <v-icon icon="mdi-email-outline" size="16" />
-                    <span>ir@xxx.com</span>
+                    <span>{{ siteConfig.brand.email }}</span>
                   </li>
-                  <li>
+                  <li v-if="siteConfig.site.phone">
                     <v-icon icon="mdi-phone-outline" size="16" />
                     <span>{{ siteConfig.site.phone }}</span>
                   </li>
@@ -107,6 +118,7 @@ useSeoMeta({
                     <span>{{ siteConfig.brand.address }}</span>
                   </li>
                 </ul>
+                <p class="investor-contact__pending">联络邮箱与电话整理中，请先通过在线留言与我们沟通。</p>
                 <v-btn color="primary" to="/contact" block class="mt-2">投资者咨询</v-btn>
               </v-card>
 
@@ -116,7 +128,7 @@ useSeoMeta({
                   本页面所载信息仅为公司公开信息的汇总，不构成任何投资建议。公告全文以公司在监管机构指定媒体披露的内容为准。
                 </p>
                 <v-divider class="my-4" />
-                <p class="investor-note__meta font-en">LAST UPDATED · 2026.10</p>
+                <p class="investor-note__meta">公告与定期报告整理中。</p>
               </v-card>
             </aside>
           </v-col>
@@ -185,6 +197,13 @@ useSeoMeta({
   display: flex;
   flex-direction: column;
   border-top: 1px solid rgba(16, 35, 58, 0.1);
+}
+
+.notice-empty {
+  margin-top: 20px;
+  padding: 18px 20px;
+  font-size: 13.5px;
+  line-height: 1.9;
 }
 
 .notice-row {
@@ -340,6 +359,13 @@ useSeoMeta({
 
 .investor-contact__list li:nth-child(-n + 2) span {
   color: var(--panel-accent);
+}
+
+.investor-contact__pending {
+  margin: -6px 0 18px;
+  color: var(--panel-muted);
+  font-size: 12.5px;
+  line-height: 1.8;
 }
 
 .investor-contact__list :deep(.v-icon) {

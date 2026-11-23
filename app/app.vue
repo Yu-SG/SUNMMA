@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { siteConfig } from '~/config/site'
 
-const title = computed(() => `${siteConfig.brand.name} 制药｜${siteConfig.brand.tagline}`)
+const title = computed(() => `${siteConfig.brand.name}｜${siteConfig.brand.tagline}`)
 
 useSeoMeta({
   title,

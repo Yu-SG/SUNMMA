@@ -1,4 +1,4 @@
-# XXX BioTechnology — 官网 + 内容后台
+# 舒美奇 SUMAAZ — 官网 + 内容后台
 
 一个 **Nuxt 4 全栈单体**：同一个项目、一次构建、一个 Node 进程同时承载
 

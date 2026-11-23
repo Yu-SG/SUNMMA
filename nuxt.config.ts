@@ -108,18 +108,18 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'zh-CN' },
-      title: 'XXX 制药｜让科学成为可及的疗法',
+      title: '舒美奇｜药品研发与上市许可持有人专业企业',
       meta: [
         { name: 'theme-color', content: '#1976d2' },
-        { name: 'author', content: 'XXX' },
+        { name: 'author', content: '舒美奇成都生物科技有限公司' },
         { name: 'format-detection', content: 'telephone=no' },
         {
           name: 'description',
           content:
-            'XXX 制药是一家以研发为驱动的制药企业，聚焦呼吸、心血管、神经与代谢等治疗领域，提供制剂产品与原料药。',
+            '舒美奇成都生物科技有限公司成立于 2016 年，位于成都高新区天府生命科技园，专注化学药制剂与中药新药研发，是药品上市许可持有人。',
         },
         { name: 'robots', content: 'index, follow, max-image-preview:large' },
-        { property: 'og:site_name', content: 'XXX PHARMACEUTICAL' },
+        { property: 'og:site_name', content: 'SUMAZ' },
         { property: 'og:locale', content: 'zh_CN' },
         { property: 'og:type', content: 'website' },
         { name: 'twitter:card', content: 'summary_large_image' },

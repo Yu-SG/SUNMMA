@@ -4,19 +4,14 @@ import { siteConfig } from '~/config/site'
 
 const page = siteConfig.pages.contact
 const brand = siteConfig.brand
-const phoneHref = computed(() => `tel:${siteConfig.site.phone.replace(/[^\d+]/g, '')}`)
+const phone = siteConfig.site.phone || brand.phone
+const phoneHref = computed(() => `tel:${phone.replace(/[^\d+]/g, '')}`)
 const mapHref = computed(() => `https://map.baidu.com/search/${encodeURIComponent(brand.address)}`)
 
-const departments = [
-  { label: '产品与商务合作', email: 'partner@xxx.com' },
-  { label: '投资者关系', email: 'ir@xxx.com' },
-  { label: '简历投递', email: 'hr@xxx.com' },
-]
-
 useSeoMeta({
-  title: `联系我们｜${siteConfig.brand.name} 制药`,
-  description: page.intro[0] || `联系 ${siteConfig.brand.name} 制药`,
-  ogTitle: `联系我们｜${siteConfig.brand.name} 制药`,
+  title: `联系我们｜${siteConfig.brand.name}`,
+  description: page.intro[0] || `联系 ${siteConfig.brand.name}`,
+  ogTitle: `联系我们｜${siteConfig.brand.name}`,
   ogDescription: page.intro[0] || '',
 })
 </script>
@@ -41,36 +36,25 @@ useSeoMeta({
                     <span class="contact-list__value">{{ brand.address }}</span>
                   </div>
                 </li>
-                <li>
+                <li v-if="phone">
                   <span class="contact-list__icon"><v-icon icon="mdi-phone-outline" size="20" /></span>
                   <div>
                     <span class="contact-list__label">总机电话</span>
-                    <a class="contact-list__value" :href="phoneHref">{{ siteConfig.site.phone }}</a>
+                    <a class="contact-list__value" :href="phoneHref">{{ phone }}</a>
                   </div>
                 </li>
-                <li>
+                <li v-if="brand.email">
                   <span class="contact-list__icon"><v-icon icon="mdi-email-outline" size="20" /></span>
                   <div>
                     <span class="contact-list__label">电子邮箱</span>
                     <a class="contact-list__value" :href="`mailto:${brand.email}`">{{ brand.email }}</a>
                   </div>
                 </li>
-                <li>
-                  <span class="contact-list__icon"><v-icon icon="mdi-clock-outline" size="20" /></span>
-                  <div>
-                    <span class="contact-list__label">工作时间</span>
-                    <span class="contact-list__value">周一至周五 9:00 – 17:30</span>
-                  </div>
-                </li>
               </ul>
 
-              <div class="department-list">
-                <p class="department-list__title">部门联络</p>
-                <div v-for="department in departments" :key="department.email" class="department">
-                  <span>{{ department.label }}</span>
-                  <a :href="`mailto:${department.email}`">{{ department.email }}</a>
-                </div>
-              </div>
+              <p v-if="!phone || !brand.email" class="contact-note">
+                电话、邮箱与微信公众号信息整理中，请先通过右侧表单留言，我们会在 2 个工作日内回复。
+              </p>
 
               <a class="map-card" :href="mapHref" target="_blank" rel="noopener noreferrer">
                 <div class="map-card__grid" aria-hidden="true">
@@ -171,6 +155,16 @@ useSeoMeta({
 
 a.contact-list__value:hover {
   color: #1976d2;
+}
+
+.contact-note {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #f5f9fd;
+  color: #5b6472;
+  font-size: 13px;
+  line-height: 1.85;
 }
 
 .department-list {
