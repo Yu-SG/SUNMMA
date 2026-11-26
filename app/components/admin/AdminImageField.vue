@@ -218,8 +218,17 @@ const remove = async () => {
 <style scoped>
 .preview {
   position: relative;
+  width: 72px;
+  height: 72px;
   flex: 0 0 auto;
+  overflow: hidden;
   border-radius: 12px;
+  background:
+    linear-gradient(45deg, #eef2f7 25%, transparent 25%) 0 0 / 16px 16px,
+    linear-gradient(-45deg, #eef2f7 25%, transparent 25%) 0 8px / 16px 16px,
+    linear-gradient(45deg, transparent 75%, #eef2f7 75%) 8px -8px / 16px 16px,
+    linear-gradient(-45deg, transparent 75%, #eef2f7 75%) -8px 0 / 16px 16px,
+    #fff;
   outline: 2px dashed transparent;
   outline-offset: 2px;
   transition: outline-color 0.15s ease;
@@ -239,7 +248,15 @@ const remove = async () => {
 }
 
 .thumb {
+  width: 100%;
+  height: 100%;
   border: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+}
+
+.thumb :deep(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .media-field {

@@ -1014,7 +1014,7 @@ onBeforeUnmount(() => {
           <p class="text-overline text-primary mb-1">Content Studio</p>
           <h1 class="text-h4 font-weight-medium mb-3">内容管理</h1>
           <p class="text-body-2 text-medium-emphasis mb-6">
-            登录后可编辑官网站点的品牌信息、首页横幅、产品、新闻、关于、投资者、招聘与页面内容。
+            登录后可编辑官网站点的品牌信息、首页横幅、产品、新闻、关于、招聘与页面内容。
           </p>
 
           <v-form @submit.prevent="login">
