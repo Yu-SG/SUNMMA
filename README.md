@@ -147,6 +147,8 @@ ADMIN_PASSWORD=... ADMIN_SECRET=... node .output/server/index.mjs
 
 SQLite 文件默认写在项目根目录 `.data/`，部署时挂载一个可写目录或把 `CONTENT_DB_PATH` 指过去即可。
 
+Ubuntu 24.04 无图形界面服务器的完整部署步骤（Node 24、systemd、Nginx + HTTPS、备份与排查）见 [`docs/deploy-ubuntu.md`](docs/deploy-ubuntu.md)；内容编辑请参考 [`docs/舒美奇官网内容管理操作手册.docx`](docs/舒美奇官网内容管理操作手册.docx)。
+
 ### GitHub
 
 代码仓库：<https://github.com/Yu-SG/SUNMMA>
